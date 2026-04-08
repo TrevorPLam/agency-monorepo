@@ -20,9 +20,13 @@ Complete implementation guide organized by execution phase. Each package has its
 | 32 | [`32-ui-design-system/`](./32-ui-design-system/) | `@agency/ui-design-system` | UI primitives |
 | 40 | [`40-seo/`](./40-seo/) | `@agency/seo` | SEO utilities |
 | 41 | [`41-compliance/`](./41-compliance/) | `@agency/compliance` | GDPR/CCPA compliance |
+| 41a | [`41a-compliance-security-headers/`](./41a-compliance-security-headers/) | `@agency/compliance-security-headers` | Compliance security headers |
 | 42 | [`42-monitoring/`](./42-monitoring/) | `@agency/monitoring` | Performance monitoring |
+| 42a | [`42a-monitoring-rum/`](./42a-monitoring-rum/) | `@agency/monitoring-rum` | Real User Monitoring (CrUX) |
 | 50 | [`50-data-db/`](./50-data-db/) | `@agency/data-db` | Database (Drizzle/Neon) |
 | 51 | [`51-data-cms/`](./51-data-cms/) | `@agency/data-cms` | CMS schemas (Sanity) |
+| 51a | [`51a-data-content-federation/`](./51a-data-content-federation/) | `@agency/data-content-federation` | Multi-source content federation |
+| 51b | [`51b-data-ai-enrichment/`](./51b-data-ai-enrichment/) | `@agency/data-ai-enrichment` | AI content processing |
 | 52 | [`52-data-api-client/`](./52-data-api-client/) | `@agency/data-api-client` | API client utilities |
 | 60 | [`60-auth-internal/`](./60-auth-internal/) | `@agency/auth-internal` | Clerk authentication |
 | 61 | [`61-auth-portal/`](./61-auth-portal/) | `@agency/auth-portal` | Better Auth for portals |
@@ -30,8 +34,13 @@ Complete implementation guide organized by execution phase. Each package has its
 | 71 | [`71-email-service/`](./71-email-service/) | `@agency/email-service` | Email delivery (Resend/Postmark) |
 | 72 | [`72-notifications/`](./72-notifications/) | `@agency/notifications` | Notification service |
 | 80 | [`80-analytics/`](./80-analytics/) | `@agency/analytics` | Analytics package |
+| 80a | [`80a-analytics-attribution/`](./80a-analytics-attribution/) | `@agency/analytics-attribution` | Multi-touch attribution |
+| 80b | [`80b-analytics-consent-bridge/`](./80b-analytics-consent-bridge/) | `@agency/analytics-consent-bridge` | Consent-analytics bridge |
 | 81 | [`81-experimentation/`](./81-experimentation/) | `@agency/experimentation` | A/B testing & feature flags |
+| 81a | [`81a-experimentation-edge/`](./81a-experimentation-edge/) | `@agency/experimentation-edge` | Edge Config experimentation |
 | 82 | [`82-lead-capture/`](./82-lead-capture/) | `@agency/lead-capture` | Lead capture forms |
+| 82a | [`82a-lead-forms-progressive/`](./82a-lead-forms-progressive/) | `@agency/lead-capture-progressive` | Progressive form orchestration |
+| 82b | [`82b-lead-enrichment/`](./82b-lead-enrichment/) | `@agency/lead-capture-enrichment` | Lead data enrichment |
 | 90 | [`90-test-setup/`](./90-test-setup/) | `@agency/test-setup` | Test infrastructure |
 | 91 | [`91-test-fixtures/`](./91-test-fixtures/) | `@agency/test-fixtures` | Test data generators |
 | a0 | [`a0-docs-agents/`](./a0-docs-agents/) | - | AI Agent Rules (`docs/AGENTS.md`) |
@@ -42,6 +51,7 @@ Complete implementation guide organized by execution phase. Each package has its
 | b1 | [`b1-tools-package-generator/`](./b1-tools-package-generator/) | - | Package generator script |
 | b2 | [`b2-tools-db-seed/`](./b2-tools-db-seed/) | - | Database seed script |
 | b3 | [`b3-tools-codemods/`](./b3-tools-codemods/) | - | Codemod scripts |
+| b4 | [`b4-tools-content-pipeline/`](./b4-tools-content-pipeline/) | - | AI content pipeline |
 | c0 | [`c0-infra-codeowners/`](./c0-infra-codeowners/) | - | CODEOWNERS (v1) |
 | c1 | [`c1-infra-codeowners-v2/`](./c1-infra-codeowners-v2/) | - | CODEOWNERS (v2) |
 | c2 | [`c2-infra-ci-workflow/`](./c2-infra-ci-workflow/) | - | CI Workflow (v1) |
@@ -51,6 +61,7 @@ Complete implementation guide organized by execution phase. Each package has its
 | c6 | [`c6-infra-changesets/`](./c6-infra-changesets/) | - | Changesets configuration |
 | c7 | [`c7-infra-security-audit/`](./c7-infra-security-audit/) | - | Security audit workflow |
 | c8 | [`c8-infra-accessibility-audit/`](./c8-infra-accessibility-audit/) | - | Accessibility audit workflow |
+| c9 | [`c9-infra-security-headers/`](./c9-infra-security-headers/) | - | Security headers workflow |
 | d0 | [`d0-infra-vscode/`](./d0-infra-vscode/) | - | VS Code settings |
 | d1 | [`d1-infra-db-migrations/`](./d1-infra-db-migrations/) | - | Database migration workflow |
 | d2 | [`d2-infra-environment-mgmt/`](./d2-infra-environment-mgmt/) | - | Environment management |
@@ -62,8 +73,22 @@ Complete implementation guide organized by execution phase. Each package has its
 | e3 | [`e3-apps-agency-website/`](./e3-apps-agency-website/) | - | Agency website |
 | e4 | [`e4-apps-client-portal/`](./e4-apps-client-portal/) | - | Client portal |
 | e5 | [`e5-apps-playwright-e2e/`](./e5-apps-playwright-e2e/) | - | Playwright E2E tests |
+| **e6** | **[`e6-apps-docs-site/`](./e6-apps-docs-site/)** | **-** | **Documentation site app** |
+| **e7** | **[`e7-apps-email-preview/`](./e7-apps-email-preview/)** | **-** | **Email preview app** |
+| e8 | [`e8-apps-studio/`](./e8-apps-studio/) | - | Sanity Studio app (conditional) |
+| e9 | [`e9-apps-api/`](./e9-apps-api/) | - | API app (conditional) |
+| **f0** | **[`f0-packages-monitoring/`](./f0-packages-monitoring/)** | **`@agency/observability`** | **Monitoring/observability (conditional)** |
+| **f1** | **[`f1-packages-content-blocks/`](./f1-packages-content-blocks/)** | **`@agency/content-blocks`** | **Content blocks for CMS (conditional)** |
+| **f2** | **[`f2-packages-i18n/`](./f2-packages-i18n/)** | **`@agency/i18n`** | **Internationalization (conditional)** |
+| f3 | [`f3-apps-client-sites-brand-foundation/`](./f3-apps-client-sites-brand-foundation/) | - | Brand-foundation split (conditional) |
+| **c10** | **[`c10-infra-bundle-analysis/`](./c10-infra-bundle-analysis/)** | **-** | **Bundle analysis in CI** |
+| **c11** | **[`c11-infra-security-headers/`](./c11-infra-security-headers/)** | **-** | **Shared security headers policy** |
+| **c12** | **[`c12-infra-rate-limiting/`](./c12-infra-rate-limiting/)** | **-** | **Rate limiting for public endpoints** |
+| **c13** | **[`c13-infra-image-optimization/`](./c13-infra-image-optimization/)** | **-** | **Image optimization policy** |
+| **c14** | **[`c14-infra-workspace-boundaries/`](./c14-infra-workspace-boundaries/)** | **-** | **Workspace boundary enforcement** |
+| **a4** | **[`a4-docs-marketing-standards/`](./a4-docs-marketing-standards/)** | **-** | **Marketing standards documentation** |
 
-**Total: 56 tasks**
+**Total: 82 tasks** (67 existing + 15 new)
 
 ## Build Order (Dependency Flow)
 
@@ -75,11 +100,53 @@ Tasks are numbered to reflect the dependency flow:
 10-13 (config) → 20-23 (core) → 30-32 (ui) → 40-42 (marketing utils)
                                                   ↓
 50-52 (data) → 60-61 (auth) → 70-72 (communication)
-                                    ↓
+                  ↓                     ↓
+41a (compliance)  51a-b (federation)   81a (edge-exp)
+42a (rum)                               82a-b (forms)
+        ↓                               ↓
 80-82 (advanced features: analytics, experimentation, lead-capture)
   ↓
-90-91 (testing) → a0-a3 (docs) → b0-b3 (tools) → c0-d4 (infra) → e0-e5 (apps)
+90-91 (testing) → a0-a3 (docs) → b0-b4 (tools) → c0-c9 (infra) → e0-e5 (apps)
 ```
+
+### Build Philosophy: Condition-Gated Implementation
+
+**Plan broadly, build selectively.** Task numbers indicate logical dependency order, not mandatory construction sequence.
+
+**Foundation phase (always build first):**
+- `00-foundation/` - Root scaffolding
+- `10-13-config/` - ESLint, TypeScript, Tailwind, Prettier
+- `20-23-core/` - Types, utils, constants, hooks
+- `30-32-ui/` - Theme, icons, design system
+- `c2-infra-ci-workflow/` - CI with test execution capability
+
+**Condition-gated packages (build only when trigger met):**
+| Package | Build When | Don't Build When |
+|---------|-----------|------------------|
+| `40-seo/` | Multiple surfaces need consistent SEO metadata | SEO limited to single simple app |
+| `41-compliance/` | Multiple surfaces need consistent consent | One-off banner suffices |
+| `41a-compliance-security-headers/` | GDPR/CCPA compliance headers required | Standard security headers sufficient |
+| `42a-monitoring-rum/` | Ranking-critical CrUX data needed | Lab scores (Lighthouse) sufficient |
+| `50-data-db/` | First internal tool needs persistent data | Storage needs are hypothetical |
+| `51-data-cms/` | First Sanity-backed client site arrives | Content lives in single app |
+| `51a-data-content-federation/` | Content from 2+ sources (Sanity + Shopify) | Single CMS source |
+| `51b-data-ai-enrichment/` | High content volume needs AI automation | Manual enrichment sufficient |
+| `52-data-api-client/` | Two+ apps call same internal API | One app with local route handlers |
+| `60-auth-internal/` | First internal tool needs authentication | Tools are public-only |
+| `61-auth-portal/` | First client portal needs login | Sites are brochure-only |
+| `70-71-email/` | First transactional email flow exists | Email needs are hypothetical |
+| `72-notifications/` | Multiple workflows need Slack/Discord/webhook | Single app calls provider directly |
+| `80-analytics/` | Multiple apps need provider abstraction | Analytics limited to single app |
+| `80a-analytics-attribution/` | Cross-channel marketing budget optimization | Last-click sufficient |
+| `80b-analytics-consent-bridge/` | 2+ analytics providers need unified consent | Single provider with built-in consent |
+| `81a-experimentation-edge/` | Zero-latency marketing A/B testing | Product experimentation (PostHog) sufficient |
+| `82a-lead-forms-progressive/` | Forms >4 fields or >40% abandonment | Simple 1-2 field forms |
+| `82b-lead-enrichment/` | Sales team needs enriched lead data | Manual research sufficient |
+| `90-91-testing/` | Repeated test config/factories observed | Test needs are unique per suite |
+| `c9-infra-security-headers/` | Google Ads compliance OR security audit | Vercel handles all security |
+| `b4-tools-content-pipeline/` | AI-assisted content workflows adopted | Low content volume (<5/week) |
+
+See individual package specs for full condition blocks with exit criteria.
 
 ## File Naming Convention
 
