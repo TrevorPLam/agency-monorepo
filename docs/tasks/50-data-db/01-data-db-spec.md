@@ -39,7 +39,7 @@ packages/data/database/
     "@agency/core-types": "workspace:*",
     "drizzle-orm": "0.45.2",
     "@neondatabase/serverless": "1.0.2",
-    "@supabase/supabase-js": "2.49.0"
+    "@supabase/supabase-js": "2.102.0"
   },
   "devDependencies": {
     "@agency/config-typescript": "workspace:*",

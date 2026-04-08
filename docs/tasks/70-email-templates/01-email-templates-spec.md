@@ -32,14 +32,15 @@ packages/communication/email-templates/
   },
   "dependencies": {
     "@agency/core-types": "workspace:*",
-    "@react-email/components": "1.0.10",
+    "@react-email/components": "latest",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",
     "@agency/config-typescript": "workspace:*",
-    "react-email": "latest"
+    "react-email": "^5.0.0",
+    "tailwindcss": "^4.x"
   },
   "publishConfig": { "access": "restricted" }
 }
@@ -87,23 +88,15 @@ interface WelcomeEmailProps {
 export function WelcomeEmail({ name, loginUrl }: WelcomeEmailProps) {
   return (
     <BaseLayout preview={`Welcome to Agency, ${name}`}>
-      <Heading style={{ color: "#111827", fontSize: "24px", fontWeight: 600 }}>
+      <Heading className="text-gray-900 text-2xl font-semibold">
         Welcome, {name}
       </Heading>
-      <Text style={{ color: "#374151", fontSize: "16px", lineHeight: "24px" }}>
+      <Text className="text-gray-700 text-base leading-6">
         Your account is ready. Click below to get started.
       </Text>
       <Button
         href={loginUrl}
-        style={{
-          backgroundColor: "#111827",
-          color: "#ffffff",
-          padding: "12px 24px",
-          borderRadius: "6px",
-          textDecoration: "none",
-          fontSize: "14px",
-          fontWeight: 500
-        }}
+        className="bg-gray-900 text-white px-6 py-3 rounded-md no-underline text-sm font-medium"
       >
         Go to Dashboard
       </Button>
@@ -125,27 +118,19 @@ interface PasswordResetEmailProps {
 export function PasswordResetEmail({ resetUrl, expiresInMinutes = 60 }: PasswordResetEmailProps) {
   return (
     <BaseLayout preview="Reset your password">
-      <Heading style={{ color: "#111827", fontSize: "24px", fontWeight: 600 }}>
+      <Heading className="text-gray-900 text-2xl font-semibold">
         Reset your password
       </Heading>
-      <Text style={{ color: "#374151", fontSize: "16px", lineHeight: "24px" }}>
+      <Text className="text-gray-700 text-base leading-6">
         Click the button below to reset your password. This link expires in {expiresInMinutes} minutes.
       </Text>
       <Button
         href={resetUrl}
-        style={{
-          backgroundColor: "#111827",
-          color: "#ffffff",
-          padding: "12px 24px",
-          borderRadius: "6px",
-          textDecoration: "none",
-          fontSize: "14px",
-          fontWeight: 500
-        }}
+        className="bg-gray-900 text-white px-6 py-3 rounded-md no-underline text-sm font-medium"
       >
         Reset Password
       </Button>
-      <Text style={{ color: "#6b7280", fontSize: "14px", marginTop: "24px" }}>
+      <Text className="text-gray-500 text-sm mt-6">
         If you did not request this, you can safely ignore this email.
       </Text>
     </BaseLayout>
@@ -170,29 +155,29 @@ interface InvoiceReceiptEmailProps {
 export function InvoiceReceiptEmail({ invoiceNumber, amount, currency, clientName, paidAt }: InvoiceReceiptEmailProps) {
   return (
     <BaseLayout preview={`Invoice ${invoiceNumber} paid`}>
-      <Heading style={{ color: "#111827", fontSize: "24px", fontWeight: 600 }}>
+      <Heading className="text-gray-900 text-2xl font-semibold">
         Payment Received
       </Heading>
-      <Text style={{ color: "#374151", fontSize: "16px" }}>
+      <Text className="text-gray-700 text-base">
         Hi {clientName}, thank you for your payment.
       </Text>
-      <Section style={{ backgroundColor: "#f9fafb", padding: "16px", borderRadius: "6px", margin: "24px 0" }}>
+      <Section className="bg-gray-50 p-4 rounded-md my-6">
         <Row>
           <Column>
-            <Text style={{ margin: 0, color: "#6b7280", fontSize: "14px" }}>Invoice</Text>
-            <Text style={{ margin: "4px 0 0", color: "#111827", fontSize: "18px", fontWeight: 600 }}>
+            <Text className="m-0 text-gray-500 text-sm">Invoice</Text>
+            <Text className="mt-1 text-gray-900 text-lg font-semibold">
               {invoiceNumber}
             </Text>
           </Column>
           <Column>
-            <Text style={{ margin: 0, color: "#6b7280", fontSize: "14px" }}>Amount</Text>
-            <Text style={{ margin: "4px 0 0", color: "#111827", fontSize: "18px", fontWeight: 600 }}>
+            <Text className="m-0 text-gray-500 text-sm">Amount</Text>
+            <Text className="mt-1 text-gray-900 text-lg font-semibold">
               {formatCurrency(amount / 100, currency)}
             </Text>
           </Column>
           <Column>
-            <Text style={{ margin: 0, color: "#6b7280", fontSize: "14px" }}>Date</Text>
-            <Text style={{ margin: "4px 0 0", color: "#111827", fontSize: "18px", fontWeight: 600 }}>
+            <Text className="m-0 text-gray-500 text-sm">Date</Text>
+            <Text className="mt-1 text-gray-900 text-lg font-semibold">
               {paidAt}
             </Text>
           </Column>
@@ -215,12 +200,24 @@ export { InvoiceReceiptEmail } from "./templates/invoice-receipt";
 ```md
 # @agency/email-templates
 React Email templates for transactional emails.
+
+## React Email 5.0 Migration Notes
+- Use `render` (not `renderAsync`) - synchronous in React Email 5.0
+- Tailwind 4 CSS classes supported with compatibility checking
+- Dark Mode Switcher available for email theming
+
 ## Usage
 ```tsx
 import { WelcomeEmail } from "@agency/email-templates/welcome";
 import { render } from "@react-email/components";
+
+// React Email 5.0: render is synchronous
 const html = await render(<WelcomeEmail name="John" loginUrl="https://..." />);
 ```
+
+## Testing
+Test in Mailtrap sandbox before production. See guide for details.
+
 ## Preview
 Run `pnpm email:dev` to start the React Email preview server.
 ```

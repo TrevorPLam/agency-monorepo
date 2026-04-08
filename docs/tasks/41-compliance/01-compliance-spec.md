@@ -147,6 +147,62 @@ export interface CookieInfo {
   expiry: string;
   type: string;
 }
+
+// 2026 CCPA/CPRA Additions - Effective January 1, 2026
+
+export type SensitivePersonalInfo =
+  | "ssn"
+  | "driver_license"
+  | "passport"
+  | "biometric"
+  | "health"
+  | "financial"
+  | "geolocation"
+  | "racial"
+  | "religious"
+  | "neural"; // NEW 2026: Neural data (EEG, BCI readings)
+
+export interface GlobalPrivacyControl {
+  signalDetected: boolean;
+  honored: boolean;
+  timestamp: string;
+  confirmationShown: boolean; // 2026: Must show visible confirmation
+}
+
+export interface AutomatedDecisionMaking {
+  enabled: boolean;
+  categories: ADMTCategory[];
+  optOutAvailable: boolean;
+  optOutMethod: string;
+  explanationUrl?: string;
+}
+
+export type ADMTCategory =
+  | "financial_services"
+  | "housing"
+  | "education"
+  | "employment"
+  | "healthcare"
+  | "insurance";
+
+export interface UserDataRights {
+  access: boolean;
+  deletion: boolean;
+  portability: boolean;
+  correction: boolean;
+  optOutSale: boolean;
+  optOutSharing: boolean;
+  optOutADMT: boolean; // NEW 2026: Right to opt out of automated decisions
+  limitUse: boolean;
+}
+
+export interface Compliance2026 {
+  gpc: GlobalPrivacyControl;
+  admt: AutomatedDecisionMaking;
+  dataRights: UserDataRights;
+  sensitiveInfoCollected: SensitivePersonalInfo[];
+  dataBrokerRegistered: boolean; // Required for data brokers Aug 2026
+}
 ```
 
 ### `src/store/consent-store.ts`
@@ -361,22 +417,215 @@ export function shouldShowConsentBanner(region: Region | null): boolean {
 // Client-side fallback using timezone
 export function detectRegionFromTimezone(): Region {
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  
+
   if (timezone.startsWith("Europe/")) {
     if (timezone === "Europe/London") return "UK";
     return "EU";
   }
-  
+
   if (timezone.startsWith("America/")) {
     // Rough approximation - production should use proper geolocation
     const caTimezones = ["America/Los_Angeles", "America/San_Francisco"];
     if (caTimezones.includes(timezone)) return "US-CA";
     return "US";
   }
-  
+
   return "OTHER";
 }
 ```
+
+### `src/utils/gpc-detection.ts`
+
+```typescript
+// Global Privacy Control (GPC) detection - REQUIRED for CCPA 2026 compliance
+// Effective January 1, 2026: Must detect, honor, and confirm GPC signals
+
+import type { GlobalPrivacyControl } from "../types";
+
+export interface GPCDetectionResult {
+  signalPresent: boolean;
+  signalAvailable: boolean; // Is GPC API available in browser
+}
+
+/**
+ * Detect GPC signal from browser
+ * Checks both navigator.globalPrivacyControl and Sec-GPC header
+ */
+export function detectGPCSignal(): GPCDetectionResult {
+  // Check if GPC is supported by browser
+  const gpcAvailable = typeof navigator !== 'undefined' && 
+    'globalPrivacyControl' in navigator;
+  
+  // Check the actual signal value
+  const gpcSignal = gpcAvailable 
+    ? (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl 
+    : undefined;
+  
+  return {
+    signalPresent: gpcSignal === true,
+    signalAvailable: gpcAvailable,
+  };
+}
+
+/**
+ * Determine if analytics/marketing should be blocked based on GPC
+ * 2026 Requirement: Must honor GPC as opt-out of sale/sharing
+ */
+export function shouldBlockTrackingDueToGPC(): boolean {
+  const { signalPresent } = detectGPCSignal();
+  return signalPresent;
+}
+
+/**
+ * Create GPC compliance record for 2026 CCPA requirements
+ * Must show visible confirmation (not silent processing)
+ */
+export function createGPCRecord(
+  confirmationShown: boolean
+): GlobalPrivacyControl {
+  const { signalPresent } = detectGPCSignal();
+  
+  return {
+    signalDetected: signalPresent,
+    honored: signalPresent, // Must honor if detected
+    timestamp: new Date().toISOString(),
+    confirmationShown, // 2026: Required visible confirmation
+  };
+}
+
+/**
+ * Server-side GPC detection from request headers
+ * Next.js middleware or API route usage
+ */
+export function detectGPCFromHeaders(headers: Headers): boolean {
+  // Check Sec-GPC header (1 = opt-out)
+  const gpcHeader = headers.get('sec-gpc');
+  return gpcHeader === '1';
+}
+
+/**
+ * Combined DNT (Do Not Track) and GPC check
+ * DNT: legacy, GPC: modern standard (2026)
+ */
+export function shouldRespectTrackingOptOut(request: Request): boolean {
+  const dnt = request.headers.get('dnt') === '1';
+  const gpc = detectGPCFromHeaders(request.headers);
+  
+  return dnt || gpc;
+}
+```
+
+### `src/components/gpc-indicator.tsx`
+
+```typescript
+"use client";
+
+import { useEffect, useState } from "react";
+import { detectGPCSignal, createGPCRecord } from "../utils/gpc-detection";
+import { useConsentStore } from "../store/consent-store";
+
+/**
+ * GPC Status Indicator - REQUIRED for 2026 CCPA compliance
+ * Must show visible confirmation that GPC signal is honored
+ */
+export function GPCIndicator() {
+  const [gpcStatus, setGpcStatus] = useState<{
+    detected: boolean;
+    available: boolean;
+  } | null>(null);
+  
+  const setConsent = useConsentStore((state) => state.setAllConsent);
+
+  useEffect(() => {
+    const gpc = detectGPCSignal();
+    setGpcStatus({
+      detected: gpc.signalPresent,
+      available: gpc.signalAvailable,
+    });
+
+    // If GPC detected, automatically opt out of sale/sharing
+    if (gpc.signalPresent) {
+      // Update consent to reflect GPC opt-out
+      setConsent({
+        necessary: true,
+        analytics: false,
+        marketing: false,
+        functional: false,
+        personalization: false,
+      });
+      
+      // Record GPC compliance
+      const record = createGPCRecord(true);
+      
+      // Send to analytics/consent bridge
+      console.log("GPC signal honored:", record);
+    }
+  }, [setConsent]);
+
+  // Only show if GPC is available in browser
+  if (!gpcStatus?.available) return null;
+
+  return (
+    <div 
+      role="status" 
+      aria-live="polite"
+      className="text-sm text-muted-foreground"
+    >
+      {gpcStatus.detected ? (
+        <span className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-green-500" aria-hidden="true" />
+          Global Privacy Control active - tracking disabled
+        </span>
+      ) : (
+        <span className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-gray-400" aria-hidden="true" />
+          GPC not detected
+        </span>
+      )}
+    </div>
+  );
+}
+```
+
+### 2026 CCPA/CPRA Compliance Notes
+
+**Effective January 1, 2026:**
+
+1. **Global Privacy Control (GPC)**
+   - Must detect `navigator.globalPrivacyControl` or `Sec-GPC` header
+   - Signal MUST be honored as opt-out of sale/sharing
+   - Must show visible confirmation (not silent processing)
+   - Joint enforcement by CA, CO, CT attorneys general since Sept 2025
+
+2. **Neural Data as Sensitive PI**
+   - Added to sensitive personal information categories
+   - Includes EEG readings, brain-computer interface data
+   - Requires explicit opt-in consent
+
+3. **Automated Decision-Making (ADMT)**
+   - Consumers can request info about ADMT methodology
+   - Can appeal automated decisions
+   - Can opt out of ADMT processing entirely (with limited exceptions)
+   - Applies to financial services, housing, education, employment, healthcare
+
+4. **Opt-Out Confirmation**
+   - Shifted from optional to mandatory Jan 2026
+   - Businesses must provide visible confirmation that opt-out processed
+
+5. **Historical Data Access**
+   - Extended data access windows to Jan 2022 or earlier if maintained
+   - Must be documented in privacy policy
+
+6. **Data Broker Registration**
+   - DROP (Delete Request and Opt-out Platform) available Jan 2026
+   - Data brokers must access system every 45 days starting Aug 2026
+
+**Phased Deadlines:**
+- Jan 1, 2027: ADMT requirements for existing systems
+- Apr 1, 2028: Cybersecurity audits ($100M+ revenue)
+- Apr 1, 2029: Cybersecurity audits ($50M-$100M revenue)
+- Apr 1, 2030: Cybersecurity audits (<$50M revenue)
+
 
 ### `src/index.ts`
 

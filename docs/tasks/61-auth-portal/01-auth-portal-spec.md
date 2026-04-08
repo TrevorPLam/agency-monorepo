@@ -33,7 +33,8 @@ packages/auth/portal/
   "dependencies": {
     "@agency/core-types": "workspace:*",
     "@agency/data-db": "workspace:*",
-    "better-auth": "1.5.0",
+    "better-auth": "1.6.0",
+    "@better-auth/drizzle-adapter": "1.6.0",
     "@supabase/supabase-js": "2.49.0"
   },
   "devDependencies": {
@@ -47,15 +48,18 @@ packages/auth/portal/
 ### `src/auth.ts` (Better Auth - Primary)
 ```ts
 import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import type { DatabaseClient } from "@agency/data-db";
 
 export function createAuth(db: DatabaseClient) {
   return betterAuth({
     database: drizzleAdapter(db, { provider: "pg" }),
     emailAndPassword: { enabled: true },
+    // Better Auth 1.6.0: Experimental joins for 2-3x performance improvement
+    experimental: { joins: true },
     plugins: [
       // Enable as needed: twoFactor(), passkey(), organization()
+      // Note: oidc-provider is deprecated in 1.6.0 - use @better-auth/oauth-provider instead
     ]
   });
 }

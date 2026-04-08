@@ -167,6 +167,7 @@ export function createDiscordProvider(config: DiscordConfig): NotificationProvid
 ### `src/webhook.ts`
 ```ts
 import type { NotificationPayload, NotificationProvider } from "./types";
+import { createHmac, timingSafeEqual } from "node:crypto";
 
 interface WebhookConfig {
   url: string;
@@ -174,16 +175,42 @@ interface WebhookConfig {
   secret?: string;
 }
 
+function generateSignature(payload: NotificationPayload, secret: string, timestamp: number): string {
+  const data = `${timestamp}.${JSON.stringify(payload)}`;
+  return createHmac("sha256", secret).update(data).digest("hex");
+}
+
+function verifySignature(
+  payload: NotificationPayload,
+  secret: string,
+  signature: string,
+  timestamp: number,
+  toleranceSeconds = 300
+): boolean {
+  // Prevent replay attacks: reject if timestamp > 5 minutes old
+  if (Math.abs(Date.now() / 1000 - timestamp) > toleranceSeconds) {
+    return false;
+  }
+  const expected = generateSignature(payload, secret, timestamp);
+  try {
+    return timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+  } catch {
+    return false;
+  }
+}
+
 export function createWebhookProvider(config: WebhookConfig): NotificationProvider {
   return {
     async send(payload: NotificationPayload) {
+      const timestamp = Math.floor(Date.now() / 1000);
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
         ...config.headers
       };
 
       if (config.secret) {
-        headers["X-Webhook-Signature"] = generateSignature(payload, config.secret);
+        headers["X-Webhook-Signature"] = generateSignature(payload, config.secret, timestamp);
+        headers["X-Webhook-Timestamp"] = timestamp.toString();
       }
 
       const response = await fetch(config.url, {
@@ -203,10 +230,122 @@ export function createWebhookProvider(config: WebhookConfig): NotificationProvid
     }
   };
 }
+```
 
-function generateSignature(payload: NotificationPayload, secret: string): string {
-  // In production, use crypto.subtle or node:crypto for HMAC
-  return `sha256=${secret.slice(0, 16)}`;
+### `src/sse.ts` (Server-Sent Events for In-App Notifications)
+```ts
+// Server-Sent Events implementation for real-time in-app notifications
+// SSE is preferred over WebSockets for one-way server-to-client push
+
+export interface SSEConfig {
+  endpoint: string;
+  headers?: Record<string, string>;
+  onMessage?: (data: unknown) => void;
+  onError?: (error: Error) => void;
+}
+
+export function createSSEConnection(config: SSEConfig): { close: () => void } {
+  const eventSource = new EventSource(config.endpoint);
+  
+  eventSource.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      config.onMessage?.(data);
+    } catch (err) {
+      config.onError?.(err as Error);
+    }
+  };
+  
+  eventSource.onerror = (err) => {
+    config.onError?.(new Error("SSE connection error"));
+  };
+  
+  return {
+    close: () => eventSource.close()
+  };
+}
+
+// Server-side SSE stream for Next.js App Router
+export async function* createNotificationStream(
+  userId: string
+): AsyncGenerator<string, void, unknown> {
+  const encoder = new TextEncoder();
+  
+  while (true) {
+    // Check for new notifications
+    const notifications = await fetchPendingNotifications(userId);
+    
+    for (const notification of notifications) {
+      yield encoder.encode(`data: ${JSON.stringify(notification)}\n\n`);
+    }
+    
+    // Wait before next check
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+}
+
+async function fetchPendingNotifications(userId: string): Promise<unknown[]> {
+  // Implementation depends on @agency/data-db
+  return [];
+}
+```
+
+### `src/fcm.ts` (Firebase Cloud Messaging for Push Notifications)
+```ts
+// FCM is completely free with unlimited push notifications (2026)
+// Use for mobile push and web push
+
+interface FCMConfig {
+  serverKey: string;
+  projectId: string;
+}
+
+interface PushNotification {
+  token: string;
+  title: string;
+  body: string;
+  data?: Record<string, string>;
+  icon?: string;
+  clickAction?: string;
+}
+
+export function createFCMProvider(config: FCMConfig) {
+  return {
+    async send(notification: PushNotification): Promise<{ success: boolean }> {
+      const response = await fetch(
+        `https://fcm.googleapis.com/v1/projects/${config.projectId}/messages:send`,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${config.serverKey}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            message: {
+              token: notification.token,
+              notification: {
+                title: notification.title,
+                body: notification.body,
+                image: notification.icon
+              },
+              data: notification.data,
+              webpush: notification.clickAction ? {
+                fcm_options: {
+                  link: notification.clickAction
+                }
+              } : undefined
+            }
+          })
+        }
+      );
+      
+      if (!response.ok) {
+        throw new Error(`FCM send failed: ${response.statusText}`);
+      }
+      
+      return { success: true };
+    }
+  };
 }
 ```
 
@@ -215,6 +354,8 @@ function generateSignature(payload: NotificationPayload, secret: string): string
 export { createSlackProvider } from "./slack";
 export { createDiscordProvider } from "./discord";
 export { createWebhookProvider } from "./webhook";
+export { createSSEConnection, createNotificationStream } from "./sse";
+export { createFCMProvider } from "./fcm";
 export type {
   NotificationPayload,
   NotificationProvider,
@@ -225,8 +366,11 @@ export type {
 ### README
 ```md
 # @agency/notifications
-Slack, Discord, and generic webhook notification providers.
+Slack, Discord, webhooks, SSE (in-app), and FCM (push) notification providers.
+
 ## Usage
+
+### Channel Notifications
 ```ts
 import { createSlackProvider } from "@agency/notifications/slack";
 
@@ -239,6 +383,40 @@ await slack.send({
   url: "https://agency.com/projects/123"
 });
 ```
+
+### In-App Notifications (SSE)
+```ts
+import { createSSEConnection } from "@agency/notifications";
+
+// Client-side (React component)
+const { close } = createSSEConnection({
+  endpoint: "/api/notifications/stream",
+  onMessage: (notification) => {
+    // Add to notification bell UI
+  }
+});
+```
+
+### Push Notifications (FCM)
+```ts
+import { createFCMProvider } from "@agency/notifications/fcm";
+
+const fcm = createFCMProvider({
+  serverKey: process.env.FCM_SERVER_KEY,
+  projectId: process.env.FCM_PROJECT_ID
+});
+
+await fcm.send({
+  token: userDeviceToken,
+  title: "New Message",
+  body: "You have a new notification",
+  clickAction: "/notifications"
+});
+```
+
+## Webhook Security
+All webhook providers implement HMAC-SHA256 signature verification with timestamp validation to prevent replay attacks. Signatures older than 5 minutes are rejected.
+
 ## When to Add
 Only create this package when two or more apps need to send the same notification type.
 ```

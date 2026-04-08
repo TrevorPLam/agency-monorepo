@@ -93,7 +93,7 @@ export interface CompanyData {
 }
 
 export interface EnrichmentConfig {
-  provider: 'clearbit' | 'apollo' | 'mock';
+  provider: 'apollo' | 'zoominfo' | 'cognism' | 'lusha' | 'mock';
   apiKey: string;
   cacheEnabled: boolean;
   cacheTtl: number;  // seconds
@@ -101,75 +101,99 @@ export interface EnrichmentConfig {
 }
 ```
 
-### `src/providers/clearbit.ts`
+### `src/providers/apollo.ts`
 
 ```typescript
-// Clearbit Enrichment API integration
+// Apollo.io Enrichment API integration
+// Primary provider as of April 2026 (replaces deprecated Clearbit)
 
 import type { EnrichedLead, EnrichmentConfig } from '../types';
 
-const CLEARBIT_API = 'https://person.clearbit.com/v2/combined/find';
+const APOLLO_API = 'https://api.apollo.io/v1';
 
-export async function enrichWithClearbit(
+export async function enrichWithApollo(
   email: string,
   config: EnrichmentConfig
 ): Promise<EnrichedLead | null> {
   try {
     const response = await fetch(
-      `${CLEARBIT_API}?email=${encodeURIComponent(email)}`,
+      `${APOLLO_API}/people/match`,
       {
+        method: 'POST',
         headers: {
-          'Authorization': `Bearer ${config.apiKey}`
-        }
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'X-Api-Key': config.apiKey
+        },
+        body: JSON.stringify({
+          email,
+          // Privacy-compliant: don't request personal emails
+          reveal_personal_emails: false,
+          // Direct dial costs extra credits - disable by default
+          show_direct_dial: false
+        })
       }
     );
 
     if (!response.ok) {
       if (response.status === 404) return null;
-      throw new Error(`Clearbit API error: ${response.status}`);
+      if (response.status === 429) {
+        // Rate limit: implement backoff
+        throw new Error('Apollo rate limit exceeded');
+      }
+      throw new Error(`Apollo API error: ${response.status}`);
     }
 
     const data = await response.json();
+    const person = data.person;
+    const organization = person?.organization;
 
     return {
       email,
-      person: data.person ? {
-        name: data.person.name?.fullName,
-        title: data.person.employment?.title,
-        role: standardizeRole(data.person.employment?.role),
-        seniority: standardizeSeniority(data.person.employment?.seniority),
-        linkedin: data.person.linkedin?.handle,
-        twitter: data.person.twitter?.handle,
-        bio: data.person.bio,
-        avatar: data.person.avatar
+      person: person ? {
+        name: person.name,
+        title: person.title,
+        role: standardizeRole(person.title),
+        seniority: standardizeSeniority(person.title),
+        linkedin: person.linkedin_url,
+        bio: person.bio,
+        avatar: person.photo_url
       } : undefined,
-      company: data.company ? {
-        name: data.company.name,
-        domain: data.company.domain,
-        industry: data.company.category?.industry,
-        subIndustry: data.company.category?.subIndustry,
-        size: standardizeSize(data.company.metrics?.employees),
-        employeeCount: data.company.metrics?.employees,
-        revenue: data.company.metrics?.estimatedAnnualRevenue,
-        founded: data.company.foundedYear,
+      company: organization ? {
+        name: organization.name,
+        domain: organization.domain,
+        industry: organization.industry,
+        subIndustry: organization.sub_industry,
+        size: standardizeSize(organization.estimated_num_employees),
+        employeeCount: organization.estimated_num_employees,
+        revenue: organization.annual_revenue,
+        founded: organization.founded_year,
         location: {
-          city: data.company.geo?.city,
-          state: data.company.geo?.state,
-          country: data.company.geo?.country
+          city: organization.city,
+          state: organization.state,
+          country: organization.country
         },
-        technologies: data.company.tech,
-        linkedin: data.company.linkedin?.handle,
-        twitter: data.company.twitter?.handle,
-        logo: data.company.logo
+        technologies: organization.technologies,
+        linkedin: organization.linkedin_url,
+        logo: organization.logo_url
       } : undefined,
-      enrichmentScore: calculateScore(data),
+      enrichmentScore: calculateApolloScore(person, organization),
       enrichedAt: new Date().toISOString(),
-      source: 'clearbit'
+      source: 'apollo'
     };
   } catch (error) {
-    console.error('Clearbit enrichment failed:', error);
+    console.error('Apollo enrichment failed:', error);
     return null;
   }
+}
+
+function calculateApolloScore(person: any, organization: any): number {
+  let score = 0;
+  if (person) score += 30;
+  if (organization) score += 30;
+  if (person?.title) score += 20;
+  if (organization?.estimated_num_employees) score += 20;
+  return score;
 }
 
 function standardizeRole(role?: string): PersonData['role'] {
@@ -217,7 +241,7 @@ function calculateScore(data: any): number {
 // Main enrichment orchestrator
 
 import type { EnrichedLead, EnrichmentConfig, LeadFormData } from './types';
-import { enrichWithClearbit } from './providers/clearbit';
+import { enrichWithApollo } from './providers/apollo';
 import { getCachedEnrichment, cacheEnrichment } from './cache';
 
 export class LeadEnricher {
@@ -238,10 +262,13 @@ export class LeadEnricher {
     let enriched: EnrichedLead | null = null;
 
     switch (this.config.provider) {
-      case 'clearbit':
-        enriched = await enrichWithClearbit(email, this.config);
+      case 'apollo':
+        enriched = await enrichWithApollo(email, this.config);
         break;
-      // Add other providers here
+      case 'mock':
+        enriched = await this.mockEnrich(email);
+        break;
+      // Add other providers (zoominfo, cognism, lusha) here
     }
 
     // Merge with form data if enrichment incomplete
@@ -366,6 +393,11 @@ export function routeLead(score: LeadScore): 'sales' | 'nurture' | 'qualified' {
 
 Social profile data enhancement for lead forms.
 
+## Provider Migration Notice (April 2026)
+
+Clearbit has been deprecated and is now HubSpot Breeze Intelligence (HubSpot-only).
+Apollo.io is the recommended replacement with a generous free tier and 230M+ contacts.
+
 ## The Problem
 
 - Form asks: Name, Email, Company, Title, Size, Industry
@@ -379,8 +411,8 @@ Ask only email, enrich the rest:
 import { LeadEnricher } from '@agency/lead-capture-enrichment';
 
 const enricher = new LeadEnricher({
-  provider: 'clearbit',
-  apiKey: process.env.CLEARBIT_KEY,
+  provider: 'apollo',
+  apiKey: process.env.APOLLO_API_KEY,
   cacheEnabled: true,
   cacheTtl: 86400 // 24 hours
 });

@@ -684,6 +684,179 @@ export function trackConversion(event: ConversionEvent) {
 }
 ```
 
+### Server-Side Tracking (Next.js App Router)
+
+```typescript
+// src/server/posthog-server.ts
+// Server-side analytics for Next.js App Router Server Components
+// Bypasses ad-blockers and handles iOS privacy restrictions
+
+import { PostHog } from 'posthog-node';
+
+// Singleton pattern for serverless environments
+let posthogClient: PostHog | null = null;
+
+export function getServerPostHog(): PostHog {
+  if (!posthogClient) {
+    posthogClient = new PostHog(process.env.POSTHOG_SERVER_KEY!, {
+      host: process.env.POSTHOG_HOST || 'https://app.posthog.com',
+      // Flush immediately for serverless (no batching)
+      flushAt: 1,
+      flushInterval: 0,
+    });
+  }
+  return posthogClient;
+}
+
+export interface ServerTrackEvent {
+  event: string;
+  properties?: Record<string, unknown>;
+  userId?: string;
+  anonymousId?: string;
+}
+
+export async function trackServerEvent({
+  event,
+  properties = {},
+  userId,
+  anonymousId,
+}: ServerTrackEvent) {
+  const client = getServerPostHog();
+  
+  // Use anonymous ID if no user ID
+  const distinctId = userId || anonymousId || `anon_${generateId()}`;
+  
+  client.capture({
+    distinctId,
+    event,
+    properties: {
+      ...properties,
+      // Mark as server-tracked for filtering
+      $lib: 'server-node',
+      // Add server timestamp
+      server_timestamp: new Date().toISOString(),
+    },
+  });
+  
+  // Flush immediately for serverless
+  await client.flush();
+}
+
+// Helper for Server Components
+export async function trackPageViewServer(
+  pathname: string,
+  searchParams: Record<string, string>,
+  headers: Headers
+) {
+  const userAgent = headers.get('user-agent') || '';
+  const referrer = headers.get('referer') || '';
+  
+  await trackServerEvent({
+    event: '$pageview',
+    properties: {
+      pathname,
+      search_params: searchParams,
+      referrer,
+      // Server-only data
+      user_agent_hash: hashString(userAgent),
+      // iOS app detection (for SKAdNetwork compatibility note)
+      is_ios_app: detectIosApp(userAgent),
+    },
+  });
+}
+
+function generateId(): string {
+  return Math.random().toString(36).substring(2, 15);
+}
+
+function hashString(str: string): string {
+  // Simple hash for privacy - not meant to be reversible
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return hash.toString(16);
+}
+
+function detectIosApp(userAgent: string): boolean {
+  return /iPhone|iPad|iPod/.test(userAgent) && !/Safari/.test(userAgent);
+}
+```
+
+### Server Component Usage
+
+```typescript
+// app/blog/[slug]/page.tsx
+import { trackPageViewServer } from '@agency/analytics/server';
+import { headers } from 'next/headers';
+
+export default async function BlogPost({ 
+  params 
+}: { 
+  params: { slug: string } 
+}) {
+  // Track server-side (bypasses ad-blockers)
+  const headersList = headers();
+  await trackPageViewServer(
+    `/blog/${params.slug}`,
+    {},
+    headersList
+  );
+  
+  return (
+    <article>
+      {/* Page content */}
+    </article>
+  );
+}
+```
+
+### Server/Client Provider Pattern
+
+```typescript
+// src/providers/analytics-provider.tsx
+'use client';
+
+import { PostHogProvider } from 'posthog-js/react';
+import { useEffect } from 'react';
+
+interface AnalyticsProviderProps {
+  children: React.ReactNode;
+  // Server-fetched distinct ID for session continuity
+  serverDistinctId?: string;
+}
+
+export function AnalyticsProvider({ 
+  children, 
+  serverDistinctId 
+}: AnalyticsProviderProps) {
+  useEffect(() => {
+    // Initialize client-side PostHog
+    if (typeof window !== 'undefined') {
+      import('posthog-js').then((posthog) => {
+        posthog.default.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
+          api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+          // Use server distinct ID if available (session continuity)
+          loaded: (ph) => {
+            if (serverDistinctId) {
+              ph.identify(serverDistinctId);
+            }
+          },
+        });
+      });
+    }
+  }, [serverDistinctId]);
+
+  return (
+    <PostHogProvider client={undefined}>
+      {children}
+    </PostHogProvider>
+  );
+}
+```
+
 ## Environment Variables
 
 Apps using this package need:
@@ -695,6 +868,10 @@ NEXT_PUBLIC_PLAUSIBLE_DOMAIN=agency.com
 # PostHog
 NEXT_PUBLIC_POSTHOG_KEY=phc_...
 NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
+POSTHOG_SERVER_KEY=phc_... (server-side key, different from client key)
+
+# PostHog Feature Flags (server-side)
+POSTHOG_PERSONAL_API_KEY=phx_... (for local evaluation)
 
 # GA4
 NEXT_PUBLIC_GA4_MEASUREMENT_ID=G-...

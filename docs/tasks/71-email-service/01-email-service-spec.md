@@ -9,9 +9,12 @@ packages/communication/email-service/
 └── src/
     ├── index.ts
     ├── types.ts
+    ├── queue.ts
+    ├── retry.ts
     ├── providers/
     │   ├── resend.ts
-    │   └── postmark.ts
+    │   ├── postmark.ts
+    │   └── brevo.ts
     └── send.ts
 ```
 
@@ -30,7 +33,10 @@ packages/communication/email-service/
   "dependencies": {
     "@agency/email-templates": "workspace:*",
     "resend": "latest",
-    "postmark": "4.0.7"
+    "postmark": "4.0.7",
+    "@getbrevo/brevo": "latest",
+    "bullmq": "^5.0.0",
+    "ioredis": "^5.0.0"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",
@@ -66,6 +72,25 @@ export interface EmailProvider {
 }
 
 export type EmailTemplate = "welcome" | "password-reset" | "invoice-receipt" | "notification-digest";
+
+export interface QueuedEmailOptions extends SendEmailOptions {
+  id?: string;
+  delay?: number;
+  attempts?: number;
+}
+
+export interface EmailQueue {
+  add(email: QueuedEmailOptions): Promise<{ id: string }>;
+}
+
+// Bounce event types for webhook handling
+export interface BounceEvent {
+  type: "hard" | "soft" | "complaint" | "delivery";
+  email: string;
+  messageId: string;
+  reason?: string;
+  timestamp: string;
+}
 ```
 
 ### `src/providers/resend.ts`
@@ -146,22 +171,115 @@ function formatRecipients(r: SendEmailOptions["to"]): string {
 }
 ```
 
+### `src/providers/brevo.ts`
+```ts
+import { TransactionalEmailsApi, SendSmtpEmail } from "@getbrevo/brevo";
+import type { EmailProvider, SendEmailOptions } from "../types";
+
+export function createBrevoProvider(apiKey: string): EmailProvider {
+  const api = new TransactionalEmailsApi();
+  api.setApiKey(0, apiKey); // 0 = api-key
+
+  return {
+    async send(options: SendEmailOptions) {
+      const sendSmtpEmail = new SendSmtpEmail();
+      sendSmtpEmail.subject = options.subject;
+      sendSmtpEmail.htmlContent = options.html;
+      sendSmtpEmail.textContent = options.text;
+      sendSmtpEmail.sender = { email: options.from.email, name: options.from.name };
+      sendSmtpEmail.to = formatRecipientsBrevo(options.to);
+      
+      if (options.replyTo) {
+        sendSmtpEmail.replyTo = { email: options.replyTo.email, name: options.replyTo.name };
+      }
+
+      const result = await api.sendTransacEmail(sendSmtpEmail);
+      return { id: result.messageId ?? "unknown", success: true };
+    }
+  };
+}
+
+function formatRecipientsBrevo(r: SendEmailOptions["to"]): Array<{ email: string; name?: string }> {
+  if (Array.isArray(r)) return r;
+  return [r];
+}
+```
+
+### `src/queue.ts`
+```ts
+import { Queue } from "bullmq";
+import Redis from "ioredis";
+import type { QueuedEmailOptions, EmailQueue } from "./types";
+
+interface EmailJobData extends QueuedEmailOptions {
+  provider: "resend" | "postmark" | "brevo";
+}
+
+export function createEmailQueue(redisUrl: string): EmailQueue {
+  const queue = new Queue<EmailJobData>("email-queue", {
+    connection: new Redis(redisUrl),
+    defaultJobOptions: {
+      attempts: 5,
+      backoff: {
+        type: "exponential",
+        delay: 2000 // Initial delay 2s, then 4s, 8s, 16s, 32s
+      },
+      removeOnComplete: 100,
+      removeOnFail: 50
+    }
+  });
+
+  return {
+    async add(email: QueuedEmailOptions) {
+      const job = await queue.add("send-email", email as EmailJobData, {
+        delay: email.delay,
+        attempts: email.attempts ?? 5
+      });
+      return { id: job.id ?? "unknown" };
+    }
+  };
+}
+```
+
+### `src/retry.ts`
+```ts
+// Exponential backoff with jitter for rate limit handling
+export function calculateRetryDelay(attempt: number, baseDelayMs = 2000): number {
+  const exponentialDelay = baseDelayMs * Math.pow(2, attempt - 1);
+  const jitter = Math.random() * 0.1 * exponentialDelay; // 0-10% jitter
+  return Math.min(exponentialDelay + jitter, 60000); // Cap at 60s
+}
+
+// Provider-specific rate limits (April 2026)
+export const RATE_LIMITS = {
+  resend: { free: 5, paid: 100 },      // requests per second
+  postmark: { free: 5, paid: 100 },  // requests per second
+  brevo: { free: 10, paid: 200 }     // requests per second
+} as const;
+```
+
 ### `src/send.ts`
 ```ts
 import { createResendProvider } from "./providers/resend";
 import { createPostmarkProvider } from "./providers/postmark";
+import { createBrevoProvider } from "./providers/brevo";
 import type { EmailProvider, SendEmailOptions } from "./types";
 
 export interface EmailServiceConfig {
   resendApiKey?: string;
   postmarkApiKey?: string;
+  brevoApiKey?: string;
   defaultFrom: { email: string; name: string };
+  redisUrl?: string; // Required for queue mode
 }
 
 export function createEmailService(config: EmailServiceConfig): EmailProvider {
+  // Provider priority: Postmark > Brevo > Resend (default)
   const provider = config.postmarkApiKey
     ? createPostmarkProvider(config.postmarkApiKey)
-    : createResendProvider(config.resendApiKey ?? "");
+    : config.brevoApiKey
+      ? createBrevoProvider(config.brevoApiKey)
+      : createResendProvider(config.resendApiKey ?? "");
 
   return {
     async send(options: SendEmailOptions) {
@@ -187,11 +305,17 @@ export async function sendTransactionalEmail(
 export { createEmailService, sendTransactionalEmail } from "./send";
 export { createResendProvider } from "./providers/resend";
 export { createPostmarkProvider } from "./providers/postmark";
+export { createBrevoProvider } from "./providers/brevo";
+export { createEmailQueue } from "./queue";
+export { calculateRetryDelay, RATE_LIMITS } from "./retry";
 export type {
   EmailRecipient,
   SendEmailOptions,
   EmailProvider,
-  EmailTemplate
+  EmailTemplate,
+  QueuedEmailOptions,
+  EmailQueue,
+  BounceEvent
 } from "./types";
 ```
 
@@ -218,7 +342,31 @@ await email.send({
 });
 ```
 ## Provider Selection
-- If `POSTMARK_API_KEY` is set, Postmark is used
-- Otherwise Resend is used
-- Zero application code changes required to switch
+Priority order (environment variable check):
+1. `POSTMARK_API_KEY` → Postmark (premium deliverability)
+2. `BREVO_API_KEY` → Brevo (marketing + transactional blend)
+3. `RESEND_API_KEY` → Resend (default, developer-friendly)
+
+Zero application code changes required to switch providers.
+
+## Queue Mode (High Volume)
+For high-volume sending, use the queue interface with BullMQ:
+```ts
+import { createEmailQueue } from "@agency/email-service";
+
+const queue = createEmailQueue(process.env.REDIS_URL);
+await queue.add({
+  to: { email: "user@example.com", name: "User" },
+  subject: "Welcome",
+  html: renderedTemplate,
+  delay: 5000, // Optional: delay 5 seconds
+  attempts: 5  // Retry up to 5 times with exponential backoff
+});
+```
+
+## Rate Limiting
+Built-in exponential backoff for provider rate limits:
+- Resend: 5 req/s (free), 100 req/s (paid)
+- Postmark: 5 req/s (free), 100 req/s (paid)
+- Brevo: 10 req/s (free), 200 req/s (paid)
 ```

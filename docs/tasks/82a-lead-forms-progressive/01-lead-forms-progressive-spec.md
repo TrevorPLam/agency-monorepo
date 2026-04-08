@@ -54,7 +54,8 @@ packages/lead-capture/progressive-forms/
 ### `src/machine.ts`
 
 ```typescript
-// XState-based form state machine
+// XState v5-based form state machine
+// Migrated from v4: Machine() -> createMachine(), interpret() -> createActor()
 
 import { createMachine, assign } from 'xstate';
 import { z } from 'zod';
@@ -141,11 +142,13 @@ export function createFormMachine(config: FormConfig) {
         history: (ctx) => [...ctx.history, ctx.currentStep]
       })
     },
+    // XState v5: guards use 'guard' property instead of 'cond'
+    // Transitions are internal by default (no 'internal: false' needed)
     guards: {
-      isStepValid: (ctx) => {
-        const step = config.steps[ctx.currentStep];
+      isStepValid: ({ context }) => {
+        const step = config.steps[context.currentStep];
         for (const field of step.fields) {
-          const value = ctx.formData[field.name];
+          const value = context.formData[field.name];
           if (!field.validation.safeParse(value).success) {
             return false;
           }
@@ -153,9 +156,9 @@ export function createFormMachine(config: FormConfig) {
         return true;
       },
       
-      canSkip: (ctx) => {
-        const nextStep = config.steps[ctx.currentStep + 1];
-        return nextStep?.skipIf?.(ctx.formData) ?? false;
+      canSkip: ({ context }) => {
+        const nextStep = config.steps[context.currentStep + 1];
+        return nextStep?.skipIf?.(context.formData) ?? false;
       }
     }
   });
@@ -204,14 +207,17 @@ function generateStepStates(steps: FormStep[]) {
 ```typescript
 'use client';
 
+// XState v5: useMachine() returns [snapshot, actor] instead of [state, send, service]
+// useActorRef() available for actor reference if needed
 import { useMachine } from '@xstate/react';
 import { createFormMachine, type FormConfig } from '../machine';
 
 export function useProgressiveForm(config: FormConfig) {
   const machine = createFormMachine(config);
-  const [state, send] = useMachine(machine);
+  // XState v5: useMachine returns [snapshot, actor]
+  const [snapshot, actor] = useMachine(machine);
 
-  const currentStep = state.context.currentStep;
+  const currentStep = snapshot.context.currentStep;
   const stepConfig = config.steps[currentStep];
   const progress = ((currentStep + 1) / config.steps.length) * 100;
 
@@ -219,16 +225,18 @@ export function useProgressiveForm(config: FormConfig) {
     currentStep,
     stepConfig,
     progress,
-    formData: state.context.formData,
-    errors: state.context.errors,
-    isValid: state.matches('valid'),
-    isSubmitting: state.matches('submitting'),
-    isSuccess: state.matches('success'),
+    formData: snapshot.context.formData,
+    errors: snapshot.context.errors,
+    // XState v5: snapshot.status === 'done' instead of state.done
+    isValid: snapshot.status === 'active',
+    isSubmitting: snapshot.matches({ submitting: 'pending' }),
+    isSuccess: snapshot.status === 'done',
     
-    next: (data: Record<string, any>) => send({ type: 'NEXT', data }),
-    prev: () => send({ type: 'PREV' }),
-    submit: () => send({ type: 'SUBMIT' }),
-    setData: (data: Record<string, any>) => send({ type: 'SET_DATA', data })
+    // XState v5: actor.send() instead of send()
+    next: (data: Record<string, any>) => actor.send({ type: 'NEXT', data }),
+    prev: () => actor.send({ type: 'PREV' }),
+    submit: () => actor.send({ type: 'SUBMIT' }),
+    setData: (data: Record<string, any>) => actor.send({ type: 'SET_DATA', data })
   };
 }
 ```
