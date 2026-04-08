@@ -1,0 +1,166 @@
+# ADR 003: Database and ORM Selection
+
+## Status
+
+Accepted
+
+## Date
+
+2026-04-08
+
+## Context
+
+We needed a database and ORM strategy for the agency’s operational data model, including clients, projects, invoices, sessions, and other application-owned records.
+
+The selected stack had to support:
+
+- serverless deployment patterns,
+- type-safe queries,
+- migration management,
+- branch-friendly development workflows,
+- strong client data isolation.
+
+This repository is optimized for Next.js applications deployed primarily on Vercel, so the database layer had to work well in serverless and edge-adjacent environments rather than assuming long-lived Node servers.
+
+The choice also needed to support two different authentication lanes:
+
+- internal tools with managed auth,
+- client-facing portals where data ownership and self-hosting matter more.
+
+## Decision
+
+Use **Neon PostgreSQL** as the default operational database host and **Drizzle ORM** as the ORM and schema layer.
+
+Use **Better Auth** as the authentication framework for client-facing portals that require self-hosted session and user ownership.
+
+Use **Clerk** for internal tools, but do not use Clerk as the default auth solution for client portals.
+
+This decision also includes the following operational rules:
+
+- `agencydata-db` is the single source of truth for operational schema definitions, migrations, and typed query modules.
+- Every table containing client-specific data must include a non-nullable `clientId` column.
+- Every query module operating on client-owned data must require and enforce a `clientId` filter.
+- Drizzle Kit generates schema migrations from TypeScript schema definitions.
+- Destructive schema changes require a documented rollout and rollback plan.
+
+## Decision Rationale
+
+### Neon over traditional managed PostgreSQL
+
+Neon was chosen because it provides:
+
+- true serverless PostgreSQL,
+- connection pooling suited to serverless deployments,
+- database branching for isolated feature and preview work,
+- pay-per-compute economics that fit both small and growing agency workloads,
+- a driver model that works well with modern serverless app architecture.
+
+Neon branching is especially valuable in this repository because feature work, pull requests, and AI-generated changes can be tested against isolated database branches instead of a shared mutable development database.
+
+### Drizzle over Prisma
+
+Drizzle ORM was chosen because it provides:
+
+- TypeScript-first schema and query authoring,
+- typed queries without a heavy runtime code generation model,
+- a SQL-like API that stays close to the database,
+- smaller runtime and bundle overhead,
+- strong compatibility with Neon’s serverless approach.
+
+This is a better fit for the repository than Prisma because the monorepo is being designed for portability, low overhead, and serverless-friendly execution.
+
+### Better Auth for portals
+
+Better Auth was chosen for client portals because it is self-hosted, integrates naturally with Drizzle, and keeps user and session data inside the agency-controlled database boundary.
+
+That matters more for client portals than for internal tools because portal users are external users, pricing sensitivity is higher at scale, and data ownership is a first-order requirement.
+
+## Consequences
+
+### Positive
+
+- Typed queries remain close to the schema definition without a large runtime layer.
+- The database stack stays compatible with serverless deployment constraints.
+- Neon branching supports safer preview and feature workflows.
+- Client portal auth remains self-hosted and under infrastructure control.
+- The repository can start with row-level client isolation and still retain a path to stronger isolation later if required.
+
+### Negative
+
+- Drizzle has a smaller ecosystem than Prisma.
+- Connection pooling is provided by Neon rather than by the ORM itself.
+- Client isolation must be enforced deliberately in query design rather than assumed automatically.
+- The repository must treat `agencydata-db` as a high-risk package because mistakes there can affect every app that persists operational data.
+
+### Neutral
+
+- Internal tools and client portals intentionally use different auth lanes.
+- Query review discipline is part of the architecture, not an optional implementation detail.
+- Migration safety must be operationalized through scripts, CI checks, and code review rather than relying on tooling defaults alone.
+
+## Alternatives Considered
+
+### Alternative: PlanetScale MySQL
+
+Why it was considered:
+
+- modern hosted database platform,
+- good operational story,
+- strong developer experience.
+
+Why it was rejected:
+
+- MySQL is less aligned with the team’s intended PostgreSQL-first approach,
+- the repository architecture already assumes PostgreSQL semantics,
+- Neon’s branching model is a better fit for this workflow.
+
+### Alternative: Supabase
+
+Why it was considered:
+
+- PostgreSQL foundation,
+- broad feature set,
+- popular full-stack developer experience.
+
+Why it was rejected:
+
+- the bundled platform provides less control over the data architecture,
+- the additional bundled features are not required for the operational data model,
+- the repository prefers a more explicit and modular stack.
+
+### Alternative: Prisma
+
+Why it was considered:
+
+- strong ecosystem,
+- familiar ORM choice,
+- polished tooling.
+
+Why it was rejected:
+
+- query engine and runtime model are less attractive in some serverless environments,
+- runtime code generation introduces additional operational weight,
+- Drizzle is a better fit for a lightweight, TypeScript-first, SQL-near architecture.
+
+### Alternative: Clerk for all authentication
+
+Why it was considered:
+
+- managed convenience,
+- strong developer experience,
+- excellent fit for internal tools.
+
+Why it was rejected as the portal default:
+
+- per-user pricing scales poorly for client-facing portal usage,
+- user and session data live outside the agency-controlled data layer,
+- self-hosted ownership is a stronger default for client portals.
+
+## References
+
+- `ARCHITECTURE.md`
+- `DEPENDENCY.md`
+- `TASKS.md`
+- `docs/architecture/ADRs/000-template.md`
+- `docs/architecture/ADRs/001-monorepo-tooling.md`
+- `docs/architecture/ADRs/002-package-structure.md`

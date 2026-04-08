@@ -42,14 +42,13 @@ packages/core/shared-types/
 ```ts
 import { z } from "zod";
 
-// Zod v4: Use .strict() for enhanced validation and better performance
 export const clientSchema = z.object({
   id: z.string().uuid(),
   name: z.string().min(1).max(255),
   slug: z.string().regex(/^[a-z0-9-]+$/),
   createdAt: z.date(),
   updatedAt: z.date()
-}).strict(); // Zod v4: Strict mode prevents unexpected properties
+});
 
 export type Client = z.infer<typeof clientSchema>;
 export type NewClient = Omit<Client, "id" | "createdAt" | "updatedAt">;
@@ -59,42 +58,23 @@ export type NewClient = Omit<Client, "id" | "createdAt" | "updatedAt">;
 ```ts
 import { z } from "zod";
 
-// Zod v4: Enhanced enum with strict validation
 export const projectStatusEnum = z.enum([
   "lead",
-  "scoping", 
+  "scoping",
   "active",
   "on-hold",
   "completed",
   "archived"
 ]);
 
-// Zod v4: Discriminated union for type-safe state handling
-const baseProjectSchema = z.object({
+export const projectSchema = z.object({
   id: z.string().uuid(),
   clientId: z.string().uuid(),
   name: z.string().min(1).max(255),
+  status: projectStatusEnum,
   createdAt: z.date(),
   updatedAt: z.date()
-}).strict();
-
-export const projectSchema = z.discriminatedUnion("status", [
-  baseProjectSchema.extend({
-    status: z.literal("lead"),
-    budget: z.number().optional(),
-    expectedCloseDate: z.date().optional()
-  }),
-  baseProjectSchema.extend({
-    status: z.literal("active"),
-    teamAssignee: z.string().uuid().optional(),
-    progress: z.number().min(0).max(100).optional()
-  }),
-  baseProjectSchema.extend({
-    status: z.literal("completed"),
-    actualHours: z.number().min(0),
-    invoiceId: z.string().uuid().optional()
-  })
-]);
+});
 
 export type Project = z.infer<typeof projectSchema>;
 export type NewProject = Omit<Project, "id" | "createdAt" | "updatedAt">;
@@ -129,12 +109,20 @@ export * from "./user";
 - [ ] Use new branded type patterns
 - [ ] Adopt new error formatting options
 
-## Verification
-
 ```bash
 # Performance test (Zod v4)
 pnpm --filter @agency/core-types test:performance
 
+# Type check
+pnpm --filter @agency/core-types typecheck
+
+# Verify exports
+pnpm --filter @agency/core-types build
+```
+
+## Verification
+
+```bash
 # Type check
 pnpm --filter @agency/core-types typecheck
 
