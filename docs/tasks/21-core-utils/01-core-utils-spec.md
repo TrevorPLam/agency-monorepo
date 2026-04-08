@@ -30,8 +30,7 @@ packages/core/shared-utils/
   },
   "dependencies": {
     "@agency/core-types": "workspace:*",
-    "zod": "^4.0.0",
-    "@js-temporal/polyfill": "^1.0.0"
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "@agency/config-typescript": "workspace:*"
@@ -42,17 +41,35 @@ packages/core/shared-utils/
 
 ### `src/date.ts`
 ```ts
-// Modern date formatting using Intl API with fallbacks for older browsers
-export function formatDate(date: Date, format: "short" | "long" = "short", locale: string = "en-US"): string {
+// April 2026: Temporal API is natively supported in Chrome 144+ and Firefox 139+
+// Use native Temporal with feature detection, fallback to Intl API
+
+// Feature detection for Temporal API
+const hasTemporal = typeof globalThis !== 'undefined' && 'Temporal' in globalThis;
+
+// Modern date formatting using Intl API with fallbacks
+export function formatDate(
+  date: Date | Temporal.PlainDate, 
+  format: "short" | "long" = "short", 
+  locale: string = "en-US"
+): string {
+  // Temporal API path (Chrome 144+, Firefox 139+)
+  if (hasTemporal && date instanceof Temporal.PlainDate) {
+    return date.toLocaleString(locale, {
+      dateStyle: format === "short" ? "medium" : "long"
+    });
+  }
+  
+  // Legacy Date path with Intl API
   try {
     const options: Intl.DateTimeFormatOptions = format === "short" 
       ? { dateStyle: "medium" as const }
       : { dateStyle: "long" as const };
     
-    return new Intl.DateTimeFormat(locale, options).format(date);
+    return new Intl.DateTimeFormat(locale, options).format(date as Date);
   } catch (error) {
     // Fallback for older browsers or invalid locales
-    return date.toLocaleDateString(locale, { 
+    return (date as Date).toLocaleDateString(locale, { 
       month: format === "short" ? "short" : "long",
       day: "numeric", 
       year: "numeric" 
@@ -60,24 +77,45 @@ export function formatDate(date: Date, format: "short" | "long" = "short", local
   }
 }
 
-export function formatRelative(date: Date, locale: string = "en-US"): string {
+export function formatRelative(date: Date | Temporal.PlainDate, locale: string = "en-US"): string {
+  // Temporal API path for modern browsers
+  if (hasTemporal && date instanceof Temporal.PlainDate) {
+    const now = Temporal.Now.plainDateISO();
+    const diff = now.until(date);
+    
+    if (diff.days === 0) return "Today";
+    if (diff.days === 1) return "Yesterday";
+    if (Math.abs(diff.days) < 7) return `${Math.abs(diff.days)} days ago`;
+    if (Math.abs(diff.days) < 30) return `${Math.floor(Math.abs(diff.days) / 7)} weeks ago`;
+    return formatDate(date, "short", locale);
+  }
+  
+  // Legacy Date path with Intl API
   try {
+    const jsDate = date as Date;
     const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
-    return rtf.format(date, { 
-      style: "narrow",
-      unit: "day"
-    });
+    
+    const now = new Date();
+    const diffMs = now.getTime() - jsDate.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return rtf.format(0, "day");
+    if (diffDays === 1) return rtf.format(-1, "day");
+    if (diffDays < 7) return rtf.format(-diffDays, "day");
+    if (diffDays < 30) return rtf.format(-Math.floor(diffDays / 7), "week");
+    return formatDate(jsDate, "short", locale);
   } catch (error) {
     // Fallback for older browsers
+    const jsDate = date as Date;
     const now = new Date();
-    const diff = now.getTime() - date.getTime();
+    const diff = now.getTime() - jsDate.getTime();
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     
     if (days === 0) return "Today";
     if (days === 1) return "Yesterday";
     if (days < 7) return `${days} days ago`;
     if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
-    return formatDate(date, "short");
+    return formatDate(jsDate, "short", locale);
   }
 }
 

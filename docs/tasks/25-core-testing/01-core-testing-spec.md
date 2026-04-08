@@ -34,7 +34,7 @@ packages/core/testing/
   },
   "devDependencies": {
     "@agency/config-typescript": "workspace:*",
-    "vitest": "^2.0.0"
+    "vitest": "^4.1.3"
   },
   "publishConfig": { "access": "restricted" }
 }

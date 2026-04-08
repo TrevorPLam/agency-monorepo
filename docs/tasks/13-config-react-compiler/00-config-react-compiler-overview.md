@@ -6,7 +6,7 @@ Configuration package for React Compiler - the automatic optimization compiler n
 ## Dependencies
 - **Required**: `11-config-typescript` (TS configuration)
 - **Required**: `10-config-eslint` (for React Compiler ESLint rules)
-- **Required**: `42-monitoring` (for performance metrics and error tracking)
+- **Optional**: `42-monitoring` (for performance metrics when monitoring package is available)
 
 ## Scope
 This task establishes:

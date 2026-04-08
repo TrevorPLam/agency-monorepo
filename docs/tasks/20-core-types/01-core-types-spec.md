@@ -42,13 +42,14 @@ packages/core/shared-types/
 ```ts
 import { z } from "zod";
 
+// Zod v4: Use .strict() for enhanced validation
 export const clientSchema = z.object({
   id: z.string().uuid(),
   name: z.string().min(1).max(255),
   slug: z.string().regex(/^[a-z0-9-]+$/),
   createdAt: z.date(),
   updatedAt: z.date()
-});
+}).strict();
 
 export type Client = z.infer<typeof clientSchema>;
 export type NewClient = Omit<Client, "id" | "createdAt" | "updatedAt">;
@@ -58,26 +59,45 @@ export type NewClient = Omit<Client, "id" | "createdAt" | "updatedAt">;
 ```ts
 import { z } from "zod";
 
-export const projectStatusEnum = z.enum([
-  "lead",
-  "scoping",
-  "active",
-  "on-hold",
-  "completed",
-  "archived"
-]);
-
-export const projectSchema = z.object({
+// Zod v4: Discriminated union for state-like objects
+const baseProjectSchema = z.object({
   id: z.string().uuid(),
   clientId: z.string().uuid(),
   name: z.string().min(1).max(255),
-  status: projectStatusEnum,
   createdAt: z.date(),
   updatedAt: z.date()
+}).strict();
+
+const leadProjectSchema = baseProjectSchema.extend({
+  status: z.literal("lead"),
+  budget: z.number().optional(),
+  expectedCloseDate: z.date().optional()
 });
 
+const activeProjectSchema = baseProjectSchema.extend({
+  status: z.literal("active"),
+  teamAssignee: z.string().uuid().optional(),
+  progress: z.number().min(0).max(100).optional()
+});
+
+const completedProjectSchema = baseProjectSchema.extend({
+  status: z.literal("completed"),
+  actualHours: z.number().min(0),
+  invoiceId: z.string().uuid().optional()
+});
+
+// Zod v4: Upgraded discriminatedUnion with better performance
+export const projectSchema = z.discriminatedUnion("status", [
+  leadProjectSchema,
+  activeProjectSchema,
+  completedProjectSchema
+]);
+
 export type Project = z.infer<typeof projectSchema>;
-export type NewProject = Omit<Project, "id" | "createdAt" | "updatedAt">;
+// Use discriminated union for type narrowing
+export function isLeadProject(project: Project): project is z.infer<typeof leadProjectSchema> {
+  return project.status === "lead";
+}
 ```
 
 ### `src/index.ts`
