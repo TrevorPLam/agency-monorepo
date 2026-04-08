@@ -81,15 +81,18 @@ shadcn/ui is **not an installable package**. Run the CLI into `packages/ui/desig
 
 ### React Compiler (`@agency/config-react-compiler`)
 
-React Compiler is **stable in Next 16 but opt-in only**. It is not enabled by default.
+React Compiler is **stable in Next 16.2+ but opt-in only**. It is not enabled by default.
 
-- Enable via `reactCompiler: true` in `next.config.ts` — not globally.
-- Required dev dependency when opt-in: `babel-plugin-react-compiler`.
+- Enable via `reactCompiler: true` in `next.config.ts` — Next.js 16.2+ uses SWC-invoked compiler (no Babel required)
+- For Next.js <16.2 or non-Next.js projects, use `babel-plugin-react-compiler`
+- Include `eslint-plugin-react-compiler` for ESLint compatibility rules
 - This config lives exclusively in `@agency/config-react-compiler`. Apps consume it; they do not configure it themselves.
 
 ***
 
 ## §3 · Monorepo Tooling
+
+> **Next.js 16 Breaking Change**: `next lint` command removed. Configure ESLint directly (see §18).
 
 | Package | Pin | Purpose |
 | --- | --- | --- |
@@ -125,10 +128,10 @@ React Compiler is **stable in Next 16 but opt-in only**. It is not enabled by de
 | `drizzle-orm` | **0.45.2** | ORM layer — works with Neon, Supabase, and standard pg. |
 | `drizzle-kit` | latest 0.3x | Migrations CLI. |
 | `@neondatabase/serverless` | **1.0.2** | Neon driver (primary lane). |
-| `@supabase/supabase-js` | **2.102.0** ⚠️ | Supabase client (was pinned at 2.49.0 — **update required**). |
+| `@supabase/supabase-js` | **2.102.0** | Supabase client (verified current April 2026). |
 | `pg` | optional | Classic TCP Postgres for non-edge/long-running workers only. |
 
-> ⚠️ `@supabase/supabase-js` version in the previous doc (2.49.0) is stale. Current release is 2.102.0. Update before implementing `@agency/data-db`.
+> 
 
 ### Tooling Rules
 - Switch providers via `DATABASE_PROVIDER` environment variable.
@@ -207,6 +210,30 @@ Apps call `@agency/email-service` and never touch provider SDKs directly.
 
 ***
 
+## §6a · Lead Enrichment Providers
+
+> **Clearbit is deprecated** — acquired by HubSpot, now Breeze Intelligence (HubSpot-only). Use Apollo.io or alternatives below.
+
+| Provider | Type | Free Tier | Best Fit | Lane |
+| --- | --- | --- | --- | --- |
+| **Apollo.io** | Cloud + API | Limited free tier; $49-79/user/mo paid | Startups, mid-market, 230M+ contacts | **Primary** |
+| **ZoomInfo** | Enterprise data | Custom ($15K-80K/yr) | Enterprise, deep org charts, intent data | Enterprise |
+| **Cognism** | EMEA-focused | Custom comparable to ZoomInfo | GDPR-compliant, phone-verified, EMEA sales | Enterprise EMEA |
+| **Lusha** | Quick enrichment | $36-59/user/mo | Fast, affordable, browser extension workflow | Budget |
+| **Enrich.so** | API-only | $49-499/mo (no per-seat fees) | Automated workflows, high-volume API calls | API-first |
+
+### Provider Selection Matrix
+
+| Need | Recommended Provider | Rationale |
+| --- | --- | --- |
+| Budget-conscious startup | **Apollo.io** | Generous free tier, affordable paid plans |
+| Enterprise global sales | **ZoomInfo** | Deepest data, intent signals, org charts |
+| EU-first / GDPR strict | **Cognism** | Phone-verified, GDPR-compliant, EMEA strength |
+| Quick Chrome workflow | **Lusha** | Best browser extension experience |
+| High-volume automation | **Enrich.so** | No per-seat fees, API-optimized pricing |
+
+***
+
 ## §7 · CMS Layer
 
 ### Provider Matrix
@@ -239,6 +266,26 @@ Apps call `@agency/email-service` and never touch provider SDKs directly.
 
 ***
 
+## §7a · AI SDK & Content Pipeline (b4)
+
+### Purpose
+AI-powered content generation and enrichment for the b4-tools-content-pipeline. Used by `@agency/data-ai-enrichment` when the AI content pipeline trigger is met.
+
+### Package Pins
+
+| Package | Pin | Notes |
+| --- | --- | --- |
+| `ai` | **6.0.x** | Vercel AI SDK — unified interface for AI providers |
+| `@ai-sdk/openai` | latest | OpenAI provider for Vercel AI SDK |
+| `@ai-sdk/anthropic` | latest | Anthropic provider for Vercel AI SDK |
+
+### Provider Selection
+- Use `ai` (Vercel AI SDK) as the abstraction layer for all LLM calls
+- Configure provider via environment variables (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`)
+- Switch providers by changing the model string: `openai/gpt-4` → `anthropic/claude-opus-4.5`
+
+***
+
 ## §8 · Analytics Stack
 
 ### Architecture Rule
@@ -249,7 +296,7 @@ Apps call `@agency/email-service` and never touch provider SDKs directly.
 | Provider | Package | Free Tier | Privacy | Best Fit | Lane |
 | --- | --- | --- | --- | --- | --- |
 | **Plausible** | `@plausible-analytics/tracker@0.4.4` | $9/mo (no meaningful free tier for production) | GDPR-compliant by default, cookieless | Public marketing sites, EU-first | **Primary — marketing** |
-| **PostHog** | `posthog-js@1.364.7`, `posthog-node@5.28.8` | 1M events/mo free | Configurable, self-host available | Product analytics, feature flags, session replay | **Primary — product** |
+| **PostHog** | `posthog-js@1.365.1`, `posthog-node@5.29.1` | 1M events/mo free | Configurable, self-host available | Product analytics, feature flags, session replay | **Primary — product** |
 | **Cloudflare Web Analytics** | Script tag only (no npm) | **Free unlimited** | Privacy-first, no cookies | Static/edge sites already on Cloudflare | Backup — zero cost |
 | **Microsoft Clarity** | Script tag / REST | **Free unlimited** | GDPR-configurable | Heatmaps, session recording, UX debugging | Backup — free UX layer |
 | **Umami** | Self-hosted or cloud | Free self-hosted | GDPR-compliant, cookieless | Privacy-sensitive clients who want self-hosting | Self-host lane |
@@ -262,8 +309,8 @@ Apps call `@agency/email-service` and never touch provider SDKs directly.
 | Package | Pin |
 | --- | --- |
 | `@plausible-analytics/tracker` | **0.4.4** |
-| `posthog-js` | **1.364.7** |
-| `posthog-node` | **5.28.8** |
+| `posthog-js` | **1.365.1** |
+| `posthog-node` | **5.29.1** |
 
 ### Escalation Packages (condition-gated — see §14)
 
@@ -343,7 +390,7 @@ When activated, package dependencies are:
 
 | Package | Version | Role |
 | --- | --- | --- |
-| `posthog-node` | **5.28.8** | Route notification events into analytics (optional) |
+| `posthog-node` | **5.29.1** | Route notification events into analytics (optional) |
 | Provider SDKs | Per-provider | Slack, Discord, webhook — install the minimum required |
 
 **Notification provider options (install only the one(s) needed):**
@@ -382,14 +429,14 @@ When activated, package dependencies are:
 
 | Option | Package | Pin | Best Fit |
 | --- | --- | --- | --- |
-| **Storybook** | `storybook`, `@storybook/react` | **10.3.4** | Full-featured, design system integration |
+| **Storybook** | `storybook`, `@storybook/react` | **8.6.x** | Full-featured, design system integration |
 | **Ladle** | `@ladle/react` | **5.1.1** | Lightweight, fast startup, less config |
 
 ### Test Fixtures (`@agency/test-fixtures`)
 
-| Package | Pin |
-| --- | --- |
-| `@faker-js/faker` | latest |
+| Package | Pin | Notes |
+| --- | --- | --- |
+| `@faker-js/faker` | **10.4.0** | ESM-only; requires Node 20.19+, 22.13+, or 24.x |
 
 ***
 
@@ -422,18 +469,18 @@ This table is the canonical record of what each internal package is allowed to d
 | `@agency/data-ai-enrichment` | AI SDK (e.g. `@ai-sdk/openai`) | `@agency/data-cms`, `@agency/core-types` |
 | `@agency/data-api-client` | `zod` | `@agency/core-types`, `@agency/core-utils` |
 | `@agency/auth-internal` | `@clerk/nextjs@7.0.8` | `@agency/core-types` |
-| `@agency/auth-portal` | `better-auth@1.5.0` | `@agency/core-types`, `@agency/data-db` |
+| `@agency/auth-portal` | `better-auth@1.6.0`, `@better-auth/drizzle-adapter@1.6.0` | `@agency/core-types`, `@agency/data-db` |
 | `@agency/email-templates` | `@react-email/components@1.0.10`, `react`, `react-dom` | `@agency/core-types` |
 | `@agency/email-service` | Transport provider SDK (see §6) | `@agency/email-templates`, `@agency/core-types` |
 | `@agency/notifications` | Provider SDK (see §11) | `@agency/core-types`, `@agency/email-service` |
-| `@agency/analytics` | `@plausible-analytics/tracker@0.4.4`, `posthog-js@1.364.7`, `posthog-node@5.28.8` | `@agency/core-types` |
+| `@agency/analytics` | `@plausible-analytics/tracker@0.4.4`, `posthog-js@1.365.1`, `posthog-node@5.29.1` | `@agency/core-types` |
 | `@agency/analytics-attribution` | Attribution provider SDKs | `@agency/analytics`, `@agency/compliance` |
 | `@agency/analytics-consent-bridge` | — | `@agency/analytics`, `@agency/compliance` |
 | `@agency/experimentation` | Provider SDK (see §9) | `@agency/analytics`, `@agency/core-types` |
 | `@agency/experimentation-edge` | `@vercel/edge-config` | `@agency/analytics`, `@agency/core-types` |
 | `@agency/lead-capture` | `react-hook-form@7.51.0`, `@hookform/resolvers@3.3.0`, `zod@3.23.0` | `@agency/ui-design-system`, `@agency/analytics`, `@agency/compliance`, `@agency/core-types` |
 | `@agency/lead-capture-progressive` | — | `@agency/lead-capture` |
-| `@agency/lead-capture-enrichment` | Enrichment provider SDK (Clearbit/Apollo) | `@agency/lead-capture`, `@agency/data-db` |
+| `@agency/lead-capture-enrichment` | Enrichment provider SDK (Apollo/ZoomInfo/Cognism) | `@agency/lead-capture`, `@agency/data-db` |
 | `@agency/test-setup` | `vitest@4.1.3`, `@testing-library/react@16.3.2`, `@playwright/test@1.59.1`, `jsdom` | — |
 | `@agency/test-fixtures` | `@faker-js/faker` | `@agency/core-types` |
 
@@ -556,7 +603,48 @@ These rules apply to all AI coding tools (Cursor, Windsurf, Copilot, etc.) when 
 
 ***
 
-## §18 · Open Validation Items
+## §18 · Linting Configuration (Post-Next.js 16)
+
+> **Breaking Change**: Next.js 16 removed the `next lint` command. Configure ESLint directly.
+
+### ESLint Setup (Current Standard)
+
+Root `package.json` scripts:
+```json
+{
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix"
+  }
+}
+```
+
+`@agency/config-eslint` must export a flat config (ESLint 9.x format):
+- No `.eslintrc` files — use `eslint.config.mjs` or `eslint.config.js`
+- Include `@next/eslint-plugin-next` for Next.js rules
+- Include `@typescript-eslint/*` for TypeScript rules
+- Include boundary rules enforcing the dependency flow from ARCHITECTURE.md
+
+### Biome Evaluation (Task 14)
+
+Task `14-config-biome` is evaluating Biome as a Rust-based alternative to ESLint+Prettier.
+- Faster execution (Rust vs Node.js)
+- Unified linting and formatting
+- Compatible with Next.js 16 (no `next lint` dependency)
+
+**Decision pending.** Do not migrate to Biome until Task 14 concludes and an ADR is recorded.
+
+### Migration from Next.js 15
+
+If upgrading from Next.js 15:
+1. Remove `"next lint"` from all npm scripts
+2. Add direct ESLint invocation to root `package.json`
+3. Update `eslint-config-next` to match Next.js 16.2.2
+4. Migrate `.eslintrc` files to flat config format (`eslint.config.mjs`)
+
+***
+
+## §19 · Open Validation Items
 
 These items require an official-source pricing/limits check before being treated as authoritative. Do not commit to a provider in production without completing this verification.
 
@@ -566,7 +654,7 @@ These items require an official-source pricing/limits check before being treated
 | Neon free tier limits | Storage, compute hours, and project count may have changed in 2026 | 🔴 High |
 | Supabase free tier limits | Auth MAU, DB size, storage — verify current limits before recommending | 🔴 High |
 | Clerk free tier MAU | 10k MAU free — confirm this is still accurate for 2026 | 🟡 Medium |
-| Better Auth `1.5.0` exact pin | Confirm this is current stable release | 🟡 Medium |
+| Better Auth `1.6.0` exact pin | Confirmed as current stable (April 6, 2026). Verify 1.6.x patch releases. | � Low |
 | Resend free tier | 3,000 emails/mo, 1 domain — verify not changed | 🟡 Medium |
 | Brevo free tier | 300 emails/day — confirm commercial-use status | 🟡 Medium |
 | Sanity free tier seat limits | Confirm free tier is still commercially usable for client projects | 🟡 Medium |

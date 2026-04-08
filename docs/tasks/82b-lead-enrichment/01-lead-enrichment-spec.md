@@ -10,7 +10,6 @@ packages/lead-capture/enrichment/
 ├── src/
 │   ├── index.ts
 │   ├── providers/
-│   │   ├── clearbit.ts
 │   │   ├── apollo.ts
 │   │   └── mock.ts
 │   ├── enrichment.ts

@@ -84,8 +84,8 @@ packages/analytics/
     "@agency/test-setup": "workspace:*",
     "@types/node": "latest",
     "@types/react": "latest",
-    "posthog-js": "^1.364.0",
-    "posthog-node": "^5.28.0",
+    "posthog-js": "1.365.1",
+    "posthog-node": "5.29.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "typescript": "6.0.0"

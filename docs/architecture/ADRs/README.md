@@ -33,6 +33,7 @@ Use one of the following statuses in every ADR:
 | 001 | Monorepo Tooling (pnpm + Turborepo) | Accepted | 2026-04-08 |
 | 002 | Domain-Grouped Package Structure | Accepted | 2026-04-08 |
 | 003 | Database and ORM Selection | Accepted | 2026-04-08 |
+| 004 | Dual-Lane Authentication Architecture | Accepted | 2026-04-08 |
 
 ## Current accepted decisions
 

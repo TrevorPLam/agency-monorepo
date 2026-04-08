@@ -1,6 +1,8 @@
 # Agency Monorepo Architecture
 *A strategic, fully elaborated reference for building, scaling, and governing a production-grade agency monorepo — written for a non-developer owner working through AI coding tools like Cursor and Windsurf.*
 
+> **Governance Note:** This document describes the **target architecture**. The current implementation state — what is approved to build, what is planned, and what is deferred — is tracked in `REPO-STATE.md`. Consult REPO-STATE.md before beginning any implementation work to confirm a package or app has been approved for scaffolding.
+
 *Last revised: April 2026. Synchronized with TASKS.md (85 tasks, generated April 7, 2026).*
 
 ***
@@ -27,11 +29,17 @@ The recommended default stack is: **pnpm workspaces** (10.x), **Turborepo 2.x** 
 
 **Next.js 16 App Router** is the right framework for every app because it supports server components, server actions, streaming, and static generation from a single unified mental model. Using one framework across the entire repo means every developer can contribute to every app, shared packages never need separate builds for different framework targets, and deployment to Vercel is zero-configuration.
 
-**React Compiler** (stable as of 2025, enabled by default in Next.js 16) eliminates manual `useMemo` and `useCallback` in most cases by automatically analyzing component dependencies at build time. The `@agency/config-react-compiler` package manages compiler configuration, ESLint plugin rules, and the migration guide from manual memoization patterns. There are still narrow cases where manual memoization remains correct — complex object equality, external library integration, and performance-critical paths requiring explicit control — and the package documents exactly those cases.
+**React Compiler** (stable as of 2025, opt-in via `reactCompiler: true` in Next.js 16.2+) eliminates manual `useMemo` and `useCallback` in most cases by automatically analyzing component dependencies at build time using SWC. The `@agency/config-react-compiler` package manages compiler configuration and the migration guide from manual memoization patterns. There are still narrow cases where manual memoization remains correct — complex object equality, external library integration, and performance-critical paths requiring explicit control — and the package documents exactly those cases.
 
-**shadcn/ui** is the correct UI library choice over a pre-compiled component library because it copies component source directly into your repository rather than importing a black-box dependency. You own and can modify every component without forking a third-party package. shadcn now supports monorepo workflows directly, making the design system package setup straightforward rather than requiring manual workarounds.
+**shadcn/ui** is the correct UI library choice over a pre-compiled component library because it copies component source directly into your repository rather than importing a black-box dependency. You own and can modify every component without forking a third-party package. shadcn/ui CLI v4 (March 2026) provides native monorepo support via the `--monorepo` flag, scaffolding components into `packages/ui` while block components install directly to consuming apps. The CLI now supports `--preset` for design system configuration codes, `--dry-run` and `--diff` for change inspection, and `shadcn/skills` for AI agent context. This makes the design system package setup straightforward rather than requiring manual workarounds.
 
 **Neon** is the right database host because it provides true serverless PostgreSQL with connection pooling, branching for development, and pay-per-compute pricing that suits both low-traffic client portals and high-traffic internal tools. Neon's database branching feature is particularly valuable in an agency context: developers and AI coding agents can create isolated database branches for feature work without polluting shared staging environments, and those branches are destroyed automatically when the branch is merged.
+
+**Neon Branch Naming Conventions:**
+- `dev/<developer-name>` — Long-lived developer branches (e.g., `dev/alice`)
+- `dev/<feature-name>` — Feature collaboration branches (e.g., `dev/new-onboarding`)
+- `preview/pr-<number>-<branch>` — PR preview databases (e.g., `preview/pr-123-feat/login`)
+- `test/<branch>-<run>-<sha>-<timestamp>` — Ephemeral test run branches
 
 **Drizzle ORM** pairs naturally with Neon because it is lightweight, TypeScript-first, and generates typed query results without a code generation step at runtime. Schema definitions, migration files, and query modules all live in the shared `@agency/data-db` package.
 

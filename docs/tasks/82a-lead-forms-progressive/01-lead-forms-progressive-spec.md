@@ -40,8 +40,9 @@ packages/lead-capture/progressive-forms/
   "dependencies": {
     "@agency/core-types": "workspace:*",
     "@agency/ui-design-system": "workspace:*",
-    "xstate": "latest",
-    "zod": "latest"
+    "xstate": "5.x",
+    "@xstate/react": "5.x",
+    "zod": "3.23.0"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",

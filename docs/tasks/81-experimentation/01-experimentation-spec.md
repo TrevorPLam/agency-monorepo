@@ -462,7 +462,7 @@ export function useMultiVariantExperiment(
 'use client';
 
 import { ReactNode } from 'react';
-import { useBooleanFlag } from '../hooks';
+import { useBooleanFlag, useFeatureFlag } from '../hooks';
 
 interface FeatureFlagProps {
   flag: string;
