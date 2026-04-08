@@ -1,4 +1,4 @@
-# 00-foundation/00-root-scaffolding: Root Repository Scaffolding
+# 00-foundation/00-root-scaffolding.md: Root Repository Scaffolding
 
 ## Purpose
 Create the foundation of the monorepo with workspace configuration, package manager setup, and orchestration tooling.

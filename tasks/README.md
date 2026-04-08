@@ -1,32 +1,113 @@
 # Agency Monorepo Tasks
 
-Complete implementation guide organized by execution phase.
+Complete implementation guide organized by execution phase. Each package has its own dedicated folder.
 
 ## Quick Navigation
 
-| Phase | Folder | Description | Tasks |
-|-------|--------|-------------|-------|
-| 0 | [`00-foundation/`](./00-foundation/) | Root scaffolding | 1 |
-| 1 | [`01-config/`](./01-config/) | Config packages (ESLint, TS, Tailwind, Prettier) | 4 |
-| 2 | [`02-core/`](./02-core/) | Core packages (types, utils, constants, hooks) | 4 |
-| 3 | [`03-ui/`](./03-ui/) | UI packages (theme, icons, design system) | 3 |
-| 3a | [`03a-seo/`](./03a-seo/) | SEO package (metadata, structured data) | 1 |
-| 3b | [`03b-compliance/`](./03b-compliance/) | Compliance package (consent, GDPR/CCPA) | 1 |
-| 3c | [`03c-analytics/`](./03c-analytics/) | Analytics package (tracking, attribution) | 1 |
-| 3d | [`03d-monitoring/`](./03d-monitoring/) | Monitoring package (performance, Web Vitals) | 1 |
-| 3e | [`03e-experimentation/`](./03e-experimentation/) | Experimentation package (A/B testing, feature flags) | 1 |
-| 3f | [`03f-lead-capture/`](./03f-lead-capture/) | Lead capture package (forms, CRM integration) | 1 |
-| 4 | [`04-data/`](./04-data/) | Data layer (database, CMS, API client, preview) | 4 |
-| 5 | [`05-auth/`](./05-auth/) | Authentication (Clerk, Better Auth) | 2 |
-| 6 | [`06-communication/`](./06-communication/) | Email & notifications | 3 |
-| 7 | [`07-testing/`](./07-testing/) | Testing infrastructure (unit, E2E) | 3 |
-| 8 | [`08-docs/`](./08-docs/) | Documentation (agents, onboarding, ADRs) | 4 |
-| 9 | [`09-cicd/`](./09-cicd/) | CI/CD workflows | 9 |
-| 10 | [`10-tools/`](./10-tools/) | Generators & scripts | 4 |
-| 11 | [`11-apps/`](./11-apps/) | Applications (agency website, CRM, portal) | 5 |
-| 12 | [`12-infra/`](./12-infra/) | Environment, deployment, Sentry | 5 |
+| Phase | Folder | Package | Description |
+|-------|--------|---------|-------------|
+| 0 | [`00-foundation/`](./00-foundation/) | - | Root scaffolding |
+| 10 | [`10-config-eslint/`](./10-config-eslint/) | `@agency/config-eslint` | ESLint configuration |
+| 11 | [`11-config-typescript/`](./11-config-typescript/) | `@agency/config-typescript` | TypeScript configuration |
+| 12 | [`12-config-tailwind/`](./12-config-tailwind/) | `@agency/config-tailwind` | Tailwind CSS configuration |
+| 13 | [`13-config-prettier/`](./13-config-prettier/) | `@agency/config-prettier` | Prettier configuration |
+| 20 | [`20-core-types/`](./20-core-types/) | `@agency/core-types` | Domain types & Zod schemas |
+| 21 | [`21-core-utils/`](./21-core-utils/) | `@agency/core-utils` | Pure utility functions |
+| 22 | [`22-core-constants/`](./22-core-constants/) | `@agency/core-constants` | Enums & constants |
+| 23 | [`23-core-hooks/`](./23-core-hooks/) | `@agency/core-hooks` | React hooks |
+| 30 | [`30-ui-theme/`](./30-ui-theme/) | `@agency/ui-theme` | Design tokens |
+| 31 | [`31-ui-icons/`](./31-ui-icons/) | `@agency/ui-icons` | Icon components |
+| 32 | [`32-ui-design-system/`](./32-ui-design-system/) | `@agency/ui-design-system` | UI primitives |
+| 40 | [`40-seo/`](./40-seo/) | `@agency/seo` | SEO utilities |
+| 41 | [`41-compliance/`](./41-compliance/) | `@agency/compliance` | GDPR/CCPA compliance |
+| 42 | [`42-monitoring/`](./42-monitoring/) | `@agency/monitoring` | Performance monitoring |
+| 50 | [`50-data-db/`](./50-data-db/) | `@agency/data-db` | Database (Drizzle/Neon) |
+| 51 | [`51-data-cms/`](./51-data-cms/) | `@agency/data-cms` | CMS schemas (Sanity) |
+| 52 | [`52-data-api-client/`](./52-data-api-client/) | `@agency/data-api-client` | API client utilities |
+| 60 | [`60-auth-internal/`](./60-auth-internal/) | `@agency/auth-internal` | Clerk authentication |
+| 61 | [`61-auth-portal/`](./61-auth-portal/) | `@agency/auth-portal` | Better Auth for portals |
+| 70 | [`70-email-templates/`](./70-email-templates/) | `@agency/email-templates` | React Email templates |
+| 71 | [`71-email-service/`](./71-email-service/) | `@agency/email-service` | Email delivery (Resend/Postmark) |
+| 72 | [`72-notifications/`](./72-notifications/) | `@agency/notifications` | Notification service |
+| 80 | [`80-analytics/`](./80-analytics/) | `@agency/analytics` | Analytics package |
+| 81 | [`81-experimentation/`](./81-experimentation/) | `@agency/experimentation` | A/B testing & feature flags |
+| 82 | [`82-lead-capture/`](./82-lead-capture/) | `@agency/lead-capture` | Lead capture forms |
+| 90 | [`90-test-setup/`](./90-test-setup/) | `@agency/test-setup` | Test infrastructure |
+| 91 | [`91-test-fixtures/`](./91-test-fixtures/) | `@agency/test-fixtures` | Test data generators |
+| a0 | [`a0-docs-agents/`](./a0-docs-agents/) | - | AI Agent Rules (`docs/AGENTS.md`) |
+| a1 | [`a1-docs-onboarding/`](./a1-docs-onboarding/) | - | Onboarding guide |
+| a2 | [`a2-docs-adrs/`](./a2-docs-adrs/) | - | Architecture Decision Records |
+| a3 | [`a3-docs-package-guides/`](./a3-docs-package-guides/) | - | Package documentation |
+| b0 | [`b0-tools-app-generator/`](./b0-tools-app-generator/) | - | App generator script |
+| b1 | [`b1-tools-package-generator/`](./b1-tools-package-generator/) | - | Package generator script |
+| b2 | [`b2-tools-db-seed/`](./b2-tools-db-seed/) | - | Database seed script |
+| b3 | [`b3-tools-codemods/`](./b3-tools-codemods/) | - | Codemod scripts |
+| c0 | [`c0-infra-codeowners/`](./c0-infra-codeowners/) | - | CODEOWNERS (v1) |
+| c1 | [`c1-infra-codeowners-v2/`](./c1-infra-codeowners-v2/) | - | CODEOWNERS (v2) |
+| c2 | [`c2-infra-ci-workflow/`](./c2-infra-ci-workflow/) | - | CI Workflow (v1) |
+| c3 | [`c3-infra-ci-workflow-v2/`](./c3-infra-ci-workflow-v2/) | - | CI Workflow (v2) |
+| c4 | [`c4-infra-release-workflow/`](./c4-infra-release-workflow/) | - | Release workflow |
+| c5 | [`c5-infra-preview-deploy/`](./c5-infra-preview-deploy/) | - | Preview deployments |
+| c6 | [`c6-infra-changesets/`](./c6-infra-changesets/) | - | Changesets configuration |
+| c7 | [`c7-infra-security-audit/`](./c7-infra-security-audit/) | - | Security audit workflow |
+| c8 | [`c8-infra-accessibility-audit/`](./c8-infra-accessibility-audit/) | - | Accessibility audit workflow |
+| d0 | [`d0-infra-vscode/`](./d0-infra-vscode/) | - | VS Code settings |
+| d1 | [`d1-infra-db-migrations/`](./d1-infra-db-migrations/) | - | Database migration workflow |
+| d2 | [`d2-infra-environment-mgmt/`](./d2-infra-environment-mgmt/) | - | Environment management |
+| d3 | [`d3-infra-deployment-guide/`](./d3-infra-deployment-guide/) | - | Deployment guide |
+| d4 | [`d4-infra-sentry/`](./d4-infra-sentry/) | - | Sentry error tracking |
+| e0 | [`e0-apps-root-readme/`](./e0-apps-root-readme/) | - | Root README |
+| e1 | [`e1-apps-crm/`](./e1-apps-crm/) | - | CRM Application |
+| e2 | [`e2-apps-analytics/`](./e2-apps-analytics/) | - | Analytics integration |
+| e3 | [`e3-apps-agency-website/`](./e3-apps-agency-website/) | - | Agency website |
+| e4 | [`e4-apps-client-portal/`](./e4-apps-client-portal/) | - | Client portal |
+| e5 | [`e5-apps-playwright-e2e/`](./e5-apps-playwright-e2e/) | - | Playwright E2E tests |
 
 **Total: 56 tasks**
+
+## Build Order (Dependency Flow)
+
+Tasks are numbered to reflect the dependency flow:
+
+```
+00 (foundation)
+  ↓
+10-13 (config) → 20-23 (core) → 30-32 (ui) → 40-42 (marketing utils)
+                                                  ↓
+50-52 (data) → 60-61 (auth) → 70-72 (communication)
+                                    ↓
+80-82 (advanced features: analytics, experimentation, lead-capture)
+  ↓
+90-91 (testing) → a0-a3 (docs) → b0-b3 (tools) → c0-d4 (infra) → e0-e5 (apps)
+```
+
+## File Naming Convention
+
+```
+tasks/
+├── {phase}-{name}/
+│   └── {sequence}-{description}.md
+```
+
+- **phase**: Number (00, 10-99) or letter prefix (a0-e5) for non-packages
+- **name**: Package or category slug
+- **sequence**: Order within folder (typically 00 for single-task packages)
+- **description**: Brief semantic name
+
+## Legacy Mapping (Old → New)
+
+| Old Location | New Location |
+|--------------|--------------|
+| `01-config/00-eslint.md` | `10-config-eslint/00-package.md` |
+| `01-config/01-typescript.md` | `11-config-typescript/00-package.md` |
+| `02-core/00-types.md` | `20-core-types/00-package.md` |
+| `03-ui/02-design-system.md` | `32-ui-design-system/00-package.md` |
+| `03a-seo/00-seo-package.md` | `40-seo/00-package.md` |
+| `03c-analytics/00-analytics-package.md` | `80-analytics/00-package.md` |
+| `04-data/00-database.md` | `50-data-db/00-package.md` |
+| `05-auth/00-internal-clerk.md` | `60-auth-internal/00-package.md` |
+| `09-cicd/01-ci-workflow.md` | `c2-infra-ci-workflow/00-package.md` |
+| `11-apps/01-crm-app.md` | `e1-apps-crm/00-package.md` |
 
 ---
 

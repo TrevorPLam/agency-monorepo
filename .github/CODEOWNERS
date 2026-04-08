@@ -1,0 +1,72 @@
+# Agency Monorepo CODEOWNERS
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global fallback - platform owner reviews everything
+* @agency/platform-lead
+
+# ============================================
+# Package Domains
+# ============================================
+
+# Config packages - broad blast radius
+/packages/config/ @agency/platform-lead
+
+# Core packages - foundational
+/packages/core/ @agency/senior-backend
+
+# UI packages - design system
+/packages/ui/ @agency/design-engineer
+
+# Data layer - schema and queries
+/packages/data/ @agency/data-owner
+
+# Auth - security critical
+/packages/auth/ @agency/security-lead
+
+# Communication - external integrations
+/packages/communication/ @agency/product-owner
+
+# Testing infrastructure
+/packages/testing/ @agency/qa-lead
+
+# ============================================
+# Applications
+# ============================================
+
+# Internal tools
+/apps/internal-tools/ @agency/internal-tools-lead
+
+# Client sites
+/apps/client-sites/ @agency/client-delivery-lead
+
+# Agency website
+/apps/agency-website/ @agency/marketing-lead
+
+# ============================================
+# Infrastructure
+# ============================================
+
+# CI/CD workflows
+/.github/workflows/ @agency/platform-lead
+
+# Documentation
+docs/AGENTS.md @agency/platform-lead @agency/ai-governance
+/tasks/ @agency/platform-lead
+
+# Root configuration
+/turbo.json @agency/platform-lead
+/pnpm-workspace.yaml @agency/platform-lead
+/package.json @agency/platform-lead
+
+# ============================================
+# Security-sensitive files
+# ============================================
+
+# Auth configuration changes require security review
+/packages/auth/*/src/ @agency/security-lead
+
+# Database schema changes require data owner review
+/packages/data/database/src/schema/ @agency/data-owner
+
+# Email template changes (client-facing copy)
+/packages/communication/email-templates/ @agency/copy-lead @agency/product-owner
