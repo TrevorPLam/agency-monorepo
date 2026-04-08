@@ -11,6 +11,7 @@ Complete implementation guide organized by execution phase. Each package has its
 | 11 | [`11-config-typescript/`](./11-config-typescript/) | `@agency/config-typescript` | TypeScript configuration |
 | 12 | [`12-config-tailwind/`](./12-config-tailwind/) | `@agency/config-tailwind` | Tailwind CSS configuration |
 | 13 | [`13-config-prettier/`](./13-config-prettier/) | `@agency/config-prettier` | Prettier configuration |
+| **13a** | **[`13-config-react-compiler/`](./13-config-react-compiler/)** | **`@agency/config-react-compiler`** | **React Compiler config (Next.js 16)** |
 | 20 | [`20-core-types/`](./20-core-types/) | `@agency/core-types` | Domain types & Zod schemas |
 | 21 | [`21-core-utils/`](./21-core-utils/) | `@agency/core-utils` | Pure utility functions |
 | 22 | [`22-core-constants/`](./22-core-constants/) | `@agency/core-constants` | Enums & constants |
@@ -87,8 +88,9 @@ Complete implementation guide organized by execution phase. Each package has its
 | **c13** | **[`c13-infra-image-optimization/`](./c13-infra-image-optimization/)** | **-** | **Image optimization policy** |
 | **c14** | **[`c14-infra-workspace-boundaries/`](./c14-infra-workspace-boundaries/)** | **-** | **Workspace boundary enforcement** |
 | **a4** | **[`a4-docs-marketing-standards/`](./a4-docs-marketing-standards/)** | **-** | **Marketing standards documentation** |
+| **g0** | **[`g0-infra-mcp-server/`](./g0-infra-mcp-server/)** | **`@agency/tools-mcp-server`** | **MCP server for AI tooling** |
 
-**Total: 82 tasks** (67 existing + 15 new)
+**Total: 85 tasks** (67 existing + 18 new)
 
 ## Build Order (Dependency Flow)
 

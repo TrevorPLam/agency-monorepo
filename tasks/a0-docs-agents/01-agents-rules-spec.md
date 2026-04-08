@@ -39,6 +39,54 @@ Never import from a path not listed in `exports`. Never import from `src/` direc
 
 - **Always use `workspace:*`** for internal dependencies
 
+- **Always use package exports** - Never import from `src/` or internal paths
+
+### React Compiler Compatibility (Next.js 16+)
+
+With React Compiler stable in Next.js 16, follow these patterns:
+
+- **Prefer removing manual memoization** over adding `useMemo`/`useCallback`
+  - React Compiler handles automatic optimization
+  - Keep manual memoization only for complex custom comparisons
+
+- **Use 'no memo' directive** when component can't be compiled:
+  ```tsx
+  'no memo';
+  export function ProblematicComponent() { }
+  ```
+
+- **Test compilation** with `DEBUG=react-compiler` before commits
+
+- **Add 'use memo' directive** for opt-out mode compilation:
+  ```tsx
+  'use memo';
+  export function OptimizedComponent() { }
+  ```
+
+### Accessibility Requirements (WCAG 2.2 AA)
+
+All UI components must meet accessibility standards:
+
+- **All images must have alt text** - Use empty string for decorative images
+- **All interactive elements must be keyboard accessible**
+- **All form inputs must have associated labels**
+- **Color contrast must meet 4.5:1 ratio** (3:1 for large text)
+- **Focus indicators must be visible** (2px minimum thickness)
+
+**Component patterns must include:**
+- Proper ARIA roles and attributes
+- Keyboard event handlers (Enter, Escape, Tab)
+- Screen reader announcements for dynamic content
+
+### MCP Server Integration
+
+When using the monorepo MCP server (@agency/tools-mcp-server):
+
+- **Query package context before changes** using `get_package_details` and `get_package_exports`
+- **Validate changes against rules** using `validate_change` tool
+- **Check dependency impact** using `find_usages` before API modifications
+- **Read AGENTS.md through MCP** for rule consistency
+
 ### Code Quality Rules
 - **Always add or update tests** when modifying a shared package
 

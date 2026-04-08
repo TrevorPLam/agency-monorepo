@@ -149,9 +149,9 @@ Clerk provides the fastest path to production for internal tools with pre-built 
 
 | Package | Version | Notes |
 | --- | --- | --- |
-| `better-auth` | **1.6.0** | Self-hosted auth framework. [npmjs](https://www.npmjs.com/package/better-auth) |
-| `better-auth/react` | **1.6.0** | React client bindings. [better-auth](https://www.better-auth.com/docs/installation) |
-| Plugins (optional) | e.g. `better-auth-harmony` | For 2FA, passkeys, RBAC. [npmjs](https://www.npmjs.com/package/better-auth-harmony) |
+| `better-auth` | **1.5.0** | Self-hosted auth framework. New: MCP auth, Electron support, Cloudflare D1 adapter. [better-auth](https://www.npmjs.com/package/better-auth) |
+| `better-auth/react` | **1.5.0** | React client bindings. [better-auth](https://www.better-auth.com/docs/installation) |
+| Plugins (optional) | e.g. `better-auth-plugins` | For 2FA, passkeys, RBAC. [better-auth](https://www.better-auth.com/docs/plugins) |
 
 Better Auth provides zero per-MAU cost and full data ownership — ideal for client portals that may scale to thousands of users.
 

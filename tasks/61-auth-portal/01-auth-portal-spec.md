@@ -33,7 +33,7 @@ packages/auth/portal/
   "dependencies": {
     "@agency/core-types": "workspace:*",
     "@agency/data-db": "workspace:*",
-    "better-auth": "1.6.0",
+    "better-auth": "1.5.0",
     "@supabase/supabase-js": "2.49.0"
   },
   "devDependencies": {
