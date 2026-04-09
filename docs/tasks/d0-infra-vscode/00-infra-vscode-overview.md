@@ -6,5 +6,5 @@ Standardized VS Code configuration for consistent development experience across 
 
 
 ## Dependencies
-- TASK_0 (Root Repository Scaffolding)
-- TASK_34 (Prettier Configuration) - for formatting settings
+- `00-foundation`
+- `13-config-prettier` - for formatting settings

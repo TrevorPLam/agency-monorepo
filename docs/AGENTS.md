@@ -1,283 +1,451 @@
-# AI Agent Rules for Agency Monorepo
+# docs/AGENTS.md
 
-## Purpose
+> **Purpose of this document**  
+> This is the operating contract for AI coding tools working in this repository.
+>
+> These rules are not suggestions. They are **hard constraints**.
+>
+> The goal of this file is to prevent:
+> - architectural drift
+> - premature package creation
+> - dependency drift
+> - package-boundary violations
+> - target-state docs being mistaken for build approval
+> - structurally plausible but repo-invalid code changes
 
-This file defines the operating rules for AI coding tools working in this repository.
-These rules are hard constraints, not suggestions.
+---
 
-The repository is currently in a planning-first phase.
-Until a human explicitly approves build execution, agents must prioritize research, clarification, documentation, structure design, and contradiction detection over code generation.
+## 1) Read this first
 
-## Mission
+Before making any change, follow this document order:
 
-Preserve architectural integrity.
-Prevent AI drift.
-Do not turn roadmap ideas into code prematurely.
-Do not treat planned packages, apps, or workflows as already approved for implementation.
+1. `REPO-STATE.md`
+2. `DECISION-STATUS.md`
+3. `DEPENDENCY.md`
+4. package-level `README.md`
+5. package-level `CHANGELOG.md` if shared package work is involved
+6. package-level `package.json` `exports`
+7. `ARCHITECTURE.md`
 
-## Operating mode
+### Why this order exists
+- `REPO-STATE.md` decides what is approved to build now.
+- `DECISION-STATUS.md` decides what is locked vs open.
+- `DEPENDENCY.md` decides what may be installed and where.
+- package docs and `exports` decide the local contract.
+- `ARCHITECTURE.md` is target-state reference only.
 
-### Planning mode default
+### Non-negotiable rule
+Do **not** infer implementation approval from `ARCHITECTURE.md`.
 
-Assume the repo is in **planning mode** unless the human explicitly says one of the following:
-- "Build this now"
-- "Scaffold this now"
-- "Implement this now"
-- "Create the files now"
-- "Start coding"
+If `ARCHITECTURE.md` suggests something that is not approved in `REPO-STATE.md`, it is **not approved**.
 
-In planning mode, do **not**:
-- Scaffold packages, apps, or directories just because they appear in `README.md`, `docs/tasks/README.md`, or `ARCHITECTURE.md`
-- Install dependencies
-- Generate boilerplate code
-- Create `package.json` files for future packages
-- Add CI workflows, infra files, or environment files
-- Convert conditional packages into active work without trigger confirmation
+---
 
-In planning mode, do:
-- Clarify structure
-- Identify contradictions
-- Propose documentation
-- Tighten package boundaries
-- Improve task definitions
-- Ask for approval before implementation
+## 2) Operating mode
 
-### Build mode
+### Default posture
+- prefer the smallest correct change
+- prefer app-local code over shared-package extraction
+- prefer existing approved patterns over new abstractions
+- prefer stopping and escalating over guessing
 
-Only enter build mode after explicit human approval.
-In build mode, still follow all dependency, version, export, and package-boundary rules below.
+### When uncertain
+Do less.
 
-## Source-of-truth order
+A missing abstraction is easier to add later than a wrong abstraction is to remove.
 
-When documents disagree, use this precedence order:
+---
 
-1. `docs/AGENTS.md`
-2. `DEPENDENCY.md`
-3. `ARCHITECTURE.md`
-4. The specific task folder files for the item being worked on
-5. `docs/tasks/README.md`
-6. `README.md`
+## 3) Stop and escalate
 
-If conflict remains, stop and surface the conflict instead of guessing.
+Stop immediately and request a decision/state update when any of these are true:
 
-## Required reading order
+### Approval ambiguity
+- a package exists in `ARCHITECTURE.md` but is not approved in `REPO-STATE.md`
+- a package is conditional in `DEPENDENCY.md` and its trigger is not explicitly satisfied
+- a decision relevant to the change is marked **Open** in `DECISION-STATUS.md`
 
-Before taking any meaningful action, read in this order:
+### Dependency ambiguity
+- a required dependency is not listed in `DEPENDENCY.md`
+- exact version references disagree across docs
+- a root `overrides` or `packageExtensions` entry seems necessary
+- a dependency row still uses an unresolved placeholder that is not safe for implementation
 
-1. `docs/AGENTS.md`
-2. `DEPENDENCY.md`
-3. `ARCHITECTURE.md`
-4. The relevant task folder docs, if they exist
-5. `docs/tasks/README.md` for dependency order and cross-links
-6. `README.md` for phase navigation
-7. If touching an existing package: that package's `README.md`, `CHANGELOG.md`, and `package.json` `exports`
+### Package boundary ambiguity
+- a change requires importing from another package’s internal `src/`
+- a change requires a cross-domain import that seems to violate repo flow
+- a new shared package seems useful but the second consumer is uncertain
+- the abstraction only works by introducing app-specific flags, brand forks, or provider-specific branching
 
-## Required cross-cutting task families
+### Architecture ambiguity
+- a change seems to require `apps/api`
+- a change seems to require Nx
+- a change seems to require repo-specific MCP tooling
+- a change seems to require turning app-local logic into a shared package without formal approval
 
-Before doing work in these areas, read the related task family as well:
+---
 
-- Tenant-sensitive planning or implementation: `docs/tasks/a5-docs-tenant-isolation-data-governance/`
-- Dependency or version changes: `docs/tasks/a6-docs-dependency-truth-version-authority/`
-- Event taxonomy or analytics documentation changes: `docs/tasks/a7-docs-analytics-guides/`
-- Non-obvious technical choices that need durable notes: `docs/tasks/a8-docs-decisions-log/`
+## 4) Launch-slice rules
 
-## Non-negotiable rules
+The repository is currently governed by a **two-step launch-slice strategy**.
 
-### Versions and installs
+### Milestone 1 — Public website slice
+The first validating app is:
 
-- Never use `latest` for core dependencies
-- Never invent versions
-- Use the exact pinned versions and provider rules in `DEPENDENCY.md`
-- Never install a dependency in an app if an internal package is supposed to own it
-- Never add a provider outside the approved provider lanes without updating governance docs first
+- `apps/agency-website/`
+
+### In Milestone 1, AI tools may build
+- root scaffolding
+- approved governance files
+- approved config packages
+- only the `@agency/core-*` packages actually consumed
+- only the `@agency/ui-*` packages actually consumed
+- the agency website
+
+### In Milestone 1, AI tools must not build
+- `apps/internal-tools/crm/`
+- `apps/api`
+- `@agency/data-db`
+- `@agency/auth-internal`
+- `@agency/auth-portal`
+- `@agency/email-templates`
+- `@agency/email-service`
+- `@agency/analytics`
+- `@agency/monitoring`
+- `@agency/monitoring-rum`
+- `@agency/data-cms`
+- `@agency/notifications`
+- `@agency/experimentation`
+- `@agency/experimentation-edge`
+- `@agency/analytics-attribution`
+- `@agency/analytics-consent-bridge`
+- `@agency/data-api-client`
+- `@agency/data-content-federation`
+- `@agency/data-ai-enrichment`
+- `@agency/lead-capture`
+- `@agency/test-setup`
+- `@agency/test-fixtures`
+
+### Milestone 1 implementation rule
+If the first website needs SEO, analytics, or monitoring before shared-package triggers are met:
+- keep that logic app-local
+- do not create the shared package early
+
+### Milestone 2 — First authenticated internal slice
+The second validating app is expected to be:
+
+- `apps/internal-tools/crm/`
+
+Only when Milestone 2 begins may AI tools activate:
+- `@agency/data-db`
+- `@agency/auth-internal`
+- other dependencies explicitly approved for that milestone
+
+---
+
+## 5) Package extraction rules
+
+### Default rule
+Keep new logic inside the app unless a shared-package approval exists.
+
+### A new shared package may be created only when all are true
+1. it has two real consumers
+2. both consumers can use the same API without distortion
+3. it has a clear domain home
+4. its dependencies fit allowed repo flow
+5. its public API can be defined through explicit `exports`
+6. it has an owner
+7. it has a README
+8. it has tests
+9. it is approved in `REPO-STATE.md`
+
+### Two real consumers means
+- two approved apps/packages already need the same capability, or
+- one implemented consumer plus one second approved consumer in the current milestone
+
+### Two real consumers does **not** mean
+- hypothetical future reuse
+- multiple files inside one app
+- one app plus its stories/tests
+- one consumer with multiple variants
+- reuse preserved only by consumer-specific switches
+
+### Distortion test
+If the proposed shared package requires:
+- app-specific flags
+- brand-specific forks
+- workflow-specific branches
+- provider-specific conditionals
+- consumer-specific exceptions
+
+…then the code should remain app-local.
+
+### Never do this
+- create a shared package because the folder exists in `ARCHITECTURE.md`
+- extract code because it “might be useful later”
+- turn one app’s private logic into a package for convenience
+- use a shared package as a dumping ground
+
+---
+
+## 6) Package boundary rules
+
+### Public API only
+For any shared package:
+- import only from paths listed in its `exports`
+- never import from its internal `src/`
+- never bypass the intended package API surface
+
+### New exports are public API
+Do not add exports casually.
+
+Every new export is a public API decision and may require:
+- docs
+- tests
+- changeset consideration
+- decision review
+
+### Dependency flow must not be violated
+Follow the repository dependency flow exactly.
+
+At a minimum:
+- no package may import from an app
+- no lower-level domain may import from a higher-level domain
+- do not introduce circular dependencies
+
+If you need a forbidden import to make the design work, stop and escalate. That is a design problem, not a coding task.
+
+---
+
+## 7) Dependency rules
+
+### Dependency authority
+`DEPENDENCY.md` is the only authoritative human source for exact dependency versions.
+
+Do not use exact version tables in `ARCHITECTURE.md` as install authority.
+
+### Before adding or upgrading a dependency
+1. update `DEPENDENCY.md`
+2. update the owning manifest or workspace config
+3. update the root lockfile
+4. run the relevant tests
+5. update any affected docs if version references changed
+
+### Never do this
+- add a dependency not listed in `DEPENDENCY.md`
+- install a dependency in the wrong internal package
+- use `latest` in repo manifests
+- use relative paths or hardcoded versions for internal package dependencies
+- add a second auth provider to an app without explicit approval
+- hard-code provider names in app logic when abstraction is required
+
+### Internal dependency rule
+Use `workspace:*` for all internal dependencies.
+
+Never use:
+- relative path imports across package boundaries
+- hardcoded internal package versions
+- registry-style version specs for internal workspace packages
+
+### Conditional dependency rule
+Do not activate a 🔒 or conditional package unless:
+- its trigger is satisfied, and
+- it is approved in `REPO-STATE.md`
+
+### Story environment rule
+Do not install Storybook and Ladle in the same repo.
+
+---
+
+## 8) Config and toolchain rules
 
 ### Turborepo rule
+Use the `tasks` key in `turbo.json`, never `pipeline`.
 
-- Use the `tasks` key in `turbo.json`, not `pipeline`
-- If an older task spec or scaffold example shows `pipeline`, treat it as outdated and do not copy it forward
+### ESLint rule
+Use direct ESLint invocation.
+Do not rely on `next lint`.
 
-### Internal dependency rules
+### Root version consistency rule
+Keep these aligned:
+- `.nvmrc`
+- `engines.node`
+- `packageManager`
+- CI Node version
+- CI pnpm version
 
-- Always use `workspace:*` for internal package dependencies
-- Never import from one app into another app
-- Never import from an app into a package
-- Never use cross-package relative imports
-- Never import from `src` or any internal path that is not publicly exported
-- Read the `exports` field before importing from a shared package
+If they drift, stop and escalate.
 
-### Package creation discipline
+---
 
-- A package exists only when two or more consumers truly share the same code without distortion
-- Do not create a shared package just because it sounds architecturally neat
-- Do not create a conditional package until its trigger condition is satisfied and the human approves activation
-- Treat premature package creation as a governance violation
+## 9) Shared-package change rules
 
-### Planning discipline
+When changing a shared package:
 
-- Planned architecture is not the same as approved implementation
-- Conditional packages are not real until activated
-- Reserved apps are not real until approved
-- Future tooling is not real until approved
-- When uncertain whether something is approved, assume it is **not**
+### You must read first
+- package `README.md`
+- package `CHANGELOG.md`
+- package `exports`
+- `DEPENDENCY.md`
+- `DECISION-STATUS.md` if the change touches a locked topic
 
-## Dependency flow
+### You must do
+- add or update tests
+- preserve package boundaries
+- preserve explicit exports discipline
+- update docs if usage or API changes
+- evaluate whether a changeset is required
 
-Follow this dependency direction unless an explicit exception is documented:
+### You must not
+- rename, remove, or change the signature of an exported item silently
+- change shared-package behavior in a way that breaks consumers without corresponding version intent
+- bypass the package’s own public API from inside another package
 
-- `config` and `core` sit at the base
-- `marketing`, `data`, `auth`, `communication`, and `ui` may depend on lower layers as documented
-- `analytics`, `experimentation`, and `lead-capture` sit above those shared domains
-- `apps` may consume packages
-- No package may import from an app
+### Changeset rule
+Any meaningful public API change to a shared package requires explicit versioning intent through Changesets.
 
-Additional rules:
-- `core` must stay dependency-light
-- `data` must not import from `ui` or `auth`
-- `auth` may use `data` where required for adapters, but must not depend on `ui` or `communication`
-- `marketing` may use `core` and `ui`, but not `data`, `auth`, or `communication`
-- `analytics-consent-bridge` is the only package allowed to bridge analytics and compliance explicitly
+If unsure whether the change is public API, treat it as public API and escalate.
 
-## Condition-gated packages
+---
 
-Many packages in this repo are intentionally conditional.
-Their presence in plans or task indexes does **not** mean they should be built now.
+## 10) Data and tenant-safety rules
 
-Before activating any condition-gated package:
-1. Verify the trigger condition in `DEPENDENCY.md`
-2. Verify the package is actually needed by the current approved scope
-3. Confirm human approval
-4. Then and only then begin scaffolding
+### Current posture
+Do not make architectural assumptions beyond the currently locked topics.
 
-Examples of condition-gated work include:
-- database packages before persistent data is truly needed
-- CMS packages before a real CMS-backed site is approved
-- auth packages before login is required
-- analytics abstraction before multiple apps need it
-- experimentation, attribution, enrichment, and federation packages before real duplication appears
+Topic 6 is not yet formally completed, so do not invent tenant-isolation standards beyond what already exists in source docs.
 
-## What belongs where
+### Still required right now
+If touching `@agency/data-db` or preparing for it:
+- preserve `client_id` scoping as a first-class requirement
+- do not allow client-owned queries without explicit client scoping
+- treat schema and migration changes as high risk
+- do not write migrations casually or destructively without review
 
-Use these placement rules:
+### Database package rule
+Never install a database driver directly in an app.
+All DB access must flow through `@agency/data-db` once that package is active.
 
-- Put pure types and schemas in `core-types`
-- Put pure side-effect-free helpers in `core-utils`
-- Put shared design tokens in `ui-theme`
-- Put generic reusable UI primitives in `ui-design-system`
-- Put SEO logic in `seo`, not directly in app pages/layouts
-- Put database schema, migrations, and query modules in `data-db`
-- Put auth provider configuration inside the appropriate auth package
-- Put email rendering in `email-templates`
-- Put email transport/provider logic in `email-service`
+---
 
-Do not place app-specific code into shared packages.
-Do not place client-specific branding into shared UI packages.
-Do not place provider SDK logic directly into apps when an internal package is supposed to own it.
+## 11) Auth, analytics, monitoring, and provider rules
 
-## High-risk areas
+### Auth
+- never mix auth providers within the same app
+- do not activate auth packages before the approved milestone
+- do not speculate on enterprise auth escalation
 
-Treat changes in these areas as high-risk and high-blast-radius:
+### Analytics
+- do not create `@agency/analytics` in Milestone 1 unless explicitly approved
+- keep early single-app analytics app-local if needed
+- do not initialize analytics before the correct consent architecture exists when compliance requirements apply
 
-- `packages/config`
-- `packages/data/database`
-- `packages/auth`
-- root dependency/version config
-- CI and workflow files
-- import boundary enforcement
-- any public package API
+### Monitoring
+- do not add monitoring, RUM, or observability packages until their trigger is explicitly confirmed
+- if lightweight first-slice visibility is needed, prefer approved app-local or platform-native minimums rather than a shared package
 
-For high-risk changes:
-- move slowly
-- explain rationale
-- minimize surface area
-- do not combine unrelated changes
-- prefer documentation and review notes before implementation
+### Email
+- do not activate `@agency/email-templates` or `@agency/email-service` until a real transactional email flow exists
 
-## Public API protection
+### Providers
+- use approved provider lanes from `DEPENDENCY.md`
+- do not invent a new provider without updating the dependency contract first
 
-Every shared package must have an explicit public API.
-Assume the `exports` field is the contract.
+---
 
-Never:
-- rename exports casually
-- remove exports casually
-- change function signatures casually
-- expose internal files as shortcuts
+## 12) Commands and execution discipline
 
-If a public API must change:
-- document the reason
-- mark the blast radius
-- specify migration expectations
-- note whether the change is patch, minor, or major
+### Prefer filtered commands
+When working on a package or app, prefer filtered commands such as:
+- `pnpm turbo build --filter=@agency/[changed-package]...`
+- `pnpm turbo lint --filter=@agency/[changed-package]...`
+- `pnpm turbo test --filter=@agency/[changed-package]...`
 
-## Client data isolation
+### Do not widen scope casually
+Do not run broad repo-wide changes when a filtered change is sufficient.
 
-If touching `@agency/data-db` or any future equivalent data layer:
+### Generator rule
+When approved generators exist for a repeated scaffolding workflow, use them.
 
-- Every client-owned table must include a non-nullable `clientId`
-- Every query operating on client-owned data must require `clientId`
-- Every query must scope by `clientId`
-- It must be structurally difficult to accidentally query across clients
+Until then:
+- manual scaffolding is allowed only for items already approved in `REPO-STATE.md`
+- manual scaffolding does not authorize creating new repo patterns
 
-If a query could possibly return another client's data, stop immediately and redesign it.
+---
 
-## Documentation behavior
+## 13) High-risk areas
 
-When changing plans or structure:
-- update the relevant docs first or alongside the change
-- do not leave architecture decisions only in chat history
-- keep terminology consistent with the repository naming system
-- prefer explicit filenames and controlled vocabulary: `overview`, `spec`, `constraints`, `adr`, `guide`, `ref`, `checklist`, `prompt`, `plan`
+Treat changes in these areas as high risk and do not proceed casually:
+- `packages/config/`
+- `packages/data/`
+- `packages/auth/`
+- `.github/workflows/`
+- `DEPENDENCY.md`
+- `REPO-STATE.md`
+- `DECISION-STATUS.md`
+- package `exports`
+- shared-package public APIs
 
-When a new AI failure mode is discovered, update this file.
+### What high risk means
+For high-risk areas:
+- read the relevant docs first
+- minimize the change
+- preserve existing boundaries
+- escalate on ambiguity
+- do not mix unrelated changes into the same edit
 
-## Contradiction handling
+---
 
-This repository already contains planning-era inconsistencies.
-Do not smooth them over silently.
-
-When you find contradictions:
-1. Quote the conflicting sources
-2. State the practical risk
-3. Recommend which source should win
-4. Wait for approval before implementing the disputed area
-
-## Commands and scope control
-
-When running commands:
-- use filtered commands whenever possible
-- keep changes scoped to the smallest valid unit
-- avoid repo-wide edits unless the task explicitly requires them
-
-When proposing work:
-- state affected packages
-- state dependency impact
-- state whether the work is planning-only or implementation
-
-## Forbidden behaviors
+## 14) Security and secret rules
 
 Never:
-- guess
-- improvise new providers
-- create speculative packages
-- bypass exports
-- bypass dependency boundaries
-- hardcode secrets
+- commit secrets
 - commit API keys
-- treat placeholders as real implementation
-- use outdated examples when a newer governance doc contradicts them
+- commit environment variable values
+- paste credentials into test data, docs, or examples
 
-## Expected response behavior for AI agents
+Use placeholders and documented environment variables only.
 
-When asked to work in this repo:
-1. Identify whether the request is planning or build mode
-2. Read the authoritative docs in order
-3. State assumptions clearly
-4. Surface contradictions early
-5. Keep package boundaries strict
-6. Ask before crossing a control boundary
-7. Prefer small, reversible changes
+---
 
-## Final rule
+## 15) Common anti-drift reminders
 
-Today's shortcuts become tomorrow's structural debt.
-When uncertain, stop and ask instead of guessing.
+### Do not confuse these things
+- target architecture ≠ implementation approval
+- package taxonomy ≠ package creation approval
+- possible reuse ≠ real shared-package justification
+- docs being silent ≠ permission
+- convenience ≠ architectural validity
+
+### When in doubt
+- keep it local
+- keep it smaller
+- keep it inside the approved milestone
+- stop instead of inferring
+
+---
+
+## 16) Done conditions for a valid AI-generated change
+
+A change is only considered repo-valid when:
+- it is approved by `REPO-STATE.md`
+- it does not conflict with `DECISION-STATUS.md`
+- its dependencies conform to `DEPENDENCY.md`
+- it respects package `exports`
+- it respects domain boundaries
+- it preserves milestone scope
+- it updates tests/docs when required
+- it does not introduce new architecture by inference
+
+---
+
+## 17) Maintenance rule for this file
+
+Update this file whenever:
+- a new AI failure mode is observed
+- a new milestone changes what AI tools may scaffold
+- a new locked topic changes repo operating policy
+- a governance conflict is resolved
+- a new exception path is approved
+
+If this file becomes vague, stale, or aspirational, AI drift will increase.

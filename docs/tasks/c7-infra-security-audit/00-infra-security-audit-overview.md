@@ -6,5 +6,7 @@ Implement security scanning and auditing to protect against secrets leakage, vul
 
 
 ## Dependencies
-- TASK_0 (Root Repository Scaffolding)
-- TASK_25 (CI Workflow) - for integration
+- `00-foundation`
+- `c2-infra-ci-workflow` - for integration
+- `a5-docs-tenant-isolation-data-governance` - for tenant-boundary audit expectations
+- `a6-docs-dependency-truth-version-authority` - for dependency-integrity review rules

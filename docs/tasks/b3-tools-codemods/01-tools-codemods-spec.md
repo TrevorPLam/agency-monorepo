@@ -395,7 +395,7 @@ pnpm --filter @agency/codemods test
 
 ## Related Tasks
 
-- TASK_29: App Generator (scaffolds new apps)
-- TASK_30: Package Generator (scaffolds new packages)
-- TASK_28: Changeset Configuration (versions changes)
-- TASK_21: AI Agent Rules (codemods help enforce rules)
+- `b0-tools-app-generator`: scaffolds new apps
+- `b1-tools-package-generator`: scaffolds new packages
+- `c6-infra-changesets`: versions changes
+- `a0-docs-agents`: codemods help enforce repository rules

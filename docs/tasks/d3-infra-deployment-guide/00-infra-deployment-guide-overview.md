@@ -6,6 +6,6 @@ Step-by-step guide for deploying applications with **dual-platform strategy**: V
 
 
 ## Dependencies
-- TASK_0 (Root Repository Scaffolding)
-- TASK_38 (Environment Management) - for env vars
-- TASK_37 (First Internal Tool) - example deployment
+- `00-foundation`
+- `d2-infra-environment-mgmt` - for env vars
+- `e1-apps-crm` - example internal deployment lane

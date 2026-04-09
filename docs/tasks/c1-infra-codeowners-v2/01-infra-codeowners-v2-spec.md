@@ -274,6 +274,6 @@ gh api repos/:owner/:repo/codeowners-errors
 
 
 ## Related Tasks
-- TASK_21: AGENTS.md (references CODEOWNERS for agent rules)
-- TASK_43: Package Guides (documents ownership per package)
-- TASK_25: CI Workflow (runs checks before CODEOWNERS review)
+- `a0-docs-agents`: `docs/AGENTS.md` references CODEOWNERS-sensitive areas
+- `a3-docs-package-guides`: documents ownership expectations per package
+- `c2-infra-ci-workflow`: runs checks before CODEOWNERS review

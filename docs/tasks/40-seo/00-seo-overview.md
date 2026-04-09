@@ -21,9 +21,9 @@ Shared SEO utilities and components for all marketing-facing applications. Provi
 
 ## Dependencies
 
-- TASK_2 (Core Types) - for structured data types
-- TASK_4 (Core Utils) - for URL helpers
-- TASK_7 (UI Theme) - for brand constants in metadata
+- `20-core-types` - for structured data types
+- `21-core-utils` - for URL helpers
+- `30-ui-theme` - for brand constants in metadata
 
 
 ## Consumer Apps

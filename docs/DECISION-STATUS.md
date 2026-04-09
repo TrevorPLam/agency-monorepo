@@ -1,173 +1,367 @@
-# Decision Status
+# DECISION-STATUS.md
 
-## Purpose
+> **Purpose of this document**  
+> This is the repository’s decision registry.  
+> It answers one question: **which decisions are locked, which are still open, and which are deferred?**
+>
+> This document does **not** approve implementation by itself.  
+> Implementation approval lives in `REPO-STATE.md`.
+>
+> **Implementation precedence**
+> 1. `REPO-STATE.md`
+> 2. `DECISION-STATUS.md`
+> 3. `DEPENDENCY.md`
+> 4. package-level README.md + `package.json` `exports`
+> 5. `ARCHITECTURE.md` (target-state reference only)
 
-This document tracks the status of major architectural and operational decisions in the repository.
+---
 
-It exists to separate:
-- decisions that are fully locked,
-- decisions that are directionally preferred but still revisable,
-- decisions that are still open,
-- decisions that have been deferred,
-- decisions that have been explicitly rejected.
+## Status model
 
-This document is not an ADR index.
-ADRs capture final decisions with rationale.
-This file captures the decision pipeline before, during, and after ADR creation.
+Use these status labels consistently.
 
-## Status definitions
+| Status | Meaning |
+|---|---|
+| **Locked** | Decided and approved. Do not reopen during implementation unless a real conflict, failure, or new requirement emerges. |
+| **Approved** | Accepted for use or adoption. |
+| **Deferred** | Intentionally not being done now. Not rejected forever, but not approved for current implementation. |
+| **Conditional** | May be approved later if specific trigger conditions are satisfied. |
+| **Open** | Still needs decision work. Do not let AI tools fill in the gap by inference. |
+| **Rejected** | Not approved. Do not implement unless the decision is explicitly changed. |
+| **Superseded** | Previously valid, now replaced by a newer decision. |
 
-Use these labels exactly:
+---
 
-- `locked` — approved decision; treat as authoritative unless replaced by a newer ADR
-- `leaning` — preferred direction, but still open to revision
-- `open` — not decided yet
-- `deferred` — intentionally postponed until a later phase or trigger
-- `rejected` — considered and intentionally not chosen
+## Repository-wide decision rules
 
-## Decision rules
+### Rule 1 — Locked means stable
+A **Locked** decision should be treated as stable planning authority.  
+Do not reopen locked topics casually during implementation.
 
-1. If a decision is marked `locked`, AI agents must follow it.
-2. If a decision is marked `leaning`, AI agents may discuss alternatives but must not silently switch direction.
-3. If a decision is marked `open`, AI agents must not assume implementation details.
-4. If a decision is marked `deferred`, AI agents must not scaffold related work without explicit approval.
-5. If a decision is marked `rejected`, AI agents must not propose it as the default path again unless the human explicitly reopens it.
+### Rule 2 — Open means stop
+If a relevant decision is **Open**, AI tools must stop and escalate rather than improvise.
 
-## Current decisions
+### Rule 3 — Deferred is not soft approval
+A **Deferred** item is not “okay to scaffold lightly.”  
+It is intentionally out of scope for the current repo phase.
 
-| Area | Decision | Status | Notes |
-|---|---|---|---|
-| Monorepo tooling | pnpm workspaces + Turborepo | locked | Default monorepo foundation |
-| Future scaling path | Nx at larger scale | leaning | Upgrade path, not launch requirement |
-| Package topology | Domain-grouped packages | locked | Structural naming and ownership rule |
-| Dependency boundaries | Strict low-to-high package flow | locked | No package may import from apps |
-| Internal package linking | `workspace:*` only | locked | Never cross-package relative imports |
-| Public package API | Explicit `exports` required | locked | Public API is the contract |
-| Core framework | Next.js 16 App Router | locked | No Pages Router planning path |
-| React version lane | React 19 with Next 16 pairing | locked | Must stay version-aligned |
-| React Compiler usage | Supported, but opt-in and package-controlled | leaning | Do not treat as globally enabled by default |
-| Lint/format lane | ESLint canonical, Biome complementary | locked | ESLint remains primary; Biome handles formatting and performance linting |
-| Styling system | Tailwind CSS v4 CSS-first approach | locked | No old preset-style Tailwind setup |
-| UI ownership model | shadcn-style source ownership | locked | Prefer owned component source over black-box UI package |
-| Design system scope | Minimal shared UI only | locked | No speculative giant component library |
-| Database host default | Neon | leaning | Preferred default lane |
-| ORM | Drizzle | locked | Required abstraction layer |
-| Database access pattern | All DB access through shared package | locked | Apps do not talk directly to DB providers |
-| Client data isolation default | Row-level `clientId` scoping | locked | Baseline multi-tenant rule |
-| Tenant-isolation governance owner | `a5` + `docs/standards/tenant-isolation-data-governance.md` | locked | Control-plane source for tenant-boundary rules |
-| Stronger isolation option | Schema-per-client | leaning | Reserved for stronger isolation cases |
-| Internal auth default | Clerk | leaning | Preferred lane for internal tools |
-| Portal auth default | Better Auth | leaning | Preferred lane for client portals |
-| Client-sites family owner | `e10-apps-client-sites-foundation` | locked | Governs `apps/client-sites/` topology |
-| Client portal default topology | `apps/client-sites/[client]-portal/` | locked | Default for client-owned portals |
-| Shared multi-tenant portal product | Separate `apps/client-portal/` lane | deferred | Only if later evidence justifies a shared portal platform |
-| Enterprise auth escalation | WorkOS | deferred | Only for real enterprise SSO need |
-| CMS default | Sanity | leaning | Preferred for structured content sites |
-| Studio deployment default | Separate Studio, embedded by exception | leaning | Separate by default once Studio is activated |
-| Self-hosted CMS lane | Strapi / Payload / Directus | leaning | Only when self-hosting or residency matters |
-| Email rendering | React Email | locked | Rendering only, no provider logic |
-| Email transport default | Resend | leaning | Default provider lane |
-| Premium email alternative | Postmark | leaning | High-deliverability alternative |
-| Marketing analytics | Plausible | leaning | Preferred public-site analytics lane |
-| Product analytics | PostHog | leaning | Preferred authenticated-app analytics lane |
-| Analytics documentation owner | `a7` + `docs/analytics/` | locked | Repository-level analytics governance layer |
-| Analytics abstraction | Shared package owns providers | locked | Apps should not import providers directly |
-| Decision-log middle layer | `a8` + `docs/decisions/` | locked | Lightweight layer between status register and ADRs |
-| Consent-to-analytics bridge | Separate bridge package | leaning | Only if multi-provider consent complexity appears |
-| Experimentation default | PostHog for product; Edge Config for edge marketing | leaning | Depends on actual use case |
-| Monitoring default | Vercel built-ins first | leaning | Extra monitoring only when justified |
-| Browser E2E lane | Dedicated Playwright workspace app when activated | leaning | Browser-context isolation and explicit CI policy |
-| Dedicated API extraction rule | Route handlers first; dedicated API only at threshold | locked | API lane stays conditional |
-| Client brand-foundation threshold | Two real surfaces before extraction | locked | Keep brand logic app-local until reuse is real |
-| Changesets | Required for shared-package versioning | locked | Version intent must be explicit |
-| Dependency-truth governance owner | `a6` + `docs/standards/dependency-truth.md` | locked | Policy layer above operational pin tables |
-| CODEOWNERS | Start early | locked | Governance begins before scale |
-| MCP server | Build later when repo complexity justifies it | deferred | Not a planning-phase implementation item |
+### Rule 4 — Conditional decisions require explicit trigger review
+If a decision is **Conditional**, the trigger must be satisfied and reflected in `REPO-STATE.md` before implementation begins.
+
+### Rule 5 — Rejected means do not build
+If something is marked **Rejected**, do not implement it unless this document is updated.
+
+---
+
+## Topic decision summary
+
+## Topic 1 — Monorepo foundation strategy
+
+### Status
+**Locked**
+
+### Core decision
+Use:
+- pnpm workspaces
+- Turborepo
+- domain-grouped packages
+- strict boundary governance
+- explicit package exports
+- `workspace:*` for internal dependencies
+- Changesets
+- AI-agent guardrails
+
+### Approved
+- Turborepo as the repo task orchestrator now
+- domain-grouped package structure
+- future compatibility with later Nx-style boundary enforcement
+- governance-first monorepo setup
+
+### Deferred
+- Nx adoption
+- Nx migration work
+- distributed task execution
+- private registry publishing
+- enterprise-scale repo controls
+
+### Rejected
+- adopting Nx at launch
+- “future-proofing” migration work before the trigger is met
+- adding scale-stage tooling before scale-stage problems exist
+
+### Nx evaluation trigger
+Evaluate Nx only when at least 2 are true for a sustained period:
+- 30+ apps or equivalent repo surface complexity
+- 8+ active developers regularly modifying the repo
+- repeated cross-domain import violations despite lint rules
+- repeated AI boundary failures despite AGENTS, exports, and approval-state controls
+- repo graph complexity is materially slowing review, planning, or safe change analysis
+- manual governance is no longer reliably containing dependency and boundary drift
+
+### Nx adoption trigger
+Nx may be approved only when:
+- the evaluation trigger has already been met
+- at least one trigger is a governance-control failure, not just inconvenience
+- lower-cost controls are already in place and still insufficient
+
+---
+
+## Topic 2 — AI-governed planning and anti-drift controls
+
+### Status
+**Locked**
+
+### Core decision
+The repository requires a formal AI governance control plane before broad AI-assisted implementation.
+
+### Approved
+- `REPO-STATE.md`
+- `DECISION-STATUS.md`
+- `DEPENDENCY.md`
+- `docs/AGENTS.md`
+- `.github/CODEOWNERS`
+- CI enforcement
+- ESLint boundary enforcement
+- Changesets for shared-package public API intent
+- document precedence and stop/escalate behavior
+
+### Deferred
+- repo-specific MCP server
+- advanced AI tooling beyond docs, linting, review ownership, CI, and generators
+- generator-enforced scaffolding as a universal requirement before generators exist
+
+### Rejected
+- prompt-only governance
+- letting target-state docs authorize implementation by implication
+- letting AI tools resolve open architectural choices by inference
+
+### Operating rule
+If repo state, dependency rules, and target-state architecture disagree:
+- implementation follows `REPO-STATE.md`
+- then `DECISION-STATUS.md`
+- then `DEPENDENCY.md`
+- and does **not** proceed by inference from `ARCHITECTURE.md`
+
+---
+
+## Topic 3 — Domain-grouped package boundaries and extraction rules
+
+### Status
+**Locked**
+
+### Core decision
+The repository uses an **app-local-first extraction policy**.
+
+### Approved
+- domain-grouped package taxonomy
+- two-real-consumers rule
+- distortion test
+- strict `exports`
+- package proposal/approval workflow
+- package creation only when it satisfies extraction criteria and approval state
+
+### Deferred
+- extraction of packages whose second consumer is only expected later
+- convenience packages created “in advance” of real reuse
+
+### Rejected
+- anticipatory extraction
+- “shared” packages with one real consumer
+- broad convenience exports that expose internals
+- treating package presence in `ARCHITECTURE.md` as approval to scaffold
+
+### Locked extraction rule
+A new shared package may be approved only when all are true:
+1. it has two real consumers
+2. both consumers can use the same API without distortion
+3. it has a clear domain home
+4. its dependencies fit allowed repo flow
+5. its public API can be expressed through explicit `exports`
+6. it has an owner, README, and tests
+7. it is approved in `REPO-STATE.md`
+
+### Two-real-consumers definition
+Counts only when:
+- two approved apps/packages need the same capability, or
+- one implemented consumer and one second approved consumer in the current milestone need the same capability and can use the same API cleanly
+
+Does **not** count:
+- hypothetical future reuse
+- multiple files in one app
+- one app plus tests/stories
+- one consumer with multiple variants
+- abstractions preserved only by app-specific switches
+
+---
+
+## Topic 4 — Launch-slice strategy
+
+### Status
+**Locked**
+
+### Core decision
+Use a two-step launch-slice strategy:
+- **Milestone 1:** `apps/agency-website/`
+- **Milestone 2:** first internal tool shell, expected `apps/internal-tools/crm/`
+
+### Approved
+- agency website as the first validating app
+- internal CRM shell as the second validating app
+- Route Handlers first
+- app-local-first treatment for first-slice SEO, analytics, and monitoring if shared-package triggers are not met
+
+### Deferred
+- `apps/api`
+- shared analytics package in Milestone 1
+- shared monitoring packages in Milestone 1
+- shared CMS package in Milestone 1 unless the first site is explicitly Sanity-backed from day one
+
+### Rejected
+- internal tool as the first validating app
+- dedicated API app in the launch slice
+- activating data/auth/email stack in Milestone 1 by default
+- activating shared SEO/analytics/monitoring packages in Milestone 1 merely because they exist in target-state architecture
+
+### Milestone rule
+If target-state build order would force conditional packages too early, implementation follows:
+- `DEPENDENCY.md` activation rules
+- `REPO-STATE.md` milestone approval
+- not aspirational sequencing from `ARCHITECTURE.md`
+
+---
+
+## Topic 5 — Dependency truth and version governance
+
+### Status
+**Locked**
+
+### Core decision
+The repository uses a two-layer dependency governance model:
+
+#### Human authority
+- `DEPENDENCY.md`
+
+#### Machine authority
+- root `package.json`
+- `pnpm-workspace.yaml`
+- root `pnpm-lock.yaml`
+- CI workflows
+- `workspace:*` for internal dependencies
+
+### Approved
+- `DEPENDENCY.md` as the only authoritative human source for exact dependency versions
+- one shared root lockfile
+- `workspace:*` for internal dependencies
+- dependency drift checks in CI
+- selective pnpm catalogs
+- root-only exception handling for `overrides` / `packageExtensions`
+
+### Deferred
+- `catalogMode: strict` at launch
+- broad catalog enforcement for every dependency immediately
+- Corepack as a hard enforcement dependency in CI
+
+### Rejected
+- exact version authority duplicated across documents
+- raw `latest` in repo manifests
+- internal dependencies using relative paths or hardcoded versions
+- dependency upgrades that begin in manifests instead of `DEPENDENCY.md`
+
+### Dependency authority rule
+If exact version references disagree across documents:
+- `DEPENDENCY.md` wins
+- conflicting references elsewhere must be corrected or de-authorized
+
+---
+
+## Active repository decisions
+
+These are currently active and should govern implementation.
+
+| Area | Decision | Status |
+|---|---|---|
+| Repo foundation | pnpm + Turborepo now | Approved |
+| Scale-stage tooling | Nx later by trigger | Deferred |
+| AI governance | formal control plane required | Approved |
+| Package extraction | app-local first | Approved |
+| Shared-package threshold | two real consumers without distortion | Approved |
+| First validating app | agency website | Approved |
+| First authenticated/persistent app | internal CRM shell | Approved |
+| Dedicated API app at launch | not allowed | Rejected |
+| Dependency truth | `DEPENDENCY.md` only | Approved |
+| Internal dependency specifier | `workspace:*` only | Approved |
+| Exact-version duplication outside `DEPENDENCY.md` | not allowed | Rejected |
+| MCP server at current phase | not approved | Deferred |
+
+---
 
 ## Open decisions
 
-These items are not fully decided yet and must not be silently settled by implementation:
+These remain open and must not be auto-resolved by AI tools.
 
-- Exact first build milestone
-- Exact initial package count
-- Whether `agencyseo` should be part of the very first build slice or only immediately before the agency website
-- Whether early CI should exist before any package code is written, or only after root scaffolding is approved
-- Whether React Compiler is enabled in the first production app
-- Whether the first real app is the internal CRM or the agency website
-- Whether marketing standards docs should be written before any app package is built
-- Whether package guides should be broad templates first or package-by-package after implementation approval
+| Decision | Status | Notes |
+|---|---|---|
+| Topic 6 — tenant isolation and client-data safety | Open | Not yet taken through the formal topic process |
+| Topic 7 — marketing-site architecture in shared monorepo | Open | Not yet taken through the formal topic process |
+| React Compiler launch enablement policy details | Open | High-level direction exists, but implementation policy still needs explicit doc if treated as active |
+| Biome adoption | Open | Explicitly pending evaluation in current repo docs |
+| Exact future generator requirements | Open | Generators are directionally approved later, but enforcement policy is not yet locked |
+| Rulesets vs classic branch protection implementation choice | Open | Governance intent is locked; GitHub mechanism detail may still be chosen |
+| Final pnpm catalog scope | Open | Selective catalog strategy is locked, exact initial catalog set is not yet finalized |
 
-## Rejected defaults
+### Open-decision rule
+If implementation touches an open decision:
+- stop
+- request explicit decision closure
+- do not let AI fill in the gap
 
-These are not the preferred default path for this repo:
+---
 
-- npm workspaces as the primary monorepo strategy
-- Yarn as the primary monorepo strategy
-- Nx at launch as the default starting point
-- Flat package organization with no domain grouping
-- Technical-role grouping as the primary package taxonomy
-- Direct provider SDK usage inside apps when a shared package should own the abstraction
-- Cross-package relative imports
-- Importing from `src` instead of public exports
-- Using `latest` for core dependency versions
-- Treating conditional packages as launch-day packages
-- Building a giant speculative design system before real consumers exist
+## Superseded / clarified assumptions
 
-## Decision promotion flow
+### Superseded assumption
+“Anything listed in `ARCHITECTURE.md` is safe to scaffold.”
 
-Use this progression:
+**Replaced by:**  
+Target-state package listings and sequencing do not authorize implementation by themselves.
 
-1. `open`
-2. `leaning`
-3. `locked`
-4. ADR created if the decision is durable, high-impact, or hard to reverse
+### Superseded assumption
+“Shared package extraction is a convenience optimization.”
 
-Not every locked decision needs an ADR immediately.
-But every high-cost, high-blast-radius, or easy-to-forget decision should eventually get one.
+**Replaced by:**  
+Shared package creation is a governance decision and must satisfy extraction tests.
 
-## When to update this file
+### Superseded assumption
+“The first validating app should be the internal CRM because it exercises more of the stack.”
 
-Update this document when:
-- a major decision becomes locked,
-- a leaning direction changes,
-- a previously open issue is resolved,
-- an ADR is created,
-- a deferred item becomes active,
-- a rejected option is reopened for reconsideration.
+**Replaced by:**  
+The first validating app is the smallest correct real milestone: the agency website.
 
-## Relationship to other docs
+### Superseded assumption
+“Exact versions can be listed in multiple docs if generally aligned.”
 
-- `docs/AGENTS.md` tells AI agents how to behave
-- `docs/REPO-STATE.md` tells them what currently exists and what is **approved for implementation**
-- `docs/DECISION-STATUS.md` tells them which choices are settled and which are still in motion
-- `docs/DEPENDENCY.md` is the authoritative source for all dependency versions
-- `docs/architecture/` ADRs explain finalized high-impact decisions in depth
+**Replaced by:**  
+Exact version authority belongs in `DEPENDENCY.md` only.
 
-## Implementation authority
+---
 
-A decision marked `locked` in this document does **not** automatically grant implementation authority. Before implementing:
+## Change control for this document
 
-1. Check `REPO-STATE.md` — is the package/app marked as `approved` or `active`?
-2. Check this document — is the relevant decision `locked`?
-3. Check `DEPENDENCY.md` — are you using the exact pinned versions?
+Any change to this file must answer:
+1. which topic or decision is being updated
+2. whether the change is locking, opening, deferring, or rejecting something
+3. what other documents must also change
+4. whether `REPO-STATE.md` needs approval-state updates
+5. whether AI operating rules in `docs/AGENTS.md` must be updated
 
-**Document hierarchy for implementation:**
-- `REPO-STATE.md` — what is approved to implement now
-- `DECISION-STATUS.md` — which decisions are locked vs still open  
-- `DEPENDENCY.md` — exact version authority for all dependencies
-- `ARCHITECTURE.md` — target state design (reference only)
+---
 
-## Change log
+## Review triggers
 
-### 2026-04-08
-- Established repository-level decision register
-- Marked monorepo tooling, package boundaries, exports discipline, and Changesets as locked
-- Marked several provider choices as leaning rather than fully locked
-- Marked MCP server and enterprise auth escalation as deferred
-- Preserved unresolved first-build decisions as open
-
-### 2026-04-09
-- Added decision ownership entries for `a5`, `a6`, `a7`, and `a8`
-- Locked the default client-portal topology at `apps/client-sites/[client]-portal/`
-- Locked the route-handler-first API extraction rule and the client brand-foundation threshold
-- Recorded the Playwright lane and Studio deployment defaults as planning decisions
+This document should be reviewed when:
+- a topic is newly completed
+- a previously deferred item becomes active
+- a conditional package trigger is satisfied
+- a governance conflict appears between source docs
+- an AI implementation failure exposes missing or ambiguous decision logic
+- the repo enters a new milestone

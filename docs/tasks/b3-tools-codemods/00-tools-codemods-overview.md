@@ -6,6 +6,6 @@ Create automated migration scripts (codemods) for handling breaking changes in s
 
 
 ## Dependencies
-- TASK_0 (Root Repository Scaffolding)
-- TASK_29 (App Generator) - for understanding app structure
-- TASK_30 (Package Generator) - for understanding package structure
+- `00-foundation`
+- `b0-tools-app-generator` - for understanding app structure
+- `b1-tools-package-generator` - for understanding package structure

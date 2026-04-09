@@ -165,7 +165,7 @@ jobs:
 
 ### On Push to Main
 1. Same as PR but builds from clean state
-2. Triggers release workflow (see TASK_26)
+2. Triggers release workflow (see `c4-infra-release-workflow`)
 
 
 ## Caching Strategy
@@ -224,6 +224,6 @@ CI=true pnpm turbo test
 
 
 ## Related Tasks
-- TASK_26: Release Workflow (runs after CI on main)
-- TASK_36: Database Migration Workflow (separate DB workflow)
-- TASK_40: Security Audit (runs in parallel)
+- `c4-infra-release-workflow`: runs after CI on main
+- `d1-infra-db-migrations`: separate DB workflow when activated
+- `c7-infra-security-audit`: runs in parallel

@@ -501,11 +501,11 @@ export function generatePageMetadata(options: PageMetadataOptions): Metadata {
 NEXT_PUBLIC_SITE_URL=https://agency.com
 NEXT_PUBLIC_SITE_NAME="Digital Agency"
 
-# Analytics (TASK_44)
+# Analytics (`80-analytics`)
 NEXT_PUBLIC_PLAUSIBLE_DOMAIN=agency.com
 NEXT_PUBLIC_POSTHOG_KEY=phc_...
 
-# CMS (TASK_47 - optional)
+# CMS (`51-data-cms` / `e8-apps-studio`, optional)
 NEXT_PUBLIC_SANITY_PROJECT_ID=...
 NEXT_PUBLIC_SANITY_DATASET=production
 NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01

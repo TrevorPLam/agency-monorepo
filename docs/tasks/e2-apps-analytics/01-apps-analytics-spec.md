@@ -724,6 +724,6 @@ Add to root `package.json`:
 
 
 ## Related Tasks
-- TASK_9: UI Design System (analytics event components)
-- TASK_37: First Internal Tool (instrument with PostHog)
-- TASK_38: Environment Management (analytics keys)
+- `32-ui-design-system`: analytics event components
+- `e1-apps-crm`: likely first internal app to instrument with PostHog
+- `d2-infra-environment-mgmt`: analytics keys and environment handling

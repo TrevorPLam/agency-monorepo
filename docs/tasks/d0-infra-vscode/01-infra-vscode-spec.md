@@ -157,7 +157,7 @@
 
 ## Git Ignore for VS Code
 
-Update root `.gitignore` (already done in TASK_0):
+Update root `.gitignore` (tracked in `00-foundation`):
 ```gitignore
 .vscode/*
 !.vscode/extensions.json
@@ -171,7 +171,7 @@ This allows team-shared settings while ignoring user-specific files.
 ## Key Configuration Details
 
 ### Formatting
-- **Default Formatter**: Prettier (from TASK_34)
+- **Default Formatter**: Prettier (from `13-config-prettier`)
 - **Format on Save**: Enabled
 - **ESLint Fix on Save**: Enabled for auto-fixable issues
 - **Organize Imports on Save**: Enabled

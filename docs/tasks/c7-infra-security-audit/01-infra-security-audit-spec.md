@@ -15,7 +15,11 @@
 
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — Security audit `approved`
+- Tenant isolation: `docs/standards/tenant-isolation-data-governance.md`
+- Dependency truth: `docs/standards/dependency-truth.md`
 - Note: Required for maintaining security posture
+
+Security-audit guidance should treat tenant-boundary verification and dependency-integrity verification as governed checks, not ad hoc local rules.
 
 ## Files
 
@@ -230,7 +234,7 @@ echo -e "\n${GREEN}✅ Security checks complete${NC}"
 - [ ] Database credentials not exposed in logs
 - [ ] Connection pooling configured
 - [ ] SSL/TLS enforced for database connections
-- [ ] `client_id` scoping enforced in all queries (multi-tenant)
+- [ ] `client_id` scoping enforced in all queries (multi-tenant; see `a5` standard)
 - [ ] Backup strategy in place
 
 ### Environment & Secrets
@@ -243,6 +247,7 @@ echo -e "\n${GREEN}✅ Security checks complete${NC}"
 ### Dependencies
 - [ ] `pnpm audit` shows no high/critical vulnerabilities
 - [ ] Dependencies reviewed for known security issues
+- [ ] Dependency versions and drift reviewed against `docs/DEPENDENCY.md` and `docs/standards/dependency-truth.md`
 - [ ] No unused dependencies (reduce attack surface)
 - [ ] Lock file committed (pnpm-lock.yaml)
 

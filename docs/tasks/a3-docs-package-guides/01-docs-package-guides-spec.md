@@ -17,7 +17,12 @@
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — Package guides `approved`
 - Location: `docs/package-guides/`
+- Tenant isolation: `docs/standards/tenant-isolation-data-governance.md`
+- Dependency truth: `docs/standards/dependency-truth.md`
+- Agent rules: `docs/AGENTS.md`
 - Note: Each shared package should have a guide
+
+Guide authors should link to the relevant control docs when documenting tenant-sensitive behavior or dependency/version policy, instead of inventing package-local governance.
 
 ## Files
 
@@ -373,6 +378,8 @@ interface ClientOwnedData {
 
 This enables strict scoping in database queries.
 
+Tenant-sensitive guides should point back to `docs/standards/tenant-isolation-data-governance.md` when explaining why the pattern exists, rather than defining a conflicting local default.
+
 ## Change Impact
 
 Changes to this package affect the entire monorepo:
@@ -384,6 +391,15 @@ Changes to this package affect the entire monorepo:
 | Change schema validation | Runtime behavior changes | Minor/Major |
 
 Always include a changeset and consider if a codemod is needed.
+
+## Dependency Authority
+
+When a package guide mentions install commands, version constraints, or workspace dependency rules, it should defer to:
+
+- `docs/DEPENDENCY.md` for exact approved pins
+- `docs/standards/dependency-truth.md` for classification and source-precedence rules
+
+Package guides may explain usage, but they should not become a shadow version authority.
 
 ## Related Packages
 
@@ -587,7 +603,7 @@ const db = createDbClient(container.getConnectionUri());
 
 ## Root README Update
 
-Add to root README.md (TASK_32) links section:
+Add to the future root README tracked by `e0-apps-root-readme`:
 ```markdown
 ## Documentation
 
@@ -599,7 +615,7 @@ Add to root README.md (TASK_32) links section:
 
 ## AI Agent Integration
 
-Per TASK_21 (AGENTS.md), agents must:
+Per `a0-docs-agents` and `docs/AGENTS.md`, agents must:
 
 1. Read package guide before touching any shared package
 2. Read package README.md

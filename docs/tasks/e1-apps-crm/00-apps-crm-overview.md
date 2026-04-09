@@ -6,11 +6,11 @@ Create the first working internal tool (CRM) that validates all packages work to
 
 
 ## Dependencies
-- TASK_9 (UI Design System)
-- TASK_11 (Database Package)
-- TASK_12 (Internal Auth - Clerk)
-- TASK_16 (CMS Schemas) - optional
-- TASK_38 (Environment Management) - for secrets
+- `32-ui-design-system`
+- `50-data-db`
+- `60-auth-internal`
+- `51-data-cms` - optional
+- `d2-infra-environment-mgmt` - for secrets
 
 
 ## Success Criteria

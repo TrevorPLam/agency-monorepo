@@ -6,12 +6,12 @@ Build the agency's public marketing website as a Next.js App Router application 
 
 
 ## Dependencies
-- TASK_7 (UI Theme) - for design tokens
-- TASK_8 (UI Icons) - for iconography
-- TASK_9 (UI Design System) - for components
-- TASK_44 (Analytics Setup) - for tracking
-- TASK_46 (Marketing SEO Foundation) - for metadata
-- TASK_47 (Headless CMS + Preview Workflow) - for content management (optional)
+- `30-ui-theme` - for design tokens
+- `31-ui-icons` - for iconography
+- `32-ui-design-system` - for components
+- `80-analytics` - for tracking
+- `40-seo` - for metadata
+- `51-data-cms` and `e8-apps-studio` when optional content workflows are activated
 
 
 ## Success Criteria

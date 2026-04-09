@@ -30,8 +30,8 @@ agency-monorepo/
 ├── package.json
 ├── pnpm-workspace.yaml
 ├── turbo.json
-├── README.md (see TASK_32)
-└── .vscode/ (see TASK_35)
+├── README.md (see `e0-apps-root-readme`)
+└── .vscode/ (see `d0-infra-vscode`)
     ├── settings.json
     ├── extensions.json
     └── launch.json
@@ -225,7 +225,7 @@ catalog:
 2. **pnpm Version**: 10.33.0 locked via `packageManager` field
 3. **Workspace Pattern**: Must include `packages/**/*` for nested package structure
 4. **Turborepo Remote Caching**: Configure `TURBO_TOKEN` and `TURBO_TEAM` env vars in CI
-5. **Prettier Integration**: Root `format` script uses Prettier (config in TASK_13)
+5. **Prettier Integration**: Root `format` script uses Prettier (config in `13-config-prettier`)
 
 ## Verification Steps
 
@@ -242,6 +242,6 @@ pnpm recursive list  # Should list all packages
 # Verify Turbo tasks
 pnpm turbo build --dry-run
 
-# Verify formatting works (after TASK_34)
+# Verify formatting works (after `13-config-prettier`)
 pnpm format:check
 ```

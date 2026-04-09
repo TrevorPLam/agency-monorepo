@@ -5,7 +5,7 @@ Create the foundation of the monorepo with workspace configuration, package mana
 
 ## Dependencies
 - None (this is the first task)
-- Followed by: TASK_10 (ESLint), TASK_11 (TypeScript), TASK_12 (Tailwind)
+- Followed by: `10-config-eslint`, `11-config-typescript`, `12-config-tailwind`
 
 ## Scope
 This task establishes the root repository structure including:
@@ -16,8 +16,8 @@ This task establishes the root repository structure including:
 - Root package.json with shared scripts
 
 ## Next Steps
-1. Create TASK_10 (ESLint Config)
-2. Create TASK_11 (TypeScript Config)
-3. Create TASK_12 (Tailwind Config)
-4. Create TASK_13 (Prettier Config)
-5. Create TASK_13a (React Compiler Config)
+1. Create `10-config-eslint`
+2. Create `11-config-typescript`
+3. Create `12-config-tailwind`
+4. Create `13-config-prettier`
+5. Create `13-config-react-compiler`

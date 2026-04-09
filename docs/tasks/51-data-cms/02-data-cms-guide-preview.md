@@ -14,8 +14,8 @@ This extends `packages/data/cms-schemas` rather than creating a new package beca
 
 ## Dependencies
 
-- TASK_16 (CMS Schemas) - base Sanity integration
-- TASK_45 (SEO Package) - for preview metadata handling
+- `51-data-cms` - base Sanity integration
+- `40-seo` - for preview metadata handling
 
 ## Files
 

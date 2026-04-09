@@ -16,7 +16,16 @@
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — DB seed tool `open`
 - Version pins: `DEPENDENCY.md` §1
+- Tenant isolation: `docs/standards/tenant-isolation-data-governance.md`
+- Dependency truth: `docs/standards/dependency-truth.md`
 - Note: Optional; useful for development but not required
+
+## Seeding policy
+
+- Seed scripts must keep client-owned records scoped by `clientId`.
+- Seed tooling must not normalize cross-client data mixing as a convenience pattern for runtime code.
+- If seed scripts need exceptions for admin or reference data, the exception should be documented explicitly rather than implied.
+- Tooling and install guidance for this lane must defer to `docs/DEPENDENCY.md` and `docs/standards/dependency-truth.md`.
 
 ## Files
 ```

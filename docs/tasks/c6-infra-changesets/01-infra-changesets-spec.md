@@ -129,5 +129,5 @@ Only skip changesets for:
 - [ ] Directory created at `.changeset/`
 - [ ] `config.json` created
 - [ ] `README.md` created for contributors
-- [ ] Changeset Action workflow configured (see TASK_26)
+- [ ] Changeset Action workflow configured (see `c4-infra-release-workflow`)
 - [ ] Test changeset created with `pnpm changeset`

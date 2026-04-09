@@ -22,10 +22,10 @@ Shared GDPR, CCPA, and privacy compliance utilities for all agency applications.
 
 ## Dependencies
 
-- TASK_2 (Core Types) - for consent state types
-- TASK_4 (Core Utils) - for storage helpers
-- TASK_9 (UI Design System) - for consent banner UI components
-- TASK_45 (SEO Package) - for metadata privacy fields (optional)
+- `20-core-types` - for consent state types
+- `21-core-utils` - for storage helpers
+- `32-ui-design-system` - for consent banner UI components
+- `40-seo` - for metadata privacy fields when needed
 
 
 ## Consumer Apps

@@ -1,291 +1,356 @@
-# Repository State
+# REPO-STATE.md
 
-## Purpose
+> **Purpose of this document**  
+> This is the implementation-state authority for the repository.  
+> It answers one question: **what is approved to build now?**
+>
+> If a package, app, tool, or workflow is described elsewhere but is not approved here, it is **not approved for scaffolding or implementation**.
+>
+> **Implementation precedence**
+> 1. `REPO-STATE.md`
+> 2. `DECISION-STATUS.md`
+> 3. `DEPENDENCY.md`
+> 4. package-level README.md + `package.json` `exports`
+> 5. `ARCHITECTURE.md` (target-state reference only)
 
-This file records the current approved state of the repository.
-It exists to prevent AI agents and human contributors from confusing planned architecture with approved implementation.
+---
 
-This is a living status document.
-Update it whenever the repository changes phase, when a package moves from planned to approved, or when a roadmap item is intentionally deferred.
+## Status summary
 
-## Current phase
+### Current implementation phase
+**Planning / pre-implementation governance phase**
 
-**Phase:** Planning  
-**Build status:** Not started  
-**Default mode for AI agents:** Planning mode  
-**Implementation authority:** Human approval required before scaffolding, coding, installation, or file generation
+### What this means
+The repository is still in planning mode.  
+Implementation should be limited to the approved launch slice and the governance spine required to keep AI-assisted scaffolding from drifting.
 
-## Core operating principle
+### Not allowed
+- broad repo-wide scaffolding based only on target-state architecture
+- activating conditional packages before their trigger is satisfied
+- creating new shared packages without explicit approval here
+- adding tooling or infra because it is “future useful”
 
-Planned architecture is not the same as approved implementation.
+---
 
-A package, app, workflow, or provider is considered real only when all of the following are true:
-1. The human has approved it for implementation
-2. Its trigger condition has been met, if conditional
-3. The work is reflected in the relevant task scope
-4. The repository state below has been updated
+## Governing rules
 
-If any of those are missing, treat the item as not approved.
+### Rule 1 — Approval is explicit
+If something is not marked **Approved now** in this file, it is not approved.
 
-## Approved now
+### Rule 2 — Conditional packages stay conditional
+A package listed in `ARCHITECTURE.md` or `DEPENDENCY.md` is still **not approved** unless:
+- its trigger is satisfied, and
+- this file says it is approved
 
-The following items are approved at the documentation and planning level:
+### Rule 3 — Smallest correct milestone wins
+Implementation follows the smallest real milestone that respects dependency activation rules and package extraction rules.
+
+### Rule 4 — App-local first
+If a capability can stay inside an app for the current milestone, keep it app-local unless a shared-package approval exists here.
+
+### Rule 5 — Stop on ambiguity
+If there is any conflict between target-state architecture and this file, follow this file and stop for decision review if needed.
+
+---
+
+## Topic lock summary
+
+| Topic | Status | Implementation effect |
+|---|---|---|
+| 1. Monorepo foundation strategy | Locked | Use pnpm + Turborepo now; Nx deferred |
+| 2. AI-governed planning and anti-drift controls | Locked | Governance spine required before broad implementation |
+| 3. Domain-grouped package boundaries and extraction rules | Locked | App-local first; new shared packages need approval |
+| 4. Launch-slice strategy | Locked | Agency website is the first validating app |
+| 5. Dependency-truth and version-governance | Locked | `DEPENDENCY.md` is version authority; machine drift checks required |
+
+---
+
+## Approved now — governance spine
+
+These items are approved immediately because they are required to make later implementation safe.
 
 ### Governance documents
-- `README.md`
-- `ARCHITECTURE.md`
+- `REPO-STATE.md`
+- `DECISION-STATUS.md`
 - `DEPENDENCY.md`
-- `docs/tasks/README.md`
-- `docs/tasks/1.md`
 - `docs/AGENTS.md`
-- `docs/REPO-STATE.md`
-- `docs/standards/tenant-isolation-data-governance.md`
-- `docs/standards/dependency-truth.md`
-- `docs/analytics/README.md`
-- `docs/decisions/README.md`
+- ADRs for Topics 1–5
 
-### Approved planning work
-- Repository structure planning
-- Package boundary planning
-- Dependency governance
-- ADR planning
-- Documentation design
-- Task decomposition
-- Naming system refinement
-- Condition-trigger definitions
-- Risk identification
-- contradiction detection
-- Cross-cutting standards ownership
-- Analytics documentation ownership
-- Decision-log ownership
-- Client-sites family planning
-- Client-portal topology planning
-- Conditional E2E, Studio, API, and brand-foundation lane planning
+### Repo governance and enforcement
+- `.github/CODEOWNERS`
+- CI baseline
+- ESLint boundary enforcement
+- explicit package `exports`
+- Changesets for shared-package version intent
+- `workspace:*` for internal dependencies
+- root lockfile governance
+- dependency drift-check job
 
-### Approved implementation work
-None yet.
+---
 
-## Not yet approved for implementation
+## Approved now — monorepo foundation
 
-The following are **not** yet approved for scaffolding or coding unless a human explicitly says so:
-
-### Root implementation
+### Root repository scaffolding
 - root `package.json`
 - `pnpm-workspace.yaml`
-- `turbo.json`
-- `.nvmrc`
+- `turbo.json` using `tasks`
 - `.gitignore`
-- `.github/`
-- CI workflows
-- Changesets configuration
-- CODEOWNERS file
-- environment files
-- generators
+- `.nvmrc`
+- `README.md`
+
+### Approved core stack direction
+- pnpm workspaces
+- Turborepo
+- Next.js App Router
+- React 19
+- Tailwind v4
+- shadcn/ui source-owned design system approach
+
+### Explicitly not approved now
+- Nx
+- repo-specific MCP server
+- private package registry
+- dedicated API app
+- enterprise-scale CI/distribution features
+
+---
+
+## Approved now — launch slice strategy
+
+The repository uses a **two-step launch-slice strategy**.
+
+### Milestone 1 — Public website slice
+**First validating app:** `apps/agency-website/`
+
+#### Approved now in Milestone 1
+##### Config packages
+- `@agency/config-eslint`
+- `@agency/config-typescript`
+- `@agency/config-tailwind`
+- `@agency/config-prettier`
+- `@agency/config-react-compiler`
+
+##### Core packages
+Only the packages actually needed by the first app:
+- `@agency/core-types`
+- `@agency/core-utils`
+- `@agency/core-constants`
+- `@agency/core-hooks`
+
+##### UI packages
+Only the packages actually needed by the first app:
+- `@agency/ui-theme`
+- `@agency/ui-icons`
+- `@agency/ui-design-system`
+
+##### App
+- `apps/agency-website/`
+
+#### Approved implementation style in Milestone 1
+- app-local SEO if only one public surface exists
+- app-local analytics if only one app exists
+- app-local monitoring if package triggers are not met
+- Route Handlers inside App Router if server endpoints are needed
+
+#### Not approved in Milestone 1
+- `apps/internal-tools/crm/`
+- `apps/api`
+- `@agency/data-db`
+- `@agency/auth-internal`
+- `@agency/auth-portal`
+- `@agency/email-templates`
+- `@agency/email-service`
+- `@agency/analytics`
+- `@agency/monitoring`
+- `@agency/monitoring-rum`
+- `@agency/data-cms`
+- `@agency/notifications`
+- `@agency/experimentation`
+- `@agency/experimentation-edge`
+- `@agency/analytics-attribution`
+- `@agency/analytics-consent-bridge`
+- `@agency/data-api-client`
+- `@agency/data-content-federation`
+- `@agency/data-ai-enrichment`
+- `@agency/lead-capture`
+- `@agency/test-setup`
+- `@agency/test-fixtures`
+
+#### Milestone 1 rule
+Do not activate a shared package in Milestone 1 if the need can be satisfied app-locally and the package trigger is not yet met.
+
+---
+
+### Milestone 2 — First authenticated internal slice
+**Second validating app:** expected `apps/internal-tools/crm/`
+
+#### Approved when Milestone 2 begins
+- `apps/internal-tools/crm/`
+- `@agency/data-db`
+- `@agency/auth-internal`
+
+#### Conditionally approvable within Milestone 2
+Only if the app actually requires them:
+- `@agency/email-templates`
+- `@agency/email-service`
+- `@agency/compliance`
+- `@agency/seo`
+- `@agency/analytics`
+
+#### Still not approved by default in Milestone 2
+Unless separately approved after trigger review:
+- `apps/api`
+- `@agency/monitoring`
+- `@agency/monitoring-rum`
+- `@agency/data-cms`
+- `@agency/auth-portal`
+- `@agency/notifications`
+- `@agency/experimentation`
+- `@agency/experimentation-edge`
+- `@agency/analytics-attribution`
+- `@agency/analytics-consent-bridge`
+- `@agency/data-api-client`
+- `@agency/data-content-federation`
+- `@agency/data-ai-enrichment`
+- `@agency/lead-capture`
+- `@agency/test-setup`
+- `@agency/test-fixtures`
+- repo-specific MCP server
+- Nx
+
+---
+
+## Shared package approval state
+
+### Always approved
+These are foundational and may be created now:
+- `@agency/config-*`
+- `@agency/core-*`
+- `@agency/ui-*`
+
+### Not automatically approved
+Even if listed in architecture, these require explicit trigger satisfaction plus approval here:
+- `@agency/seo`
+- `@agency/compliance`
+- `@agency/compliance-security-headers`
+- `@agency/monitoring`
+- `@agency/monitoring-rum`
+- `@agency/data-db`
+- `@agency/data-cms`
+- `@agency/data-content-federation`
+- `@agency/data-ai-enrichment`
+- `@agency/data-api-client`
+- `@agency/auth-internal`
+- `@agency/auth-portal`
+- `@agency/email-templates`
+- `@agency/email-service`
+- `@agency/notifications`
+- `@agency/analytics`
+- `@agency/analytics-attribution`
+- `@agency/analytics-consent-bridge`
+- `@agency/experimentation`
+- `@agency/experimentation-edge`
+- `@agency/lead-capture`
+- `@agency/lead-capture-progressive`
+- `@agency/lead-capture-enrichment`
+- `@agency/test-setup`
+- `@agency/test-fixtures`
+
+---
+
+## Shared package extraction rule
+
+A new shared package may be approved only when all are true:
+1. it has two real consumers
+2. both consumers can use the same API without distortion
+3. it has a clear domain home
+4. its dependencies fit the allowed repo dependency flow
+5. its public API can be defined via explicit `exports`
+6. it has an owner, README, and tests
+7. it is approved in this file
+
+If any of these are false, the code stays app-local.
+
+---
+
+## Tooling approval state
+
+### Approved now
+- Changesets
+- root lockfile workflow
+- CI drift checks
+- filtered Turborepo commands
+- package boundary linting
+- generator planning/specification work
+
+### Deferred
+- package generators as required implementation path
 - codemods
 - MCP server
+- Nx migration work
+- distributed task execution
+- private registry publishing
 
-### Shared packages
-- all `agencyconfig-*`
-- all `agencycore-*`
-- all `agencyui-*`
-- all marketing packages
-- all data packages
-- all auth packages
-- all communication packages
-- all analytics / experimentation / lead-capture packages
-- all testing packages
-- all conditional packages
+---
 
-### Applications
-- all `apps/*`
-- internal tools
-- agency website
-- client portal
-- docs site
-- email preview app
-- Sanity Studio app
-- API app
+## Dependency governance state
 
-## Package state model
+### Approved now
+- `DEPENDENCY.md` as human dependency authority
+- machine truth in root manifests, lockfile, workspace config, and CI
+- `workspace:*` for internal dependencies
+- no `latest` in repo manifests
+- dependency changes must begin with `DEPENDENCY.md`
 
-Use these exact state labels:
+### Required cleanup before broad implementation
+- normalize exact version references in `DEPENDENCY.md`
+- remove or de-authorize duplicated exact pin tables outside `DEPENDENCY.md`
+- add dependency drift checks to CI
 
-- `planned` — exists in architecture or tasks, but not approved to build
-- `approved` — approved to build, but not yet scaffolded
-- `active` — scaffolded or implemented in repository
-- `conditional` — may exist in plans, but blocked until trigger is met
-- `deferred` — intentionally postponed
-- `cancelled` — intentionally removed from future scope
+---
 
-## Current package states
+## AI implementation operating state
 
-### Always-foundational packages
-| Package | State | Notes |
-|---|---|---|
-| `agencyconfig-eslint` | planned | Foundational, but not approved to scaffold yet |
-| `agencyconfig-typescript` | planned | Foundational, but not approved to scaffold yet |
-| `agencyconfig-tailwind` | planned | Foundational, but not approved to scaffold yet |
-| `agencyconfig-prettier` | planned | Foundational, but not approved to scaffold yet |
-| `agencyconfig-react-compiler` | planned | Optional / opt-in behavior must stay explicit |
+### AI tools may
+- scaffold only items marked approved here
+- build only within the current approved milestone
+- keep logic app-local by default
+- use Route Handlers instead of creating `apps/api` in early phases
+- propose, but not scaffold, deferred packages
 
-### Core packages
-| Package | State | Notes |
-|---|---|---|
-| `agencycore-types` | planned | Foundational after config |
-| `agencycore-utils` | planned | Foundational after core-types |
-| `agencycore-constants` | planned | Foundational after core-types |
-| `agencycore-hooks` | planned | Planned, not approved yet |
+### AI tools must not
+- infer approval from `ARCHITECTURE.md`
+- scaffold conditional packages early
+- create shared packages without approval here
+- add Nx
+- add MCP infrastructure
+- create `apps/api` in Milestone 1
+- activate data/auth/email/CMS packages in Milestone 1 unless explicitly approved here
+- treat future reuse as current justification
 
-### UI packages
-| Package | State | Notes |
-|---|---|---|
-| `agencyui-theme` | planned | Shared design tokens only |
-| `agencyui-icons` | planned | Shared icon exports only |
-| `agencyui-design-system` | planned | Build minimally, only for real consumers |
+---
 
-### Marketing packages
-| Package | State | Notes |
-|---|---|---|
-| `agencyseo` | conditional | Build when multiple surfaces need consistent SEO |
-| `agencycompliance` | conditional | Build when real consent UI is needed |
-| `agencycompliance-security-headers` | conditional | Build only for compliance or audit need |
-| `agencymonitoring` | conditional | Build when real user data is needed |
-| `agencymonitoring-rum` | conditional | Build when ranking-critical traffic justifies it |
+## Exit criteria for moving beyond Milestone 1
 
-### Data packages
-| Package | State | Notes |
-|---|---|---|
-| `agencydata-db` | conditional | Build when first internal tool truly needs persistence |
-| `agencydata-cms` | conditional | Build when first real CMS-backed client site is confirmed |
-| `agencydata-content-federation` | conditional | Build only for genuine multi-source content |
-| `agencydata-ai-enrichment` | conditional | Build only when content scale justifies it |
-| `agencydata-api-client` | conditional | Build only when 2 apps share the same internal API |
+Milestone 1 is considered complete when:
+- governance spine exists
+- first app builds, lints, typechecks, and deploys
+- approved config/core/ui packages are consumed successfully
+- no non-approved packages were activated
+- package extraction stayed app-local where required
 
-### Auth packages
-| Package | State | Notes |
-|---|---|---|
-| `agencyauth-internal` | conditional | Build when first internal tool requires auth |
-| `agencyauth-portal` | conditional | Build when first client portal requires login |
+Milestone 2 may begin only when:
+- Milestone 1 is stable
+- first internal-tool need is approved
+- `@agency/data-db` and `@agency/auth-internal` are explicitly entered into active implementation
 
-### Communication packages
-| Package | State | Notes |
-|---|---|---|
-| `agencyemail-templates` | conditional | Build with first transactional email flow |
-| `agencyemail-service` | conditional | Build with first transactional email flow |
-| `agencynotifications` | conditional | Build when 2 workflows need shared notifications |
+---
 
-### Analytics / experimentation / lead capture
-| Package | State | Notes |
-|---|---|---|
-| `agencyanalytics` | conditional | Build when multiple apps need shared analytics abstraction |
-| `agencyanalytics-attribution` | conditional | Build only when cross-channel attribution matters |
-| `agencyanalytics-consent-bridge` | conditional | Build only when 2 analytics systems need shared consent logic |
-| `agencyexperimentation` | conditional | Build when experimentation is actually planned |
-| `agencyexperimentation-edge` | conditional | Build only for edge-assigned marketing tests |
-| `agencylead-capture` | conditional | Build when lead forms are truly needed |
-| `agencylead-capture-progressive` | conditional | Build when form complexity or abandonment justifies it |
-| `agencylead-capture-enrichment` | conditional | Build when sales workflow requires enrichment |
+## Change control for this document
 
-### Testing and tooling
-| Package / Tool | State | Notes |
-|---|---|---|
-| `agencytest-setup` | conditional | Build when repeated test setup duplication appears |
-| `agencytest-fixtures` | conditional | Build when repeated fixture duplication appears |
-| app generator | planned | Documentation may exist before implementation |
-| package generator | planned | Documentation may exist before implementation |
-| db seed tooling | planned | Not approved to build yet |
-| codemods | planned | Not approved to build yet |
-| content pipeline | conditional | Build when AI-assisted content operations are real |
-| MCP server | deferred | Growth-stage tool, not a planning-phase build item |
-
-### Documentation task families
-| Task family | State | Notes |
-|---|---|---|
-| `a5-docs-tenant-isolation-data-governance` | approved | Documentation-authorized now; owns the tenant-isolation planning source |
-| `a6-docs-dependency-truth-version-authority` | approved | Documentation-authorized now; owns dependency-truth governance |
-| `a7-docs-analytics-guides` | approved | Documentation-authorized now; owns `docs/analytics/` |
-| `a8-docs-decisions-log` | approved | Documentation-authorized now; owns `docs/decisions/` |
-
-### Apps
-| App | State | Notes |
-|---|---|---|
-| root repo shell | planned | Not scaffolded |
-| internal CRM / tools app | planned | First likely real app later |
-| agency website | planned | Important, but still not approved to build |
-| client sites family | conditional | Family owner exists; activate per approved client build |
-| client portal | conditional | Build when a real login-enabled portal is required; default path is `apps/client-sites/[client]-portal/` |
-| docs site | deferred | Nice-to-have, not current priority |
-| email preview app | deferred | Build only when email work becomes active |
-| Sanity Studio app | conditional | Build only with CMS activation |
-| API app | conditional | Build only if shared API surface becomes real |
-
-### App and package planning lanes added by gap fill
-| Task family | State | Notes |
-|---|---|---|
-| `e4-apps-client-portal` | conditional | Planning lane exists; implementation still gated |
-| `e5-apps-playwright-e2e` | conditional | Planning lane exists; implementation still gated |
-| `e8-apps-studio` | conditional | Planning lane exists; implementation still gated |
-| `e9-apps-api` | conditional | Planning lane exists; implementation still gated |
-| `e10-apps-client-sites-foundation` | conditional | Planning lane exists; implementation still gated |
-| `f3-apps-client-sites-brand-foundation` | conditional | Planning lane exists; implementation still gated |
-
-## Locked decisions
-
-The following decisions should be treated as approved unless a future ADR explicitly changes them:
-
-- pnpm workspace monorepo
-- Turborepo for orchestration
-- `tasks` key in `turbo.json`, never `pipeline`
-- internal dependencies use `workspace:*`
-- explicit package `exports`
-- no package may import from an app
-- provider choices must follow `DEPENDENCY.md`
-- conditional packages stay unbuilt until triggered
-- self-discipline over speculative package creation
-- package taxonomy remains domain-grouped, not flattened
-
-## Known tensions and unresolved items
-
-The repository contains planning-era tensions.
-These are known and should not be “fixed” implicitly by an AI agent.
-
-### Open items
-- Final initial package count is not locked
-- Exact first implementation milestone is not locked
-- Whether React Compiler is enabled in the first shipped app is not locked
-- Which planned infra items should exist before the first app is not fully locked
-- Some task inventory totals and planning references differ across documents
-- Some older examples may still show legacy structures or outdated naming
-
-### Rule for unresolved items
-When an item is unresolved:
-1. Do not guess
-2. Do not scaffold
-3. Do not silently normalize docs
-4. Surface the ambiguity
-5. Ask for a ruling or create an ADR candidate
-
-## Activation rule
-
-A conditional item may move from `conditional` to `approved` only when:
-1. its trigger condition is met,
-2. the human explicitly approves activation,
-3. dependent prerequisites are already approved,
-4. this file is updated.
-
-## Change log for state
-
-Use this section for human-readable state transitions.
-
-### 2026-04-08
-- Repository marked as planning-only
-- Default AI mode set to planning mode
-- No packages approved for implementation yet
-- `docs/AGENTS.md` established as behavioral control file
-- `docs/REPO-STATE.md` established as current-state control file
-
-### 2026-04-09
-- Added documentation-authorized task families `a5` through `a8`
-- Added conditional planning lanes `e4`, `e5`, `e8`, `e9`, `e10`, and `f3`
-- Established `docs/tasks/README.md` as the canonical task index and marked top-level `tasks/` as legacy
-- Resolved the default client-portal topology to `apps/client-sites/[client]-portal/`
+Any update to this file must answer:
+1. what is being newly approved or deferred
+2. which topic decision authorizes the change
+3. what milestone the change belongs to
+4. whether any dependency trigger or package extraction rule is being activated
+5. what AI tools are now allowed to do that they could not do before

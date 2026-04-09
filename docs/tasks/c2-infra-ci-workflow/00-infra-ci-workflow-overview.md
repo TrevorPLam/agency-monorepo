@@ -11,7 +11,7 @@ Continuous Integration pipeline that builds, lints, tests, and type-checks all a
 
 
 ## Dependencies
-- TASK_0 (Root Repository Scaffolding) - for `turbo.json`
-- TASK_1 (ESLint Config) - for linting
-- TASK_2 (TypeScript Config) - for type checking
-- TASK_17 (Test Setup) - for testing infrastructure
+- `00-foundation` - for `turbo.json`
+- `10-config-eslint` - for linting
+- `11-config-typescript` - for type checking
+- `90-test-setup` - for testing infrastructure

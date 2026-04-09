@@ -6,5 +6,5 @@ Enforce automatic review requests from the correct domain owners when shared pac
 
 
 ## Dependencies
-- TASK_0 (Root Repository Scaffolding) - for repository structure
-- All package tasks (TASK_1-21) - defines what needs ownership
+- `00-foundation` - for repository structure
+- The current package task families indexed in `docs/tasks/README.md` - define what needs ownership

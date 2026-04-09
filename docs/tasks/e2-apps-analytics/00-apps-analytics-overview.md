@@ -6,6 +6,6 @@ Configure analytics infrastructure with Plausible for marketing sites and PostHo
 
 
 ## Dependencies
-- TASK_0 (Root Repository Scaffolding)
-- TASK_9 (UI Design System) - for analytics components
-- TASK_37 (First Internal Tool) - first app to instrument
+- `00-foundation`
+- `32-ui-design-system` - for analytics components
+- `e1-apps-crm` - likely first internal app to instrument

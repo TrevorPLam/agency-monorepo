@@ -693,7 +693,7 @@ pnpm deploy:prod
 ## Platform-Specific CI/CD
 
 ### Vercel (via GitHub Actions)
-Already covered in TASK_25 and TASK_27.
+Already covered in `c2-infra-ci-workflow` and `c5-infra-preview-deploy`.
 
 ### Cloudflare (via GitHub Actions)
 
@@ -743,8 +743,8 @@ jobs:
 | Supabase Auth | ✅ Works | ✅ Works | Works via REST API |
 
 ## Related Tasks
-- TASK_25: CI Workflow (automated deployments)
-- TASK_27: Preview Deployment Workflow
-- TASK_38: Environment Management
-- TASK_40: Security Audit
+- `c2-infra-ci-workflow`: automated deployment checks
+- `c5-infra-preview-deploy`: preview deployment workflow
+- `d2-infra-environment-mgmt`: environment setup
+- `c7-infra-security-audit`: security review and audit flow
 ```
