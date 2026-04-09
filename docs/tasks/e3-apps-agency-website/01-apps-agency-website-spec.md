@@ -1,4 +1,23 @@
-# E3 Apps Agency Website Specification
+# e3-apps-agency-website: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Agency requires public marketing website |
+| **Minimum Consumers** | 1 (public-facing site) |
+| **Dependencies** | Next.js 16.2.3, React 19.2.5, `@agency/ui-design-system`, `@agency/seo` |
+| **Exit Criteria** | Website deployed and publicly accessible |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit business need |
+| **Version Authority** | `DEPENDENCY.md` §2, §17 — Next.js 16.2.3, shadcn/ui |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Agency website `open`
+- Version pins: `DEPENDENCY.md` §2, §17
+- Architecture: `ARCHITECTURE.md` — Apps layer
+- Note: Conditional; depends on agency marketing strategy
 
 ## Files
 
@@ -90,9 +109,9 @@ apps/agency-website/
     "clean": "rm -rf .next"
   },
   "dependencies": {
-    "next": "16.2.2",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "next": "16.2.3",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "@agency/config-tailwind": "workspace:*",
     "@agency/config-typescript": "workspace:*",
     "@agency/core-types": "workspace:*",
@@ -102,16 +121,16 @@ apps/agency-website/
     "@agency/ui-icons": "workspace:*",
     "@agency/ui-design-system": "workspace:*",
     "@agency/analytics": "workspace:*",
-    "@vercel/speed-insights": "latest",
-    "@vercel/analytics": "latest"
+    "@vercel/speed-insights": "2.0.0",
+    "@vercel/analytics": "2.0.1"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",
     "@agency/config-prettier": "workspace:*",
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "typescript": "6.0.0"
+    "@types/node": "25.5.2",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "typescript": "6.0.2"
   },
   "prettier": "@agency/config-prettier"
 }

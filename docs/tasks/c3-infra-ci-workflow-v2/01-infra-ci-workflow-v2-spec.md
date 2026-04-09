@@ -1,4 +1,22 @@
-# C3 Infra Ci Workflow V2 Specification
+# c3-infra-ci-workflow-v2: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `deferred` — Depends on CI maturity needs |
+| **Trigger** | CI requires advanced features (caching, parallelization, security hardening) |
+| **Minimum Consumers** | CI bottlenecks or security requirements |
+| **Dependencies** | Task c2-infra-ci-workflow completed |
+| **Exit Criteria** | CI v2 workflow deployed and stable |
+| **Implementation Authority** | `REPO-STATE.md` — Deferred until needs justify upgrade |
+| **Version Authority** | Repository governance |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — CI v2 `deferred`
+- Supersedes: Task c2-infra-ci-workflow (evolution)
+- Note: Deferred until CI v1 shows limitations
 
 ## Files
 ```

@@ -1,4 +1,22 @@
-# Analytics Attribution Specification
+# 80a-analytics-attribution: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires multi-touch attribution tracking |
+| **Minimum Consumers** | 1+ apps with attribution modeling needs |
+| **Dependencies** | PostHog OR Plausible, React 19.2.5 |
+| **Exit Criteria** | Attribution package exported and integrated |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit analytics need |
+| **Version Authority** | `DEPENDENCY.md` §2 — React 19.2.5 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Attribution `open`
+- Version pins: `DEPENDENCY.md` §2
+- Note: Sub-task of 80-analytics; optional attribution modeling
 
 ## Files
 
@@ -36,7 +54,7 @@ packages/analytics/attribution/
   "dependencies": {
     "@agency/core-types": "workspace:*",
     "@agency/analytics": "workspace:*",
-    "uuid": "latest"
+    "uuid": "13.0.0"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",

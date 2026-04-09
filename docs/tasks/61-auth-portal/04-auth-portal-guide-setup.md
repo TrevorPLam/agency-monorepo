@@ -259,13 +259,13 @@ await auth.api.createOrganization({
 });
 ```
 
-## Migration from Better Auth 1.5.x to 1.6.0
+## Migration from Better Auth 1.5.x to 1.6.x
 
 ### Update Dependencies
 
 ```bash
-pnpm up better-auth@1.6.0
-pnpm add @better-auth/drizzle-adapter@1.6.0
+pnpm up better-auth@1.6.2
+pnpm add @better-auth/drizzle-adapter@1.6.2
 ```
 
 ### Update Import

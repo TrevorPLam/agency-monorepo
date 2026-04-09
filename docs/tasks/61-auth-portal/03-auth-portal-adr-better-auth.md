@@ -30,7 +30,7 @@ Better Auth provides:
 - Plugin system: 2FA, passkeys, organizations, admin, stripe integration
 - Framework-agnostic core with first-class Next.js support
 
-### Better Auth 1.6.0 Configuration
+### Better Auth 1.6.x Configuration
 
 ```typescript
 import { betterAuth } from "better-auth";
@@ -49,10 +49,10 @@ export const auth = betterAuth({
 });
 ```
 
-### Session Freshness (1.6.0 Breaking Change)
+### Session Freshness (1.6.x Breaking Change Introduced in 1.6.0)
 
 ```typescript
-// In Better Auth 1.6.0, session.freshAge calculates from createdAt
+// In Better Auth 1.6.x, session.freshAge calculates from createdAt
 // NOT from updatedAt (behavior in <1.6.0)
 // This means session activity no longer extends the freshness window
 
@@ -83,7 +83,7 @@ export const auth = betterAuth({
 ### Neutral
 
 - Supabase Auth retained as fallback for clients wanting managed auth
-- Better Auth 1.6.0 moved Drizzle adapter to separate package (`@better-auth/drizzle-adapter`)
+- Better Auth 1.6.x moved Drizzle adapter to separate package (`@better-auth/drizzle-adapter`)
 - Experimental joins feature requires Drizzle relations in schema
 
 ## Alternatives Considered

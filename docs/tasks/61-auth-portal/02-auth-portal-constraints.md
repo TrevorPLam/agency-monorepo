@@ -12,7 +12,7 @@
 - Users cannot access cross-client data even with valid session
 - Organization scoping enforced at database query level
 
-### Better Auth 1.6.0 Breaking Changes
+### Better Auth 1.6.x Breaking Changes (introduced in 1.6.0)
 ```typescript
 // session.freshAge now calculates from createdAt, not updatedAt
 // Previously: activity extended freshness window
@@ -26,7 +26,7 @@
 ```
 
 ### OIDC Provider Deprecation
-- `oidc-provider` plugin deprecated in 1.6.0
+- `oidc-provider` plugin deprecated starting in 1.6.0
 - Migrate to `@better-auth/oauth-provider` if using custom OIDC
 - One-time deprecation warning emitted — plan migration before v2.0
 

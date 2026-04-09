@@ -1,4 +1,24 @@
-# Data Cms Specification
+# 51-data-cms: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires Sanity CMS integration |
+| **Minimum Consumers** | 1+ apps explicitly requesting CMS |
+| **Dependencies** | `sanity@5.20.0`, `next-sanity@12.2.2`, `@sanity/client@7.20.0` |
+| **Exit Criteria** | Schemas exported, client configured, used in at least one app |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app-level opt-in |
+| **Version Authority** | `DEPENDENCY.md` §7 — `sanity@5.20.0`, `next-sanity@12.2.2` |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Sanity CMS `leaning` (evaluate during Task 51)
+- Version pins: `DEPENDENCY.md` §9
+- Architecture: `ARCHITECTURE.md` — Data layer section
+- Note: CMS is optional; not all apps require content management
 
 ## Files
 ```
@@ -33,8 +53,8 @@ packages/data/cms-schemas/
     "./fragments/seo": "./src/fragments/seo-fields.ts"
   },
   "dependencies": {
-    "sanity": "5.19.0",
-    "next-sanity": "12.1.5"
+    "sanity": "5.20.0",
+    "next-sanity": "12.2.2"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",

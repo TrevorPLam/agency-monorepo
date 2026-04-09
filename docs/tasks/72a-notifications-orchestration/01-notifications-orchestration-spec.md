@@ -1,4 +1,22 @@
-# Notifications Orchestration Specification
+# 72a-notifications-orchestration: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | 2+ production consumers share the same multi-channel notification workflow |
+| **Minimum Consumers** | 2+ apps with proven shared workflow routing needs |
+| **Dependencies** | `@agency/notifications`, React 19.2.5, one chosen orchestration provider |
+| **Exit Criteria** | Base notifications prove insufficient and one orchestrator is integrated behind a narrow routing surface |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; advanced escalation only after Task 72 proves insufficient |
+| **Version Authority** | `DEPENDENCY.md` §2 — React 19.2.5 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Notification orchestration `open`
+- Version pins: `DEPENDENCY.md` §2
+- Note: Sub-task of 72-notifications; do not build until there is a concrete shared workflow gap that simple outbound notifications cannot cover
 
 ## Files
 
@@ -9,105 +27,40 @@ packages/communication/notifications-orchestration/
 ├── README.md
 └── src/
     ├── index.ts
-    ├── knock.ts
-    ├── novu.ts
+    ├── provider.ts
+    ├── router.ts
     └── workflows/
         └── welcome-series.ts
 ```
 
-## Provider Comparison
+## Scope Boundary
 
-| Feature | Knock | Novu |
-|---------|-------|------|
-| **Pricing** | $250/mo entry | Free tier (10k/mo) |
-| **Open Source** | No | Yes (MIT) |
-| **Self-hostable** | No | Yes |
-| **React Components** | Yes (comprehensive) | Yes (basic) |
-| **Multi-tenant** | Native | Manual |
-| **Best For** | Enterprise workflows | Budget/OSS preference |
+Task 72a is not a default extension of Task 72. It exists only for cases where multiple apps need the same multi-step, cross-channel workflow behavior and a plain Slack/Discord/webhook adapter is no longer sufficient.
 
-## Knock Implementation
+## Candidate Providers (choose one after proof)
 
-```typescript
-// src/knock.ts
-import { Knock } from "@knocklabs/node";
+| Provider | Use only when | Keep out of baseline scope |
+|----------|---------------|----------------------------|
+| Knock | Managed enterprise workflow tooling is justified by budget and shared workflow complexity | Do not pre-bundle for speculative future enterprise needs |
+| Novu | Open-source/self-hosted orchestration is required by a proven workflow need | Do not add just to compare options in advance |
 
-interface KnockConfig {
-  apiKey: string;
-  workflowKey: string;
-}
-
-export function createKnockProvider(config: KnockConfig) {
-  const knock = new Knock(config.apiKey);
-  
-  return {
-    async trigger(
-      userId: string,
-      data: Record<string, unknown>
-    ) {
-      await knock.workflows.trigger(config.workflowKey, {
-        recipients: [userId],
-        data
-      });
-    },
-    
-    async identifyUser(userId: string, userData: unknown) {
-      await knock.users.identify(userId, userData);
-    },
-    
-    async setPreferences(
-      userId: string,
-      preferences: Record<string, boolean>
-    ) {
-      await knock.users.setPreferences(userId, {
-        workflows: preferences
-      });
-    }
-  };
-}
-```
-
-## Novu Implementation
+## Minimal Routing Surface
 
 ```typescript
-// src/novu.ts
-import { Novu } from "@novu/node";
-
-interface NovuConfig {
-  apiKey: string;
-  workflowId: string;
+// src/provider.ts
+export interface NotificationWorkflowProvider {
+  trigger(workflowKey: string, recipientId: string, data: Record<string, unknown>): Promise<void>;
+  syncPreferences?(recipientId: string, preferences: Record<string, boolean>): Promise<void>;
 }
 
-export function createNovuProvider(config: NovuConfig) {
-  const novu = new Novu(config.apiKey);
-  
+// src/router.ts
+import type { NotificationWorkflowProvider } from "./provider";
+
+export function createNotificationRouter(provider: NotificationWorkflowProvider) {
   return {
-    async trigger(
-      subscriberId: string,
-      payload: Record<string, unknown>
-    ) {
-      await novu.trigger(config.workflowId, {
-        to: { subscriberId },
-        payload
-      });
+    async trigger(workflowKey: string, recipientId: string, data: Record<string, unknown>) {
+      await provider.trigger(workflowKey, recipientId, data);
     },
-    
-    async identifySubscriber(
-      subscriberId: string,
-      data: unknown
-    ) {
-      await novu.subscribers.identify(subscriberId, data);
-    },
-    
-    async updatePreferences(
-      subscriberId: string,
-      preferences: Record<string, boolean>
-    ) {
-      await novu.subscribers.updatePreferences(
-        subscriberId,
-        preferences
-      );
-    }
   };
 }
 ```
@@ -171,9 +124,7 @@ function NovuNotificationBell() {
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@knocklabs/node": "latest",
-    "@knocklabs/react": "latest",
-    "@novu/node": "latest"
+    "@agency/notifications": "workspace:*"
   },
   "peerDependencies": {
     "react": "^19.0.0"
@@ -186,32 +137,24 @@ function NovuNotificationBell() {
 ```md
 # @agency/notifications-orchestration
 
-Enterprise notification workflows using Knock or Novu.
+Shared routing surface for a single chosen notification orchestrator.
 
 ## When to Use
 
-- Multi-channel sequences (email + push + in-app)
-- Complex branching logic
-- Preference management at scale
-- Notification digests/batching
+- Multiple apps need the same multi-step notification workflow
+- Base outbound notifications from Task 72 are already implemented and insufficient
+- One orchestrator has been selected for real consumer requirements
 
-## Provider Selection
+## Boundary
 
-Use **Knock** when:
-- Budget allows $250+/mo
-- Need comprehensive React components
-- Want managed infrastructure
-
-Use **Novu** when:
-- Budget constrained
-- Prefer open source
-- Need self-hosting option
-- Volume <100k/month
+- Do not install both Knock and Novu in the baseline package.
+- Choose exactly one provider after workflow requirements are validated.
+- Keep provider-specific UI feeds out of this package unless two consumers share the same UI surface.
 
 ## Setup
 
-1. Configure provider in dashboard
-2. Create workflows
-3. Map workflow keys to environment variables
-4. Implement user identification
+1. Validate the shared workflow gap.
+2. Choose one orchestrator.
+3. Add only that provider's SDK.
+4. Route workflows through the minimal provider interface above.
 ```

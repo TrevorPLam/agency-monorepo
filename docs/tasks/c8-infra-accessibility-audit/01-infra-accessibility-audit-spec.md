@@ -1,5 +1,23 @@
 # c8-infra-accessibility-audit: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires accessibility audit and compliance |
+| **Minimum Consumers** | 1+ apps with accessibility requirements |
+| **Dependencies** | axe-core, Playwright, TypeScript 6.0 |
+| **Exit Criteria** | Accessibility audit package exported and integrated |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit a11y need |
+| **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Accessibility audit `open`
+- Version pins: `DEPENDENCY.md` §1
+- Note: Optional; required for WCAG compliance
+
 ## Files
 
 ```

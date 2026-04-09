@@ -1,7 +1,24 @@
 # 23-core-hooks: Implementation Specification
 
+## Task Header
 
-Reusable React hooks with no app-specific state. Safe to use in any internal tool or client-facing portal.
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Repository initialization — always required |
+| **Minimum Consumers** | n/a (root infrastructure) |
+| **Dependencies** | React 19.2.5, TypeScript 6.0, `@agency/config-typescript` |
+| **Exit Criteria** | Root package.json, pnpm-workspace.yaml, turbo.json committed and verified |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §1, §2 — React 19.2.5, TypeScript 6.0 |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+## Cross-references
+
+- Decision status: `DECISION-STATUS.md` — Core hooks package `approved`
+- Version pins: `DEPENDENCY.md` §1, §2
+- Architecture: `ARCHITECTURE.md` — Core layer section
 
 ## Files
 ```

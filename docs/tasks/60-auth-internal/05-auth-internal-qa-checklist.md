@@ -13,7 +13,7 @@
 ### Package Structure
 - [ ] `@agency/auth-internal` package created in `packages/auth/internal/`
 - [ ] `package.json` has correct exports field
-- [ ] `@clerk/nextjs@7.0.8` installed
+- [ ] `@clerk/nextjs@7.0.12` installed
 - [ ] No imports from higher-level domains
 
 ### Middleware/Proxy

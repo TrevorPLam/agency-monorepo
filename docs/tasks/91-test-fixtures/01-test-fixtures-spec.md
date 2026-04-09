@@ -1,4 +1,24 @@
-# Test Fixtures Specification
+# 91-test-fixtures: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Multiple tests require shared mock data |
+| **Minimum Consumers** | 2+ packages/apps using shared fixtures |
+| **Dependencies** | TypeScript 6.0, `@agency/core-types`, `@agency/test-setup` |
+| **Exit Criteria** | Fixtures exported and used by at least 2 consumers |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit consumer opt-in |
+| **Version Authority** | `DEPENDENCY.md` §1, §12 — TypeScript 6.0 |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Test fixtures `approved`
+- Version pins: `DEPENDENCY.md` §1, §12
+- Architecture: `ARCHITECTURE.md` — Testing layer section
+- Note: Shared mock data for consistent testing across packages
 
 ## Files
 ```
@@ -30,7 +50,7 @@ packages/testing/fixtures/
   },
   "dependencies": {
     "@agency/core-types": "workspace:*",
-    "@faker-js/faker": "latest"
+    "@faker-js/faker": "10.4.0"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",

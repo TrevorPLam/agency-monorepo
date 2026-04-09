@@ -1,4 +1,24 @@
-# Email Templates Specification
+# 70-email-templates: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires transactional email with React components |
+| **Minimum Consumers** | 1+ apps explicitly requesting email |
+| **Dependencies** | React Email 5.2.x, `@react-email/*` packages |
+| **Exit Criteria** | Email templates exported and used in at least one app |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app-level opt-in |
+| **Version Authority** | `DEPENDENCY.md` §6 — React Email 5.2.10, `@react-email/components@1.0.12` |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — React Email `leaning` (stable, evaluate during Task 70)
+- Version pins: `DEPENDENCY.md` §18
+- Architecture: `ARCHITECTURE.md` — Communication layer section
+- Note: Transactional email is optional; not all apps require it
 
 ## Files
 ```
@@ -32,14 +52,14 @@ packages/communication/email-templates/
   },
   "dependencies": {
     "@agency/core-types": "workspace:*",
-    "@react-email/components": "latest",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "@react-email/components": "1.0.12",
+    "react": "19.2.5",
+    "react-dom": "19.2.5"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",
     "@agency/config-typescript": "workspace:*",
-    "react-email": "^5.0.0",
+    "react-email": "5.2.10",
     "tailwindcss": "^4.x"
   },
   "publishConfig": { "access": "restricted" }

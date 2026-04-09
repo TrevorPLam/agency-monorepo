@@ -1,4 +1,22 @@
-# Rate Limiting Specification
+# c12-infra-rate-limiting: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires rate limiting for API protection |
+| **Minimum Consumers** | 1+ apps with public API endpoints |
+| **Dependencies** | Next.js 16.2.3, Redis OR Upstash, TypeScript 6.0 |
+| **Exit Criteria** | Rate limiting implemented and protecting endpoints |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit API need |
+| **Version Authority** | `DEPENDENCY.md` §1, §2 — TypeScript 6.0, Next.js 16.2.3 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Rate limiting `open`
+- Version pins: `DEPENDENCY.md` §1, §2
+- Note: Optional; API protection for public endpoints
 
 ## Endpoints Requiring Rate Limiting
 

@@ -1,4 +1,22 @@
-# B2 Tools Db Seed Specification
+# b2-tools-db-seed: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Database seeding scripts needed for development/testing |
+| **Minimum Consumers** | 1+ apps using database |
+| **Dependencies** | TypeScript 6.0, `@agency/data-db` |
+| **Exit Criteria** | Seed script working and documented |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit need |
+| **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — DB seed tool `open`
+- Version pins: `DEPENDENCY.md` §1
+- Note: Optional; useful for development but not required
 
 ## Files
 ```

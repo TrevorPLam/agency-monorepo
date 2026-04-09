@@ -5,9 +5,9 @@ AI agent instructions for implementing Vite configuration with modern build tool
 
 ## Context
 You are implementing Vite configuration for a monorepo that uses:
-- pnpm 10.44.0 with workspace catalog
+- pnpm 10.33.0 with workspace catalog
 - TypeScript 6.0.0 with Project References
-- Turborepo 2.9.4 with tasks-based configuration
+- Turborepo 2.9.5 with tasks-based configuration
 - Next.js 16+ with Turbopack integration
 - ESLint compatibility layer for gradual migration from webpack
 
@@ -24,7 +24,7 @@ Create a unified Vite configuration system that enables:
 ### Key Requirements
 
 #### 1. Base Configuration (`vite.config.ts`)
-- Performance-focused Vite 6.0.0 configuration
+- Performance-focused Vite 8.0.8 configuration
 - Native ESM bundling with strict module resolution
 - Modern ES2022 target with broad browser support
 - TypeScript integration with strict type checking

@@ -1,4 +1,21 @@
-# C5 Infra Preview Deploy Specification
+# c5-infra-preview-deploy: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Apps require preview deployments for PR review |
+| **Minimum Consumers** | 1+ apps needing preview URLs |
+| **Dependencies** | Vercel OR Netlify, GitHub Actions |
+| **Exit Criteria** | Preview deploys working on PRs |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit need |
+| **Version Authority** | Platform provider (Vercel/Netlify) |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Preview deploy `open`
+- Note: Conditional; only needed for apps with visual review requirements
 
 ## Files
 ```

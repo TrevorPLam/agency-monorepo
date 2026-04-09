@@ -1,5 +1,24 @@
 # a0-docs-agents: AI Agent Rules Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Monorepo requires AI agent operating rules |
+| **Minimum Consumers** | All AI agents working in repository |
+| **Dependencies** | None (meta documentation) |
+| **Exit Criteria** | `AGENTS.md` published and enforced |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | Repository governance |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — AI agent rules `approved`
+- Location: `docs/AGENTS.md`
+- Note: Living document; evolves with repository needs
+
 ## File Location
 `docs/AGENTS.md`
 

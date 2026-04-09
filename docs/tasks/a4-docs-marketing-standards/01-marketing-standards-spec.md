@@ -1,4 +1,23 @@
-# Marketing Standards Specification
+# a4-docs-marketing-standards: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Client sites require marketing documentation |
+| **Minimum Consumers** | 1+ apps with marketing requirements |
+| **Dependencies** | None (meta documentation) |
+| **Exit Criteria** | Marketing standards published and referenced |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app opt-in |
+| **Version Authority** | Repository governance |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Marketing standards `open`
+- Location: `docs/marketing/`
+- Note: Optional; only needed for SEO/marketing-focused apps
 
 ## Documentation Structure
 

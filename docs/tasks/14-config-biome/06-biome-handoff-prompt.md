@@ -5,9 +5,9 @@ AI agent instructions for implementing Biome configuration with performance-focu
 
 ## Context
 You are implementing Biome configuration for a monorepo that uses:
-- pnpm 10.44.0 with workspace catalog
+- pnpm 10.33.0 with workspace catalog
 - TypeScript 6.0.0 with Project References
-- Turborepo 2.9.4 with tasks-based configuration
+- Turborepo 2.9.5 with tasks-based configuration
 - ESLint compatibility layer for gradual migration
 
 ## Implementation Instructions

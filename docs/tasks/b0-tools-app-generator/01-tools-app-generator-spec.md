@@ -1,4 +1,21 @@
-# B0 Tools App Generator Specification
+# b0-tools-app-generator: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Multiple apps need consistent scaffolding |
+| **Minimum Consumers** | 2+ apps to be generated |
+| **Dependencies** | Shell scripting, Node.js |
+| **Exit Criteria** | Generator script working and documented |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit need |
+| **Version Authority** | Repository governance |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — App generator `open`
+- Note: Optional automation; manual scaffolding is always valid
 
 ## Files
 ```
@@ -119,9 +136,9 @@ cat > "${APP_DIR}/package.json" << EOF
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "next": "16.2.2",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "next": "16.2.3",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "@agency/config-tailwind": "workspace:*",
     "@agency/config-typescript": "workspace:*",
     "@agency/core-types": "workspace:*",
@@ -131,8 +148,8 @@ cat > "${APP_DIR}/package.json" << EOF
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",
-    "@types/node": "latest",
-    "@types/react": "latest",
+    "@types/node": "25.5.2",
+    "@types/react": "19.2.14",
     "typescript": "6.0.0"
   }
 }

@@ -1,5 +1,25 @@
 # 26-core-performance: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires performance monitoring utilities |
+| **Minimum Consumers** | 1+ apps explicitly requesting performance tools |
+| **Dependencies** | TypeScript 6.0, `@agency/config-typescript` |
+| **Exit Criteria** | Performance utilities exported and integrated in at least one app |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app-level opt-in |
+| **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Core performance package `conditional`
+- Version pins: `DEPENDENCY.md` §1
+- Architecture: `ARCHITECTURE.md` — Core layer section
+- Note: Optional performance utilities for bundle analysis and runtime metrics
+
 ## Files
 ```
 packages/core/performance/

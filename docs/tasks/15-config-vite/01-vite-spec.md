@@ -1,5 +1,26 @@
 # 15-config-vite: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Only for non-Next build needs |
+| **Trigger** | A non-Next package or app requires a Vite-based dev/build pipeline |
+| **Minimum Consumers** | 1+ non-Next packages/apps with a real Vite requirement |
+| **Dependencies** | Vite 8.0.8, TypeScript 6.0 |
+| **Exit Criteria** | Shared Vite config exported and adopted by at least one non-Next consumer |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §2 — Vite 8.0.8 |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+## Cross-references
+
+- Decision status: `DECISION-STATUS.md` — Vite `leaning` (demoted from primary build tool)
+- Version pins: `DEPENDENCY.md` §2
+- Architecture: `ARCHITECTURE.md` — Final stack section
+- Note: Next.js apps rely on Turbopack by default; Vite is not foundational for this repo
+
 ## Files
 ```
 packages/config/vite-config/

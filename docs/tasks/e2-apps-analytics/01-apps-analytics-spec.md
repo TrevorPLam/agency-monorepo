@@ -1,4 +1,22 @@
-# E2 Apps Analytics Specification
+# e2-apps-analytics: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires integrated analytics dashboard |
+| **Minimum Consumers** | 1+ apps with analytics visualization needs |
+| **Dependencies** | Next.js 16.2.3, React 19.2.5, `@agency/analytics` |
+| **Exit Criteria** | Analytics app deployed and displaying data |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit business need |
+| **Version Authority** | `DEPENDENCY.md` §2 — Next.js 16.2.3, React 19.2.5 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Analytics app `open`
+- Version pins: `DEPENDENCY.md` §2
+- Note: Conditional; internal tool for analytics visualization
 
 ## Overview
 
@@ -55,12 +73,12 @@ packages/
   },
   "dependencies": {
     "@plausible-analytics/tracker": "0.4.4",
-    "react": "19.2.4"
+    "react": "19.2.5"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",
     "@agency/config-typescript": "workspace:*",
-    "@types/react": "latest",
+    "@types/react": "19.2.14",
     "typescript": "6.0.0"
   }
 }
@@ -184,14 +202,14 @@ Plausible is GDPR-compliant by default:
     "./hooks": "./src/hooks/index.ts"
   },
   "dependencies": {
-    "posthog-js": "1.364.7",
-    "posthog-node": "5.28.8",
-    "react": "19.2.4"
+    "posthog-js": "1.366.0",
+    "posthog-node": "5.29.2",
+    "react": "19.2.5"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",
     "@agency/config-typescript": "workspace:*",
-    "@types/react": "latest",
+    "@types/react": "19.2.14",
     "typescript": "6.0.0"
   }
 }

@@ -1,4 +1,22 @@
-# Data Ai Enrichment Specification
+# 51b-data-ai-enrichment: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | CMS content requires AI-powered enrichment |
+| **Minimum Consumers** | 1+ apps with AI content processing needs |
+| **Dependencies** | OpenAI API OR Anthropic API, TypeScript 6.0 |
+| **Exit Criteria** | AI enrichment package exported and used |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit AI need |
+| **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — AI enrichment `open`
+- Version pins: `DEPENDENCY.md` §1
+- Note: Sub-task of 51-data-cms; optional AI content enhancement
 
 ## Files
 
@@ -38,9 +56,9 @@ packages/data/ai-enrichment/
   },
   "dependencies": {
     "@agency/core-types": "workspace:*",
-    "openai": "latest",
-    "@anthropic-ai/sdk": "latest",
-    "bullmq": "latest"  // Job queue
+    "openai": "6.34.0",
+    "@anthropic-ai/sdk": "0.86.1",
+    "bullmq": "5.73.3"  // Job queue
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",

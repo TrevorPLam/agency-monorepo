@@ -1,4 +1,22 @@
-# Internationalization Package Specification
+# f2-packages-i18n: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires multi-language support |
+| **Minimum Consumers** | 1+ apps explicitly requesting i18n |
+| **Dependencies** | next-i18next OR react-i18next, Next.js 16.2.3 |
+| **Exit Criteria** | i18n package exported and used in at least one app |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app-level opt-in |
+| **Version Authority** | `DEPENDENCY.md` §2 — Next.js 16.2.3 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — i18n `open`
+- Version pins: `DEPENDENCY.md` §2
+- Note: Conditional; most apps don't need internationalization
 
 ## Package Structure
 

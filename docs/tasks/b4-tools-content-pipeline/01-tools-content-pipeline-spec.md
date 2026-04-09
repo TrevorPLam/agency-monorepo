@@ -1,4 +1,22 @@
-# B4 Tools Content Pipeline Specification
+# b4-tools-content-pipeline: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | CMS content requires transformation pipeline |
+| **Minimum Consumers** | 1+ apps with CMS content needs |
+| **Dependencies** | Node.js 20.9.0, CMS SDK (Contentful/Strapi/Sanity) |
+| **Exit Criteria** | Pipeline working and content flowing |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit CMS need |
+| **Version Authority** | `DEPENDENCY.md` §1 — Node.js 20.9.0 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Content pipeline `open`
+- Version pins: `DEPENDENCY.md` §1
+- Note: Conditional; only needed when using CMS with transformations
 
 ## Files
 
@@ -46,9 +64,9 @@ tools/content-pipeline/
   },
   "dependencies": {
     "@agency/core-types": "workspace:*",
-    "commander": "latest",
-    "inquirer": "latest",
-    "chalk": "latest"
+    "commander": "14.0.3",
+    "inquirer": "13.4.1",
+    "chalk": "5.6.2"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",

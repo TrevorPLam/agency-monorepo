@@ -1,4 +1,24 @@
-# Security Headers Specification
+# c11-infra-security-headers: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires security headers implementation |
+| **Minimum Consumers** | 1+ production apps |
+| **Dependencies** | Next.js 16.2.3, TypeScript 6.0 |
+| **Exit Criteria** | Security headers implemented and verified |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit security need |
+| **Version Authority** | `DEPENDENCY.md` §1, §2 — TypeScript 6.0, Next.js 16.2.3 |
+| **Supersedes** | c9-infra-security-headers (legacy config draft) |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Security headers impl `open`
+- Version pins: `DEPENDENCY.md` §1, §2
+- Related task: `41a-compliance-security-headers` covers optional compliance-package policy templates
+- Note: Optional; implementation-focused security headers
 
 ## Headers Covered
 

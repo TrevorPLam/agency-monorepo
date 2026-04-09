@@ -1,5 +1,25 @@
 # 50-data-db: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Repository initialization — always required |
+| **Minimum Consumers** | n/a (root infrastructure) |
+| **Dependencies** | `drizzle-orm@0.45.2`, `@neondatabase/serverless@1.0.2`, Neon database |
+| **Exit Criteria** | Root package.json, pnpm-workspace.yaml, turbo.json committed and verified |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §4 — `drizzle-orm@0.45.2`, `@neondatabase/serverless@1.0.2` |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Drizzle ORM `locked`, Neon `locked`
+- Version pins: `DEPENDENCY.md` §5, §6
+- Architecture: `ARCHITECTURE.md` — Data layer section
+- Scope boundary: shared query helpers target the Drizzle + Neon lane; Supabase support remains an explicit companion helper, not a drop-in provider switch for shared query modules
+
 ## Files
 ```
 packages/data/database/
@@ -39,11 +59,11 @@ packages/data/database/
     "@agency/core-types": "workspace:*",
     "drizzle-orm": "0.45.2",
     "@neondatabase/serverless": "1.0.2",
-    "@supabase/supabase-js": "2.102.0"
+    "@supabase/supabase-js": "2.103.0"
   },
   "devDependencies": {
     "@agency/config-typescript": "workspace:*",
-    "drizzle-kit": "0.31.0"
+    "drizzle-kit": "0.31.10"
   },
   "publishConfig": { "access": "restricted" }
 }
@@ -68,42 +88,19 @@ import { neon } from "@neondatabase/serverless";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import * as schema from "./schema";
 
-export type DatabaseProvider = "neon" | "supabase";
-
-export function createNeonClient(connectionString: string) {
+export function createDbClient(connectionString: string) {
   const sql = neon(connectionString);
   return drizzle(sql, { schema });
 }
 
-export function createSupabaseClient(url: string, key: string) {
+export function createSupabaseAdminClient(url: string, key: string): SupabaseClient {
   return createClient(url, key);
 }
 
-export function createDbClient(config: {
-  provider?: DatabaseProvider;
-  connectionString?: string;
-  supabaseUrl?: string;
-  supabaseKey?: string;
-}): DatabaseClient {
-  const provider = config.provider ?? 
-    (process.env.DATABASE_PROVIDER as DatabaseProvider) ?? "neon";
-  
-  if (provider === "supabase") {
-    if (!config.supabaseUrl || !config.supabaseKey) {
-      throw new Error("Supabase requires supabaseUrl and supabaseKey");
-    }
-    return createSupabaseClient(config.supabaseUrl, config.supabaseKey) as unknown as DatabaseClient;
-  }
-  
-  const connectionString = config.connectionString ?? process.env.DATABASE_URL;
-  if (!connectionString) {
-    throw new Error("Neon requires connectionString (DATABASE_URL)");
-  }
-  return createNeonClient(connectionString);
-}
-
-export type DatabaseClient = ReturnType<typeof createNeonClient> | SupabaseClient;
+export type DatabaseClient = ReturnType<typeof createDbClient>;
 ```
+
+Shared query modules accept `DatabaseClient` only. Supabase helpers are reserved for explicit storage or managed-platform features and do not promise query-layer parity with the Drizzle + Neon lane.
 
 ### `src/schema/common.ts`
 ```ts

@@ -1,4 +1,24 @@
-# Compliance Specification
+# 41-compliance: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | 2+ apps require GDPR/privacy compliance and consent management |
+| **Minimum Consumers** | 2+ apps needing compliance |
+| **Dependencies** | React 19.2.5, TypeScript 6.0, `@agency/core-types` |
+| **Exit Criteria** | Compliance utilities exported and used by at least 2 apps |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app opt-in |
+| **Version Authority** | `DEPENDENCY.md` §1, §2 — TypeScript 6.0, React 19.2.5 |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Compliance utilities `open`
+- Version pins: `DEPENDENCY.md` §1, §2
+- Architecture: `ARCHITECTURE.md` — Compliance layer
+- Note: Conditional; only client-facing apps typically need compliance
 
 ## Rationale (Package vs App)
 
@@ -83,10 +103,10 @@ packages/compliance/consent/
     "@agency/config-eslint": "workspace:*",
     "@agency/config-typescript": "workspace:*",
     "@agency/test-setup": "workspace:*",
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "@types/node": "25.5.2",
+    "@types/react": "19.2.14",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "typescript": "6.0.0"
   },
   "peerDependencies": {

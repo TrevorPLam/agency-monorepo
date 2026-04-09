@@ -1,4 +1,23 @@
-# A1 Docs Onboarding Specification
+# a1-docs-onboarding: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | New contributors need onboarding documentation |
+| **Minimum Consumers** | All new repository contributors |
+| **Dependencies** | None (meta documentation) |
+| **Exit Criteria** | Onboarding docs published and accessible |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | Repository governance |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Onboarding docs `approved`
+- Location: `docs/onboarding/`
+- Note: Living document; evolves with team processes
 
 ## Files
 ```

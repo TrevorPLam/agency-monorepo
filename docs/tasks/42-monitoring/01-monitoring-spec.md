@@ -1,5 +1,24 @@
-# Monitoring Specification
+# 42-monitoring: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | 2+ production apps require error tracking and performance monitoring |
+| **Minimum Consumers** | 2+ apps needing monitoring |
+| **Dependencies** | Sentry SDK 10.x OR PostHog, React 19.2.5 |
+| **Exit Criteria** | Monitoring utilities exported and integrated in at least 2 apps |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app opt-in |
+| **Version Authority** | `DEPENDENCY.md` §2, §16 — React 19.2.5, Sentry 10.x |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Monitoring `open` (vendor TBD during Task 42)
+- Version pins: `DEPENDENCY.md` §2, §16
+- Architecture: `ARCHITECTURE.md` — Observability layer
+- Note: Conditional; production apps should have monitoring
 
 ## Rationale (Package vs App)
 
@@ -71,16 +90,16 @@ packages/monitoring/
     "@agency/core-utils": "workspace:*"
   },
   "optionalDependencies": {
-    "@sentry/nextjs": "^9.x",
+    "@sentry/nextjs": "10.47.0",
     "newrelic": "^12.x"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",
     "@agency/config-typescript": "workspace:*",
     "@agency/test-setup": "workspace:*",
-    "@types/node": "latest",
-    "next": "16.2.2",
-    "react": "19.2.4",
+    "@types/node": "25.5.2",
+    "next": "16.2.3",
+    "react": "19.2.5",
     "typescript": "6.0.0"
   },
   "peerDependencies": {

@@ -1,4 +1,22 @@
-# Monitoring Rum Specification
+# 42a-monitoring-rum: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires Real User Monitoring (RUM) |
+| **Minimum Consumers** | 1+ apps with performance monitoring needs |
+| **Dependencies** | Sentry 10.x OR PostHog, React 19.2.5 |
+| **Exit Criteria** | RUM package exported and integrated |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app opt-in |
+| **Version Authority** | `DEPENDENCY.md` §2, §16 — React 19.2.5, Sentry 10.x |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — RUM `open`
+- Version pins: `DEPENDENCY.md` §2, §16
+- Note: Sub-task of 42-monitoring; optional performance analytics
 
 ## Files
 
@@ -39,7 +57,7 @@ packages/monitoring/rum/
   },
   "dependencies": {
     "@agency/core-types": "workspace:*",
-    "web-vitals": "latest",
+    "web-vitals": "5.2.0",
     "@agency/data-db": "workspace:*"
   },
   "devDependencies": {

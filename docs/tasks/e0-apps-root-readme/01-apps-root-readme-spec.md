@@ -1,4 +1,22 @@
-# E0 Apps Root Readme Specification
+# e0-apps-root-readme: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Repository requires root documentation |
+| **Minimum Consumers** | All repository visitors |
+| **Dependencies** | None (meta documentation) |
+| **Exit Criteria** | Root README published and informative |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | Repository governance |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Root README `approved`
+- Location: Repository root `README.md`
+- Note: First impression for all visitors; keep current
 
 ## Files
 ```

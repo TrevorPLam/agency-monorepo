@@ -5,8 +5,8 @@ AI agent instructions for implementing Changesets configuration with automated v
 
 ## Context
 You are implementing Changesets configuration for a monorepo that uses:
-- pnpm 10.44.0 with workspace catalog
-- Turborepo 2.9.4 with tasks-based configuration
+- pnpm 10.33.0 with workspace catalog
+- Turborepo 2.9.5 with tasks-based configuration
 - Conventional commit format for semantic versioning
 - CI/CD integration for automated releases
 

@@ -5,9 +5,9 @@ AI agent instructions for implementing TypeScript configuration with Project Ref
 
 ## Context
 You are implementing TypeScript configuration for a monorepo that uses:
-- pnpm 10.44.0 with workspace catalog
+- pnpm 10.33.0 with workspace catalog
 - TypeScript 6.0.0 with Project References
-- Turborepo 2.9.4 with tasks-based configuration
+- Turborepo 2.9.5 with tasks-based configuration
 - ESLint with TypeScript plugin v8.57.0+
 
 ## Implementation Instructions

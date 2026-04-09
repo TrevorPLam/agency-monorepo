@@ -1,4 +1,23 @@
-# E1 Apps Crm Specification
+# e1-apps-crm: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Agency requires internal CRM system |
+| **Minimum Consumers** | 1 (internal tool) |
+| **Dependencies** | Next.js 16.2.3, React 19.2.5, `@agency/data-db`, `@agency/auth-internal` |
+| **Exit Criteria** | CRM app deployed and used by agency team |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit business need |
+| **Version Authority** | `DEPENDENCY.md` §2, §5 — Next.js 16.2.3, Clerk 7.0.12 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — CRM app `open`
+- Version pins: `DEPENDENCY.md` §2, §10
+- Architecture: `ARCHITECTURE.md` — Apps layer
+- Note: Conditional; depends on agency operational needs
 
 ## Files
 
@@ -55,9 +74,9 @@ apps/internal-tools/crm/
     "clean": "rm -rf .next"
   },
   "dependencies": {
-    "next": "16.2.2",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "next": "16.2.3",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "@agency/config-tailwind": "workspace:*",
     "@agency/config-typescript": "workspace:*",
     "@agency/core-types": "workspace:*",
@@ -69,14 +88,14 @@ apps/internal-tools/crm/
     "@agency/ui-design-system": "workspace:*",
     "@agency/data-db": "workspace:*",
     "@agency/auth-internal": "workspace:*",
-    "@clerk/nextjs": "7.0.8"
+    "@clerk/nextjs": "7.0.12"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",
     "@agency/config-prettier": "workspace:*",
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
+    "@types/node": "25.5.2",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
     "typescript": "6.0.0"
   },
   "prettier": "@agency/config-prettier"

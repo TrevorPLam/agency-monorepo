@@ -1,4 +1,21 @@
-# C7 Infra Security Audit Specification
+# c7-infra-security-audit: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Repository requires security audit processes |
+| **Minimum Consumers** | All apps and packages |
+| **Dependencies** | None (documentation/process) |
+| **Exit Criteria** | Security audit docs published and followed |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | Repository governance |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Security audit `approved`
+- Note: Required for maintaining security posture
 
 ## Files
 

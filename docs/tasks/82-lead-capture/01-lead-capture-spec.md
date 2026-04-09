@@ -1,7 +1,26 @@
-# Lead Capture Specification
+# 82-lead-capture: Implementation Specification
 
+## Task Header
 
-**Status:** Reserved for future implementation
+| Field | Value |
+|-------|-------|
+| **State** | `deferred` — Reserved for future implementation |
+| **Trigger** | App requires lead capture and form handling |
+| **Minimum Consumers** | 1+ apps with lead generation needs |
+| **Dependencies** | React 19.2.5, `@agency/data-db`, `@agency/ui-design-system` |
+| **Exit Criteria** | Lead capture package exported and used |
+| **Implementation Authority** | `REPO-STATE.md` — Deferred until business need confirmed |
+| **Version Authority** | `DEPENDENCY.md` §2 — React 19.2.5 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Lead capture `deferred`
+- Version pins: `DEPENDENCY.md` §2
+- Note: Deferred; reserved for future marketing automation needs
+
+## Status
+
+Reserved for future implementation
 
 This phase is reserved for lead capture and form handling infrastructure.
 

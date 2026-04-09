@@ -1,5 +1,23 @@
 # g0-infra-mcp-server: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Team requires AI context server for monorepo operations |
+| **Minimum Consumers** | 1 (internal tooling) |
+| **Dependencies** | Node.js 20.9.0, TypeScript 6.0, MCP SDK |
+| **Exit Criteria** | MCP server deployed and serving context |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit tooling need |
+| **Version Authority** | `DEPENDENCY.md` §1 — Node.js 20.9.0, TypeScript 6.0 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — MCP server `open`
+- Version pins: `DEPENDENCY.md` §1
+- Note: Conditional; advanced tooling for AI-assisted development
+
 ## Files
 
 ```

@@ -1,4 +1,22 @@
-# B3 Tools Codemods Specification
+# b3-tools-codemods: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Large-scale code migrations or refactors needed |
+| **Minimum Consumers** | 1+ major migrations |
+| **Dependencies** | jscodeshift OR ts-morph, TypeScript 6.0 |
+| **Exit Criteria** | Codemod utilities working and documented |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit need |
+| **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Codemods `open`
+- Version pins: `DEPENDENCY.md` §1
+- Note: Optional; only needed for major refactoring waves
 
 ## Files
 
@@ -48,7 +66,7 @@ tools/
     "@agency/config-eslint": "workspace:*",
     "@agency/config-typescript": "workspace:*",
     "@types/jscodeshift": "^0.11.0",
-    "@types/node": "latest",
+    "@types/node": "25.5.2",
     "typescript": "6.0.0",
     "vitest": "4.1.3"
   }

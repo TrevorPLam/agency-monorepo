@@ -1,9 +1,20 @@
 # Agency Monorepo Architecture
 *A strategic, fully elaborated reference for building, scaling, and governing a production-grade agency monorepo — written for a non-developer owner working through AI coding tools like Cursor and Windsurf.*
 
-> **Governance Note:** This document describes the **target architecture**. The current implementation state — what is approved to build, what is planned, and what is deferred — is tracked in `REPO-STATE.md`. Consult REPO-STATE.md before beginning any implementation work to confirm a package or app has been approved for scaffolding.
+> **Governance Note:** This document describes the **target architecture** — the intended end-state design of the repository. It does **not** grant implementation authority. The current implementation state — what is approved to build, what is planned, and what is deferred — is tracked in `REPO-STATE.md`. 
+>
+> **Before beginning any implementation work:**
+> 1. Consult `REPO-STATE.md` to confirm a package or app has been approved for scaffolding
+> 2. Consult `DECISION-STATUS.md` to verify the decision status of relevant architectural choices
+> 3. Consult `DEPENDENCY.md` for exact version pins — never use versions from this document without cross-referencing DEPENDENCY.md
+>
+> **Document hierarchy for implementation:**
+> - `REPO-STATE.md` — what is approved to implement now
+> - `DECISION-STATUS.md` — which decisions are locked vs still open
+> - `DEPENDENCY.md` — exact version authority for all dependencies
+> - `ARCHITECTURE.md` — target state design (reference only)
 
-*Last revised: April 2026. Synchronized with TASKS.md (85 tasks, generated April 7, 2026).*
+*Last revised: April 2026. Synchronized with docs/tasks/README.md (95 tasks, verified April 9, 2026).*
 
 ***
 
@@ -61,12 +72,12 @@ All version locks are maintained in `DEPENDENCY.md`. The values below are the pi
 |---|---|---|
 | Node.js | 24.x (min 20.9.0) | `.nvmrc` set to `24.0.0` |
 | pnpm | 10.33.0 | Locked via `packageManager` field in root `package.json` |
-| Turborepo | 2.9.4 | Uses `tasks` key (not `pipeline`) in `turbo.json` |
-| Next.js | 16.2.2 | Minimum for stable React Compiler support |
-| React | 19.2.4 | Required for React Compiler |
-| TypeScript | 6.0.0 | Used in all packages and apps |
+| Turborepo | 2.9.5 | Uses `tasks` key (not `pipeline`) in `turbo.json` |
+| Next.js | 16.2.3 | Minimum for stable React Compiler support |
+| React | 19.2.5 | Required for React Compiler |
+| TypeScript | 6.0.2 | Used in all packages and apps |
 | Tailwind CSS | 4.x | CSS-first configuration via `@theme` directives, no JS preset |
-| Drizzle ORM | latest stable | Paired with `drizzle-kit` for migrations |
+| Drizzle ORM | 0.45.2 | Paired with `drizzle-kit` for migrations |
 
 > **AI agent note:** When scaffolding any new package or app, always read `DEPENDENCY.md` and use these exact versions. Do not use `latest` as a version specifier for core dependencies. Never upgrade major versions without a corresponding ADR in `docs/architecture/`.
 

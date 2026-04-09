@@ -1,5 +1,30 @@
 # 20-core-types: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Repository initialization — always required |
+| **Minimum Consumers** | n/a (root infrastructure) |
+| **Dependencies** | TypeScript 6.0, `@agency/config-typescript` |
+| **Exit Criteria** | Root package.json, pnpm-workspace.yaml, turbo.json committed and verified |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+## Cross-references
+
+- Decision status: `DECISION-STATUS.md` — Core types package `approved`
+- Version pins: `DEPENDENCY.md` §1
+- Architecture: `ARCHITECTURE.md` — Core layer section
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Core types package `approved`
+- Version pins: `DEPENDENCY.md` §1
+- Architecture: `ARCHITECTURE.md` — Core layer section
+
 ## Files
 ```
 packages/core/shared-types/

@@ -1,5 +1,25 @@
 # 60-auth-internal: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Internal tool requires authentication |
+| **Minimum Consumers** | 1+ internal tools needing auth |
+| **Dependencies** | Clerk 7.0.12 |
+| **Exit Criteria** | Auth package exported and integrated in at least one internal tool |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app-level opt-in |
+| **Version Authority** | `DEPENDENCY.md` §10 — Clerk 7.0.12 |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Clerk `leaning` (preferred for internal tools)
+- Version pins: `DEPENDENCY.md` §10
+- Architecture: `ARCHITECTURE.md` — Auth layer section
+- Note: Internal tools use Clerk; defer to Task 61 for portal auth
+
 ## Files
 ```
 packages/auth/internal/
@@ -28,7 +48,7 @@ packages/auth/internal/
   },
   "dependencies": {
     "@agency/core-types": "workspace:*",
-    "@clerk/nextjs": "7.0.8"
+    "@clerk/nextjs": "7.0.12"
   },
   "devDependencies": {
     "@agency/config-typescript": "workspace:*"

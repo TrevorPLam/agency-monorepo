@@ -1,4 +1,21 @@
-# D2 Infra Environment Mgmt Specification
+# d2-infra-environment-mgmt: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Repository requires environment variable management |
+| **Minimum Consumers** | All apps and packages |
+| **Dependencies** | None (documentation/tooling) |
+| **Exit Criteria** | Environment docs published and followed |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | Repository governance |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Environment mgmt `approved`
+- Note: Required for consistent environment handling
 
 ## Files
 

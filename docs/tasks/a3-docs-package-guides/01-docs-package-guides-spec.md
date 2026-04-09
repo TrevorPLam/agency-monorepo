@@ -1,4 +1,23 @@
-# A3 Docs Package Guides Specification
+# a3-docs-package-guides: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Shared packages require usage documentation |
+| **Minimum Consumers** | All package consumers |
+| **Dependencies** | None (meta documentation) |
+| **Exit Criteria** | Package guides published for all shared packages |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | Repository governance |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Package guides `approved`
+- Location: `docs/package-guides/`
+- Note: Each shared package should have a guide
 
 ## Files
 

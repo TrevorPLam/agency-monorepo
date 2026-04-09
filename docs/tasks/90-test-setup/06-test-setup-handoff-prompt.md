@@ -53,10 +53,10 @@ Create `package.json`:
   "dependencies": {
     "vitest": "4.1.3",
     "@testing-library/react": "16.3.2",
-    "@testing-library/jest-dom": "latest",
-    "@testing-library/user-event": "latest",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/user-event": "14.6.1",
     "@playwright/test": "1.59.1",
-    "jsdom": "latest"
+    "jsdom": "29.0.2"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",

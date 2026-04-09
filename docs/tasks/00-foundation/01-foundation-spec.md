@@ -1,5 +1,24 @@
 # 00-foundation: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Repository initialization — always required |
+| **Minimum Consumers** | n/a (root infrastructure) |
+| **Dependencies** | Node 24.x LTS, pnpm 10.33.0 |
+| **Exit Criteria** | Root package.json, pnpm-workspace.yaml, turbo.json committed and verified |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §1 — pnpm 10.33.0 locked via packageManager |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — pnpm workspaces + Turborepo `locked`
+- Version pins: `DEPENDENCY.md` §1, §3
+- Architecture: `ARCHITECTURE.md` — Final stack section
+
 ## Files
 
 ### Root Directory Structure
@@ -127,7 +146,7 @@ yarn.lock
   "devDependencies": {
     "@changesets/cli": "2.30.0",
     "prettier": "3.5.0",
-    "turbo": "2.9.4"
+    "turbo": "2.9.5"
   }
 }
 ```
@@ -162,7 +181,7 @@ catalog:
   eslint: ^9.0.0
   
   # Build tools
-  turbo: ^2.9.4
+  turbo: ^2.9.5
   
   # Testing
   vitest: ^3.0.0
@@ -202,8 +221,8 @@ catalog:
 
 ## Critical Requirements
 
-1. **Node Version**: 20.x LTS (minimum 20.9.0 for Next.js 16 compatibility)
-2. **pnpm Version**: 10.44.0 locked via `packageManager` field
+1. **Node Version**: 24.x LTS (minimum 20.9.0 for Next.js 16 compatibility)
+2. **pnpm Version**: 10.33.0 locked via `packageManager` field
 3. **Workspace Pattern**: Must include `packages/**/*` for nested package structure
 4. **Turborepo Remote Caching**: Configure `TURBO_TOKEN` and `TURBO_TEAM` env vars in CI
 5. **Prettier Integration**: Root `format` script uses Prettier (config in TASK_13)

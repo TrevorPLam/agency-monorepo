@@ -1,4 +1,22 @@
-# C4 Infra Release Workflow Specification
+# c4-infra-release-workflow: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Packages require automated versioning and publishing |
+| **Minimum Consumers** | 2+ publishable packages |
+| **Dependencies** | Changesets 2.30.0, GitHub Actions |
+| **Exit Criteria** | Release workflow publishing packages |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §12 — Changesets 2.30.0 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Release workflow `approved`
+- Version pins: `DEPENDENCY.md` §12
+- Note: Required for automated package publishing
 
 ## Files
 ```

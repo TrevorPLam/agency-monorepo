@@ -1,4 +1,23 @@
-# C2 Infra Ci Workflow Specification
+# c2-infra-ci-workflow: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Repository requires automated CI/CD |
+| **Minimum Consumers** | All packages and apps |
+| **Dependencies** | GitHub Actions, pnpm 10.33.0, Turborepo 2.9.5 |
+| **Exit Criteria** | CI workflow running on all PRs and main branch |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §1, §11 — pnpm 10.33.0, Turborepo 2.9.5 |
+| **Superseded by** | c3-infra-ci-workflow-v2 (deferred) |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — CI workflow `approved`
+- Version pins: `DEPENDENCY.md` §1, §11
+- Location: `.github/workflows/ci.yml`
+- Note: Required for quality assurance and automated testing
 
 ## Files
 

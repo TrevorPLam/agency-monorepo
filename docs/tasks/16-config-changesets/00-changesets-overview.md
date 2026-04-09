@@ -1,7 +1,7 @@
 # 16-config-changesets: Changesets Configuration
 
 ## Purpose
-Provide Changesets configuration for automated version management and changelog generation across the agency monorepo.
+Provide Changesets configuration for automated version management and changelog generation across the agency monorepo (infrastructure-only).
 
 ## Dependencies
 - None (uses external Changesets packages only)

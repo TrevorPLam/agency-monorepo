@@ -1,4 +1,22 @@
-# Monitoring Package Specification
+# f0-packages-monitoring: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | 2+ apps require observability and monitoring |
+| **Minimum Consumers** | 2+ apps needing monitoring |
+| **Dependencies** | Sentry 10.x OR PostHog, TypeScript 6.0 |
+| **Exit Criteria** | Monitoring package exported and used by at least 2 apps |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app opt-in |
+| **Version Authority** | `DEPENDENCY.md` §1, §16 — TypeScript 6.0, Sentry 10.x |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Monitoring package `open`
+- Version pins: `DEPENDENCY.md` §1, §16
+- Note: Conditional; production apps should have monitoring
 
 ## Package Structure
 

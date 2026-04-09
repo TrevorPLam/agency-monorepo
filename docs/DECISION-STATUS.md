@@ -46,6 +46,7 @@ Use these labels exactly:
 | Core framework | Next.js 16 App Router | locked | No Pages Router planning path |
 | React version lane | React 19 with Next 16 pairing | locked | Must stay version-aligned |
 | React Compiler usage | Supported, but opt-in and package-controlled | leaning | Do not treat as globally enabled by default |
+| Lint/format lane | ESLint canonical, Biome complementary | locked | ESLint remains primary; Biome handles formatting and performance linting |
 | Styling system | Tailwind CSS v4 CSS-first approach | locked | No old preset-style Tailwind setup |
 | UI ownership model | shadcn-style source ownership | locked | Prefer owned component source over black-box UI package |
 | Design system scope | Minimal shared UI only | locked | No speculative giant component library |
@@ -126,9 +127,24 @@ Update this document when:
 ## Relationship to other docs
 
 - `docs/AGENTS.md` tells AI agents how to behave
-- `docs/REPO-STATE.md` tells them what currently exists and what is approved
+- `docs/REPO-STATE.md` tells them what currently exists and what is **approved for implementation**
 - `docs/DECISION-STATUS.md` tells them which choices are settled and which are still in motion
+- `docs/DEPENDENCY.md` is the authoritative source for all dependency versions
 - `docs/architecture/` ADRs explain finalized high-impact decisions in depth
+
+## Implementation authority
+
+A decision marked `locked` in this document does **not** automatically grant implementation authority. Before implementing:
+
+1. Check `REPO-STATE.md` — is the package/app marked as `approved` or `active`?
+2. Check this document — is the relevant decision `locked`?
+3. Check `DEPENDENCY.md` — are you using the exact pinned versions?
+
+**Document hierarchy for implementation:**
+- `REPO-STATE.md` — what is approved to implement now
+- `DECISION-STATUS.md` — which decisions are locked vs still open  
+- `DEPENDENCY.md` — exact version authority for all dependencies
+- `ARCHITECTURE.md` — target state design (reference only)
 
 ## Change log
 

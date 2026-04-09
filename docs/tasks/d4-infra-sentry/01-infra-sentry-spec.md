@@ -1,5 +1,23 @@
 # d4-infra-sentry: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires Sentry error tracking integration |
+| **Minimum Consumers** | 1+ apps needing Sentry monitoring |
+| **Dependencies** | Sentry 10.x, React 19.2.5, Next.js 16.2.3 |
+| **Exit Criteria** | Sentry package exported and error tracking active |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit monitoring need |
+| **Version Authority** | `DEPENDENCY.md` §2, §16 — React 19.2.5, Sentry 10.x |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Sentry integration `open`
+- Version pins: `DEPENDENCY.md` §2, §16
+- Note: Optional; alternative to other monitoring solutions
+
 ## Files
 
 ```
@@ -41,15 +59,15 @@ packages/observability/sentry/
     "./feedback": "./src/feedback.ts"
   },
   "dependencies": {
-    "@sentry/nextjs": "^9.0.0",
-    "@sentry/react": "^9.0.0",
-    "@sentry/node": "^9.0.0"
+    "@sentry/nextjs": "10.47.0",
+    "@sentry/react": "10.47.0",
+    "@sentry/node": "10.47.0"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",
     "@agency/config-typescript": "workspace:*",
-    "@types/react": "^19.0.0",
-    "react": "^19.0.0"
+    "@types/react": "19.2.14",
+    "react": "19.2.5"
   },
   "peerDependencies": {
     "next": ">=16.0.0",

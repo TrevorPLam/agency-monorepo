@@ -1,4 +1,24 @@
-# Data Api Client Specification
+# 52-data-api-client: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | 2+ consumers share the same external API contract |
+| **Minimum Consumers** | 2+ apps or packages reusing one upstream API client |
+| **Dependencies** | TypeScript 6.0, `@agency/config-typescript`, native `fetch` |
+| **Exit Criteria** | One shared upstream API client exported and reused by at least 2 consumers |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app-level opt-in |
+| **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — API client pattern `open`
+- Version pins: `DEPENDENCY.md` §1
+- Architecture: `ARCHITECTURE.md` — Data layer section
+- Note: External API integration is optional; one-off integrations stay inside the owning app until two consumers genuinely share the same upstream contract
 
 ## Files
 ```

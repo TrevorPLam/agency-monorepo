@@ -17,7 +17,7 @@ You are implementing `@agency/auth-internal`, the Clerk-based authentication pac
 Create the package at `packages/auth/internal/` with:
 
 ### Required Files
-- `package.json` — Dependencies: `@clerk/nextjs@7.0.8`, `@agency/core-types`
+- `package.json` — Dependencies: `@clerk/nextjs@7.0.12`, `@agency/core-types`
 - `tsconfig.json` — Extends `@agency/config-typescript`
 - `README.md` — Usage documentation
 - `src/index.ts` — Public exports

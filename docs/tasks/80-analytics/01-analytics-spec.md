@@ -1,4 +1,24 @@
-# Analytics Specification
+# 80-analytics: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Repository initialization — always required |
+| **Minimum Consumers** | n/a (root infrastructure) |
+| **Dependencies** | Plausible OR PostHog OR Google Analytics 4, React 19.2.5 |
+| **Exit Criteria** | Root package.json, pnpm-workspace.yaml, turbo.json committed and verified |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §2 — React 19.2.5 |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+## Cross-references
+
+- Decision status: `DECISION-STATUS.md` — Analytics `open` (evaluate during Task 80)
+- Version pins: `DEPENDENCY.md` §2
+- Architecture: `ARCHITECTURE.md` — Analytics layer
 
 ## Rationale (Package vs App)
 
@@ -82,13 +102,13 @@ packages/analytics/
     "@agency/config-eslint": "workspace:*",
     "@agency/config-typescript": "workspace:*",
     "@agency/test-setup": "workspace:*",
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "posthog-js": "1.365.1",
-    "posthog-node": "5.29.1",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "typescript": "6.0.0"
+    "@types/node": "25.5.2",
+    "@types/react": "19.2.14",
+    "posthog-js": "1.365.5",
+    "posthog-node": "5.29.2",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
+    "typescript": "6.0.2"
   },
   "peerDependencies": {
     "react": "^19.0.0",

@@ -1,4 +1,24 @@
-# Seo Specification
+# 40-seo: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | 2+ apps require SEO utilities and metadata patterns |
+| **Minimum Consumers** | 2+ apps needing SEO |
+| **Dependencies** | Next.js 16.2.3, React 19.2.5, `@agency/core-types` |
+| **Exit Criteria** | SEO utilities exported and used by at least 2 apps |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app opt-in |
+| **Version Authority** | `DEPENDENCY.md` §2, §17 — Next.js 16.2.3, React 19.2.5 |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — SEO utilities `open`
+- Version pins: `DEPENDENCY.md` §2, §17
+- Architecture: `ARCHITECTURE.md` — SEO/optimization layer
+- Note: Conditional; only marketing-focused apps typically need SEO
 
 ## Rationale (Package vs App)
 
@@ -78,9 +98,9 @@ packages/seo/
     "@agency/config-eslint": "workspace:*",
     "@agency/config-typescript": "workspace:*",
     "@agency/test-setup": "workspace:*",
-    "next": "16.2.2",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "next": "16.2.3",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "typescript": "6.0.0"
   },
   "peerDependencies": {

@@ -1,5 +1,31 @@
 # 10-config-eslint: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Repository initialization — always required |
+| **Minimum Consumers** | n/a (root infrastructure) |
+| **Dependencies** | ESLint 9.x, `@typescript-eslint/*`, `eslint-config-next@16.2.3` |
+| **Exit Criteria** | Root package.json, pnpm-workspace.yaml, turbo.json committed and verified |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §1, §3 — pnpm 10.33.0 locked via packageManager |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+## Cross-references
+
+- Decision status: `DECISION-STATUS.md` — pnpm workspaces + Turborepo `locked`
+- Version pins: `DEPENDENCY.md` §1, §3
+- Architecture: `ARCHITECTURE.md` — Final stack section
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — ESLint canonical, Biome `open`
+- Version pins: `DEPENDENCY.md` §3, §18
+- Architecture: `ARCHITECTURE.md` — Linting configuration section
+- Related: Task 14 (14-config-biome) evaluation determines future canonical status
+
 ## Files
 ```
 packages/config/eslint-config/
@@ -26,14 +52,14 @@ packages/config/eslint-config/
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^8.57.0",
     "@typescript-eslint/parser": "^8.57.0",
-    "eslint-config-next": "16.2.2",
+    "eslint-config-next": "16.2.3",
     "eslint-plugin-import": "^2.31.0"
   },
   "publishConfig": { "access": "restricted" }
 }
 ```
 
-ESLint 9 flat config has been the default configuration system since v9.0.0. Shared configuration packages must export flat config objects directly for use in `eslint.config.js`. `@typescript-eslint` v8.0.0 (latest minor versions ~8.56.1) includes all TypeScript linting rules and the ESLint parser. `eslint-config-next` v16.2.2 is the latest official Next.js configuration and includes Next-specific rules plus React and React Hooks recommendations.
+ESLint 9 flat config has been the default configuration system since v9.0.0. Shared configuration packages must export flat config objects directly for use in `eslint.config.js`. `@typescript-eslint` v8.0.0 (latest minor versions ~8.56.1) includes all TypeScript linting rules and the ESLint parser. `eslint-config-next` v16.2.3 is the latest official Next.js configuration and includes Next-specific rules plus React and React Hooks recommendations.
 
 ### `base.mjs`
 

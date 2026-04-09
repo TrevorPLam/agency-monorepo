@@ -19,7 +19,7 @@ This task establishes:
 
 ## Critical Context
 
-ESLint 9 flat config is the current standard. The old `.eslintrc.js` configuration system is deprecated. All shared configurations must export flat config objects directly for use in `eslint.config.js`. `@typescript-eslint` v8.57.0 (latest minor versions ~8.57.1) includes all TypeScript linting rules and ESLint parser. `eslint-config-next` v16.2.2 is the latest official Next.js configuration and includes Next-specific rules plus React and React Hooks recommendations.
+ESLint 9 flat config is the current standard. The old `.eslintrc.js` configuration system is deprecated. All shared configurations must export flat config objects directly for use in `eslint.config.js`. `@typescript-eslint` v8.57.0 (latest minor versions ~8.57.1) includes all TypeScript linting rules and ESLint parser. `eslint-config-next` v16.2.3 is the latest official Next.js configuration and includes Next-specific rules plus React and React Hooks recommendations.
 
 The `@agency/config-eslint` package enforces the monorepo's critical dependency flow rules using `no-restricted-paths` and `no-restricted-imports`. This prevents packages from importing from apps and ensures proper domain boundaries are respected.
 

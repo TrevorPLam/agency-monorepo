@@ -1,4 +1,24 @@
-# Test Setup Specification
+# 90-test-setup: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | First package or app requires test utilities |
+| **Minimum Consumers** | 2+ packages/apps using shared test setup |
+| **Dependencies** | Vitest 3.x, Testing Library React, Playwright |
+| **Exit Criteria** | Test setup exported and used by at least 2 consumers |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §12 — Vitest 3.x |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Test setup `approved`
+- Version pins: `DEPENDENCY.md` §12
+- Architecture: `ARCHITECTURE.md` — Testing layer section
+- Note: Vitest is the canonical test runner
 
 ## Files
 ```
@@ -31,10 +51,10 @@ packages/testing/setup/
   "dependencies": {
     "vitest": "4.1.3",
     "@testing-library/react": "16.3.2",
-    "@testing-library/jest-dom": "latest",
-    "@testing-library/user-event": "latest",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/user-event": "14.6.1",
     "@playwright/test": "1.59.1",
-    "jsdom": "latest"
+    "jsdom": "29.0.2"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",

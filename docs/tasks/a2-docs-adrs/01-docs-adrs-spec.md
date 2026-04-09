@@ -1,4 +1,23 @@
-# A2 Docs Adrs Specification
+# a2-docs-adrs: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Architecture decisions require documentation |
+| **Minimum Consumers** | All architecture decision records |
+| **Dependencies** | None (meta documentation) |
+| **Exit Criteria** | ADR structure published and used |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | Repository governance |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — ADR process `approved`
+- Location: `docs/architecture/ADRs/`
+- Note: ADRs are immutable once accepted
 
 ## Files
 ```

@@ -19,7 +19,7 @@
 ## Technical Constraints
 
 ### React 19 Compatibility
-- Must use React 19.2.0+
+- Must use React 19.2.5+
 - Must use `forwardRef` for ref forwarding
 - Must support both decorative and informative modes
 - Must handle `aria-label` and `aria-hidden` properly
@@ -53,9 +53,9 @@ export function IconName({
 ## Dependency Rules
 
 ### Allowed Dependencies
-- `lucide-react` (0.487.0 pinned)
-- `react` (19.2.0)
-- `react-dom` (19.2.0)
+- `lucide-react` (1.8.0 pinned)
+- `react` (19.2.5)
+- `react-dom` (19.2.5)
 - `@agency/config-eslint`
 - `@agency/config-typescript`
 - `@agency/test-setup` (dev)

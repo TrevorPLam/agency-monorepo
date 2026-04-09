@@ -19,8 +19,8 @@ Lucide-based icon wrappers with custom SVG support. Provides tree-shakable, acce
 - **Custom SVG Support**: Add agency-specific icons alongside Lucide
 
 ## Dependencies
-- `lucide-react` (0.487.0) - Icon library
-- `react` (19.2.0) - React framework
+- `lucide-react` (1.8.0) - Icon library
+- `react` (19.2.5) - React framework
 - `@agency/config-typescript` - TypeScript configuration
 - `@agency/test-setup` (dev) - Testing utilities
 

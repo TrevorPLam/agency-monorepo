@@ -15,6 +15,44 @@
 
 ***
 
+## Dependency Truth Policy
+
+This section defines the classification system for dependency versions in this repository. Every dependency entry must fall into one of these four categories:
+
+| Classification | Meaning | Example |
+|---|---|---|
+| **Verified exact pin** | Version confirmed from official source (registry, changelog, or docs) | `pnpm@10.33.0`, `react@19.2.5` |
+| **Approved range** | Semver range approved for non-runtime dependencies | `^9.0.0` for ESLint 9.x |
+| **Tool-only latest** | Acceptable for CLI tools invoked by generators (not runtime) | `npx create-next-app@latest` |
+| **Validation pending** | Placeholder requiring verification before use | Marked with ⚠️ in tables |
+
+### Verified Exact Pins
+
+These versions are confirmed from official sources and locked for production use:
+2. **Official changelog** — for release notes and breaking changes
+3. **Official docs** — for installation instructions
+4. **GitHub releases** — for verification only
+
+### When `latest` is allowed
+
+- **Never** for runtime dependencies in `package.json` files
+- **Never** for internal package version pins
+- **Only** for:
+  - Generator CLI commands (e.g., `npx shadcn@latest`)
+  - Research placeholders marked "verify before use"
+  - Documentation examples explicitly labeled as tool commands
+
+### Stale pin correction process
+
+When a version pin is found to be outdated:
+1. Verify the new version from official source
+2. Update this document (DEPENDENCY.md) first
+3. Update all referencing documents (ARCHITECTURE.md, task specs)
+4. Run `pnpm install` to update lockfile
+5. Test in at least one consuming app before merging
+
+***
+
 ## §1 · Runtime, Package Manager & Compiler
 
 Global baseline. These values are authoritative. Do not override per-package.
@@ -51,17 +89,17 @@ These three must always be installed as a coordinated trio. Never install one wi
 
 | Package | Pin | Notes |
 | --- | --- | --- |
-| `next` | **16.2.2** | App Router-first. Requires Node 20.9+, TS 5+. |
-| `react` | **19.2.4** | Required pairing for Next 16. |
-| `react-dom` | **19.2.4** | Must match `react` exactly. |
+| `next` | **16.2.3** | App Router-first. Requires Node 20.9+, TS 5+. |
+| `react` | **19.2.5** | Required pairing for Next 16. |
+| `react-dom` | **19.2.5** | Must match `react` exactly. |
 
 ### Tailwind CSS v4
 
 | Package | Pin | Notes |
 | --- | --- | --- |
 | `tailwindcss` | **4.2.2** | CSS-first. `@theme {}` replaces `tailwind.config.js`. `presets` API removed. |
-| `postcss` | latest 8.x | Still required for Next's CSS pipeline. |
-| `autoprefixer` | latest 10.x | Standard PostCSS peer. |
+| `postcss` | **8.5.9** | Still required for Next's CSS pipeline. |
+| `autoprefixer` | **10.4.27** | Standard PostCSS peer. |
 
 **`@agency/config-tailwind` must export a CSS file — not a JS preset.** The `presets` API does not exist in v4.
 - Export `theme.css` with design tokens inside an `@theme {}` block.
@@ -73,11 +111,11 @@ shadcn/ui is **not an installable package**. Run the CLI into `packages/ui/desig
 
 | Package | Pin | Owned by |
 | --- | --- | --- |
-| `@radix-ui/react-*` | latest | Installed per-component by shadcn CLI → `@agency/ui-design-system` |
-| `lucide-react` | latest | `@agency/ui-icons` |
-| `clsx` | latest | `@agency/ui-design-system` |
-| `tailwind-merge` | latest | `@agency/ui-design-system` |
-| `class-variance-authority` | latest | `@agency/ui-design-system` |
+| `@radix-ui/react-*` | exact pin per installed component | Installed per-component by shadcn CLI → `@agency/ui-design-system` (current examples: `@radix-ui/react-label@2.1.8`, `@radix-ui/react-slot@1.2.4`) |
+| `lucide-react` | **1.8.0** | `@agency/ui-icons` |
+| `clsx` | **2.1.1** | `@agency/ui-design-system` |
+| `tailwind-merge` | **3.5.0** | `@agency/ui-design-system` |
+| `class-variance-authority` | **0.7.1** | `@agency/ui-design-system` |
 
 ### React Compiler (`@agency/config-react-compiler`)
 
@@ -96,13 +134,13 @@ React Compiler is **stable in Next 16.2+ but opt-in only**. It is not enabled by
 
 | Package | Pin | Purpose |
 | --- | --- | --- |
-| `turbo` | **2.9.4** | Task orchestration above pnpm workspaces. |
+| `turbo` | **2.9.5** | Task orchestration above pnpm workspaces. |
 | `@changesets/cli` | **2.30.0** | Versioning and changelogs. |
 | `eslint` | latest 9.x | Base linter. |
-| `eslint-config-next` | **16.2.2** | Must match Next pin exactly. |
+| `eslint-config-next` | **16.2.3** | Must match Next pin exactly. |
 | `@typescript-eslint/parser` | latest | TS-aware ESLint parser. |
 | `@typescript-eslint/eslint-plugin` | latest | TS ESLint rules. |
-| `@types/node` | latest | Node typings for apps and tools. |
+| `@types/node` | **25.5.2** | Node typings for apps and tools. |
 
 **All internal dependencies use `workspace:*` ranges** so pnpm resolves locally and Changesets can bump versions correctly.
 
@@ -128,7 +166,7 @@ React Compiler is **stable in Next 16.2+ but opt-in only**. It is not enabled by
 | `drizzle-orm` | **0.45.2** | ORM layer — works with Neon, Supabase, and standard pg. |
 | `drizzle-kit` | latest 0.3x | Migrations CLI. |
 | `@neondatabase/serverless` | **1.0.2** | Neon driver (primary lane). |
-| `@supabase/supabase-js` | **2.102.0** | Supabase client (verified current April 2026). |
+| `@supabase/supabase-js` | **2.103.0** | Supabase client (verified current April 2026). |
 | `pg` | optional | Classic TCP Postgres for non-edge/long-running workers only. |
 
 > 
@@ -158,16 +196,17 @@ React Compiler is **stable in Next 16.2+ but opt-in only**. It is not enabled by
 **`@agency/auth-internal` (Clerk lane):**
 | Package | Pin |
 | --- | --- |
-| `@clerk/nextjs` | **7.0.8** |
+| `@clerk/nextjs` | **7.0.12** |
 
 **`@agency/auth-portal` (Better Auth lane):**
 | Package | Pin |
 | --- | --- |
-| `better-auth` | **1.6.0** ⚠️ See breaking changes note below |
-| `better-auth/react` | **1.6.0** |
+| `better-auth` | **1.6.2** ⚠️ See breaking changes note below |
+| React client import | `better-auth/react` (bundled with `better-auth@1.6.2`) |
+| `@better-auth/drizzle-adapter` | **1.6.2** |
 | Plugins | optional (`better-auth-plugins` for 2FA, passkeys, RBAC) |
 
-> ⚠️ **Better Auth 1.6.0 Breaking Changes** (April 6, 2026):
+> ⚠️ **Better Auth 1.6.x Breaking Changes** (introduced in 1.6.0, still applicable in 1.6.2):
 > - `session.freshAge` now calculates from `createdAt` instead of `updatedAt` — session activity no longer extends freshness window
 > - `oidc-provider` plugin deprecated — migrate to `@better-auth/oauth-provider` before next major release
 > - See [Better Auth Changelog](https://better-auth.com/changelog) for migration guide
@@ -191,16 +230,16 @@ Apps call `@agency/email-service` and never touch provider SDKs directly.
 
 | Package | Pin | Notes |
 | --- | --- | --- |
-| `@react-email/components` | **1.0.10** | Component primitives. |
-| `@react-email/preview-server` | latest | Dev preview server — `devDependencies` only. |
+| `@react-email/components` | **1.0.12** | Component primitives. |
+| `@react-email/preview-server` | **5.2.10** | Dev preview server — `devDependencies` only. |
 
 ### Transport Providers (`@agency/email-service`)
 
 | Provider | Package | Free Tier | Best Fit | Lane |
 | --- | --- | --- | --- | --- |
-| **Resend** | `resend` (latest 3.x) | 3,000 emails/mo, 1 domain | Developer DX, modern API, monorepo-friendly | Primary |
+| **Resend** | `resend@6.10.0` | 3,000 emails/mo, 1 domain | Developer DX, modern API, monorepo-friendly | Primary |
 | **Postmark** | `postmark` (4.0.7) | 100 emails/mo (dev only) | Transactional deliverability, premium | Primary alt / high-stakes transactional |
-| **Brevo (Sendinblue)** | REST or `@getbrevo/brevo` | 300 emails/day | Budget clients, marketing + transactional blend | Backup |
+| **Brevo (Sendinblue)** | REST or `@getbrevo/brevo@5.0.3` | 300 emails/day | Budget clients, marketing + transactional blend | Backup |
 | **SendGrid** | `@sendgrid/mail` | 100 emails/day | Enterprise, existing Twilio contracts | Backup |
 | **Mailtrap** | REST | Free dev sandbox | Dev/staging email testing (not production) | Dev tooling |
 | **SMTP2GO** | SMTP/REST | 1,000 emails/mo | SMTP-native clients, small volume | Backup |
@@ -240,7 +279,7 @@ Apps call `@agency/email-service` and never touch provider SDKs directly.
 
 | Provider | Package(s) | Free Tier | Self-hostable | Best Fit | Lane |
 | --- | --- | --- | --- | --- | --- |
-| **Sanity** | `sanity@5.19.0`, `next-sanity@12.1.5` | Free (with seat limits) | No (cloud-hosted Studio, open-source SDK) | Rich content modeling, real-time collab, visual editing | **Primary** |
+| **Sanity** | `sanity@5.20.0`, `next-sanity@12.2.2` | Free (with seat limits) | No (cloud-hosted Studio, open-source SDK) | Rich content modeling, real-time collab, visual editing | **Primary** |
 | **Hygraph** | REST/GraphQL SDK | Free (limited operations) | No | GraphQL-native CMS, federated content | Backup |
 | **Contentful** | `contentful` | Free (25k records, 2 locales) | No | Enterprise-familiar CMS, broad ecosystem | Backup |
 | **Prismic** | `@prismicio/client` | Free (1 user, 1 repo) | No | Slice-based page building, Next.js strong support | Backup |
@@ -255,8 +294,8 @@ Apps call `@agency/email-service` and never touch provider SDKs directly.
 
 | Package | Pin |
 | --- | --- |
-| `sanity` | **5.19.0** |
-| `next-sanity` | **12.1.5** |
+| `sanity` | **5.20.0** |
+| `next-sanity` | **12.2.2** |
 | `@sanity/client` | **7.20.0** (optional if only using `next-sanity`) |
 
 ### CMS Selection Trigger
@@ -296,7 +335,7 @@ AI-powered content generation and enrichment for the b4-tools-content-pipeline. 
 | Provider | Package | Free Tier | Privacy | Best Fit | Lane |
 | --- | --- | --- | --- | --- | --- |
 | **Plausible** | `@plausible-analytics/tracker@0.4.4` | $9/mo (no meaningful free tier for production) | GDPR-compliant by default, cookieless | Public marketing sites, EU-first | **Primary — marketing** |
-| **PostHog** | `posthog-js@1.365.1`, `posthog-node@5.29.1` | 1M events/mo free | Configurable, self-host available | Product analytics, feature flags, session replay | **Primary — product** |
+| **PostHog** | `posthog-js@1.366.0`, `posthog-node@5.29.2` | 1M events/mo free | Configurable, self-host available | Product analytics, feature flags, session replay | **Primary — product** |
 | **Cloudflare Web Analytics** | Script tag only (no npm) | **Free unlimited** | Privacy-first, no cookies | Static/edge sites already on Cloudflare | Backup — zero cost |
 | **Microsoft Clarity** | Script tag / REST | **Free unlimited** | GDPR-configurable | Heatmaps, session recording, UX debugging | Backup — free UX layer |
 | **Umami** | Self-hosted or cloud | Free self-hosted | GDPR-compliant, cookieless | Privacy-sensitive clients who want self-hosting | Self-host lane |
@@ -309,8 +348,8 @@ AI-powered content generation and enrichment for the b4-tools-content-pipeline. 
 | Package | Pin |
 | --- | --- |
 | `@plausible-analytics/tracker` | **0.4.4** |
-| `posthog-js` | **1.365.1** |
-| `posthog-node` | **5.29.1** |
+| `posthog-js` | **1.366.0** |
+| `posthog-node` | **5.29.2** |
 
 ### Escalation Packages (condition-gated — see §14)
 
@@ -379,7 +418,7 @@ When activated, package dependencies are:
 | --- | --- |
 | Vercel default (no extra install) | Use built-in Vercel Speed Insights + Analytics via Next.js integration |
 | New Relic RUM lane | `newrelic` (Node agent) + browser agent script |
-| Sentry error lane | `@sentry/nextjs` |
+| Sentry error lane | `@sentry/nextjs@10.47.0` |
 | Grafana Faro | `@grafana/faro-web-sdk` |
 
 ***
@@ -390,7 +429,7 @@ When activated, package dependencies are:
 
 | Package | Version | Role |
 | --- | --- | --- |
-| `posthog-node` | **5.29.1** | Route notification events into analytics (optional) |
+| `posthog-node` | **5.29.2** | Route notification events into analytics (optional) |
 | Provider SDKs | Per-provider | Slack, Discord, webhook — install the minimum required |
 
 **Notification provider options (install only the one(s) needed):**
@@ -415,9 +454,9 @@ When activated, package dependencies are:
 | --- | --- | --- |
 | `vitest` | **4.1.3** | Requires Node 20+, Vite 6+. |
 | `@testing-library/react` | **16.3.2** | Supports React 19. |
-| `@testing-library/jest-dom` | latest | DOM matchers. |
-| `@testing-library/user-event` | latest | Interaction helpers. |
-| `jsdom` | latest | Browser env for unit tests. |
+| `@testing-library/jest-dom` | **6.9.1** | DOM matchers. |
+| `@testing-library/user-event` | **14.6.1** | Interaction helpers. |
+| `jsdom` | **29.0.2** | Browser env for unit tests. |
 
 ### E2E (`@agency/test-setup`)
 
@@ -446,7 +485,7 @@ This table is the canonical record of what each internal package is allowed to d
 
 | Package | Allowed external deps | Allowed internal deps |
 | --- | --- | --- |
-| `@agency/config-eslint` | `eslint`, `eslint-config-next@16.2.2`, `@typescript-eslint/*` | — |
+| `@agency/config-eslint` | `eslint`, `eslint-config-next@16.2.3`, `@typescript-eslint/*` | — |
 | `@agency/config-typescript` | `typescript@6.0` | — |
 | `@agency/config-tailwind` | `tailwindcss@4.2.2`, `postcss`, `autoprefixer` | — |
 | `@agency/config-prettier` | `prettier@3.5.0` | — |
@@ -463,21 +502,21 @@ This table is the canonical record of what each internal package is allowed to d
 | `@agency/compliance-security-headers` | — | `@agency/compliance` |
 | `@agency/monitoring` | Provider SDK (see §10) | `@agency/core-types` |
 | `@agency/monitoring-rum` | Provider SDK (see §10) | `@agency/monitoring` |
-| `@agency/data-db` | `drizzle-orm@0.45.2`, `drizzle-kit`, `@neondatabase/serverless@1.0.2`, `@supabase/supabase-js@2.102.0`, `pg` (optional) | `@agency/core-types` |
-| `@agency/data-cms` | `sanity@5.19.0`, `next-sanity@12.1.5`, `@sanity/client@7.20.0` | `@agency/core-types` |
+| `@agency/data-db` | `drizzle-orm@0.45.2`, `drizzle-kit@0.31.10`, `@neondatabase/serverless@1.0.2`, `@supabase/supabase-js@2.103.0`, `pg` (optional) | `@agency/core-types` |
+| `@agency/data-cms` | `sanity@5.20.0`, `next-sanity@12.2.2`, `@sanity/client@7.20.0` | `@agency/core-types` |
 | `@agency/data-content-federation` | Federation provider SDKs | `@agency/data-cms`, `@agency/data-db`, `@agency/core-types` |
 | `@agency/data-ai-enrichment` | AI SDK (e.g. `@ai-sdk/openai`) | `@agency/data-cms`, `@agency/core-types` |
 | `@agency/data-api-client` | `zod` | `@agency/core-types`, `@agency/core-utils` |
-| `@agency/auth-internal` | `@clerk/nextjs@7.0.8` | `@agency/core-types` |
-| `@agency/auth-portal` | `better-auth@1.6.0`, `@better-auth/drizzle-adapter@1.6.0` | `@agency/core-types`, `@agency/data-db` |
-| `@agency/email-templates` | `@react-email/components@1.0.10`, `react`, `react-dom` | `@agency/core-types` |
+| `@agency/auth-internal` | `@clerk/nextjs@7.0.12` | `@agency/core-types` |
+| `@agency/auth-portal` | `better-auth@1.6.2`, `@better-auth/drizzle-adapter@1.6.2` | `@agency/core-types`, `@agency/data-db` |
+| `@agency/email-templates` | `@react-email/components@1.0.12`, `react`, `react-dom` | `@agency/core-types` |
 | `@agency/email-service` | Transport provider SDK (see §6) | `@agency/email-templates`, `@agency/core-types` |
 | `@agency/notifications` | Provider SDK (see §11) | `@agency/core-types`, `@agency/email-service` |
-| `@agency/analytics` | `@plausible-analytics/tracker@0.4.4`, `posthog-js@1.365.1`, `posthog-node@5.29.1` | `@agency/core-types` |
+| `@agency/analytics` | `@plausible-analytics/tracker@0.4.4`, `posthog-js@1.366.0`, `posthog-node@5.29.2` | `@agency/core-types` |
 | `@agency/analytics-attribution` | Attribution provider SDKs | `@agency/analytics`, `@agency/compliance` |
 | `@agency/analytics-consent-bridge` | — | `@agency/analytics`, `@agency/compliance` |
 | `@agency/experimentation` | Provider SDK (see §9) | `@agency/analytics`, `@agency/core-types` |
-| `@agency/experimentation-edge` | `@vercel/edge-config` | `@agency/analytics`, `@agency/core-types` |
+| `@agency/experimentation-edge` | `@vercel/edge-config@1.4.3` | `@agency/analytics`, `@agency/core-types` |
 | `@agency/lead-capture` | `react-hook-form@7.51.0`, `@hookform/resolvers@3.3.0`, `zod@3.23.0` | `@agency/ui-design-system`, `@agency/analytics`, `@agency/compliance`, `@agency/core-types` |
 | `@agency/lead-capture-progressive` | — | `@agency/lead-capture` |
 | `@agency/lead-capture-enrichment` | Enrichment provider SDK (Apollo/ZoomInfo/Cognism) | `@agency/lead-capture`, `@agency/data-db` |
@@ -639,34 +678,52 @@ Task `14-config-biome` is evaluating Biome as a Rust-based alternative to ESLint
 If upgrading from Next.js 15:
 1. Remove `"next lint"` from all npm scripts
 2. Add direct ESLint invocation to root `package.json`
-3. Update `eslint-config-next` to match Next.js 16.2.2
+3. Update `eslint-config-next` to match Next.js 16.2.3
 4. Migrate `.eslintrc` files to flat config format (`eslint.config.mjs`)
 
 ***
 
-## §19 · Open Validation Items
+## §19 · Version Verification Report (April 2026)
 
-These items require an official-source pricing/limits check before being treated as authoritative. Do not commit to a provider in production without completing this verification.
+This section documents the results of the April 2026 research pass on core dependency versions.
+
+### Verified exact pins
+
+| Package | Current Pin | Verified Version | Status | Source |
+|---------|-------------|------------------|--------|--------|
+| pnpm | 10.33.0 | 10.33.0 | ✅ Verified | GitHub releases |
+| React | 19.2.5 | 19.2.5 | ✅ Verified | npm registry |
+| TypeScript | 6.0.2 | 6.0.2 | ✅ Verified | npm registry |
+| Tailwind CSS | 4.2.2 | 4.2.2 | ✅ Verified | GitHub releases |
+| Turborepo | 2.9.5 | 2.9.5 | ✅ Verified | npm registry |
+| Next.js | 16.2.3 | 16.2.3 | ✅ Verified | npm registry |
+
+### Key findings
+
+1. **pnpm 10.44.0** — This version does **not exist**. The correct latest stable is **10.33.0**. The 10.44.0 reference in foundation spec was an error and has been corrected.
+
+2. **Turborepo 2.9.5** — Current stable pin confirmed from the npm registry.
+
+3. **Better Auth 1.6.2** — Current stable pin confirmed from the npm registry. Breaking changes introduced in 1.6.0 still apply.
+
+4. **React 19.2.5** — Current stable pin confirmed from the npm registry.
+
+### Pending verification
 
 | Item | Why it needs verification | Priority |
 | --- | --- | --- |
-| `@supabase/supabase-js` version | Previous pin (2.49.0) is stale; current is ~2.102.0 — confirm exact pin | 🔴 High |
 | Neon free tier limits | Storage, compute hours, and project count may have changed in 2026 | 🔴 High |
 | Supabase free tier limits | Auth MAU, DB size, storage — verify current limits before recommending | 🔴 High |
 | Clerk free tier MAU | 10k MAU free — confirm this is still accurate for 2026 | 🟡 Medium |
-| Better Auth `1.6.0` exact pin | Confirmed as current stable (April 6, 2026). Verify 1.6.x patch releases. | � Low |
 | Resend free tier | 3,000 emails/mo, 1 domain — verify not changed | 🟡 Medium |
 | Brevo free tier | 300 emails/day — confirm commercial-use status | 🟡 Medium |
 | Sanity free tier seat limits | Confirm free tier is still commercially usable for client projects | 🟡 Medium |
 | PostHog free tier event count | 1M events/mo — confirm includes feature flags | 🟡 Medium |
-| Plausible pricing | No meaningful free production tier — confirm self-host option is viable for budget clients | 🟡 Medium |
+| Plausible pricing | No meaningful free production tier — confirm self-host option is viable | 🟡 Medium |
 | New Relic 100 GB free ingest | Confirm this is still the current free tier and includes RUM | 🟡 Medium |
-| Vercel Hobby free tier for client sites | Confirm commercial use is allowed on Hobby plan | 🟡 Medium |
-| Cloudflare Pages/Workers free limits | 100k req/day Workers free — confirm sufficient for typical marketing sites | 🟡 Medium |
-| `@clerk/nextjs@7.0.8` exact pin | Confirm latest in 7.x series | 🟢 Low |
-| `posthog-js@1.364.7` exact pin | Confirm latest stable | 🟢 Low |
-| `next-sanity@12.1.5` exact pin | Confirm latest stable | 🟢 Low |
+| Vercel Hobby free tier | Confirm commercial use is allowed on Hobby plan | 🟡 Medium |
+| Cloudflare Pages/Workers limits | 100k req/day Workers free — confirm sufficient for typical sites | 🟡 Medium |
 
 ***
 
-*Last updated: April 2026 — synthesized from TASKS.md analysis across four research passes plus provider-lane enrichment research.* 
+*Last updated: April 8, 2026 — Phase 1 truth and control pass completed.*

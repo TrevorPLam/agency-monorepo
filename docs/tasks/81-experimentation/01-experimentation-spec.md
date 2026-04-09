@@ -1,10 +1,29 @@
-# Experimentation Specification
+# 81-experimentation: Implementation Specification
 
+## Task Header
 
-**Status:** Ready for implementation (April 2026)
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires A/B testing or feature flags |
+| **Minimum Consumers** | 1+ apps explicitly requesting experimentation |
+| **Dependencies** | PostHog SDK, React 19.2.5, `@agency/core-types` |
+| **Exit Criteria** | Experimentation utilities exported and used in at least one app |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app-level opt-in |
+| **Version Authority** | `DEPENDENCY.md` §2 — React 19.2.5 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Experimentation `open` (PostHog `leaning`)
+- Version pins: `DEPENDENCY.md` §2
+- Architecture: `ARCHITECTURE.md` — Experimentation layer
+- Note: Conditional; most apps don't need experimentation infrastructure
+
+## Status
+
+Ready for implementation (April 2026)
 
 This package provides A/B testing and feature flag infrastructure using PostHog as the primary backend. It supports both client-side and server-side feature flag evaluation.
-
 
 ## Files
 
@@ -63,17 +82,17 @@ packages/experimentation/
   "dependencies": {
     "@agency/core-types": "workspace:*",
     "@agency/analytics": "workspace:*",
-    "posthog-js": "1.365.1",
-    "posthog-node": "5.29.1"
+    "posthog-js": "1.366.0",
+    "posthog-node": "5.29.2"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",
     "@agency/config-typescript": "workspace:*",
     "@agency/test-setup": "workspace:*",
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "@types/node": "25.5.2",
+    "@types/react": "19.2.14",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "typescript": "6.0.0"
   },
   "peerDependencies": {

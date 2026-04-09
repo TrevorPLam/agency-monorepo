@@ -2,21 +2,21 @@
 
 ## Context
 
-You are implementing `@agency/auth-portal`, the Better Auth-based authentication package for client portals. This uses Better Auth 1.6.0 with Drizzle adapter.
+You are implementing `@agency/auth-portal`, the Better Auth-based authentication package for client portals. This uses Better Auth 1.6.2 with Drizzle adapter.
 
-## Critical: Better Auth 1.6.0 Breaking Changes
+## Critical: Better Auth 1.6.x Breaking Changes (Introduced in 1.6.0)
 
 **Adapter Import Changed:**
 ```typescript
-// WRONG (pre-1.6.0):
+// WRONG (pre-1.6.x):
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
-// CORRECT (1.6.0):
+// CORRECT (1.6.2):
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 ```
 
 **Session Freshness Changed:**
-- In 1.6.0: `session.freshAge` calculates from `createdAt` (not `updatedAt`)
+- In 1.6.x: `session.freshAge` calculates from `createdAt` (not `updatedAt`)
 - Session activity no longer extends freshness window
 - To disable: `{ session: { freshAge: 0 } }`
 
@@ -27,7 +27,7 @@ import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 ## Files to Read First
 
 1. `docs/tasks/61-auth-portal/00-auth-portal-overview.md` — Purpose and scope
-2. `docs/tasks/61-auth-portal/01-auth-portal-spec.md` — Implementation spec (UPDATED for 1.6.0)
+2. `docs/tasks/61-auth-portal/01-auth-portal-spec.md` — Implementation spec (updated for 1.6.2)
 3. `docs/tasks/61-auth-portal/02-auth-portal-constraints.md` — Security rules
 4. `docs/tasks/61-auth-portal/03-auth-portal-adr-better-auth.md` — Why Better Auth was chosen
 5. `docs/tasks/61-auth-portal/04-auth-portal-guide-setup.md` — Setup instructions
@@ -37,9 +37,9 @@ import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 Create the package at `packages/auth/portal/` with:
 
 ### Required Files
-- `package.json` — Dependencies: `better-auth@1.6.0`, `@better-auth/drizzle-adapter@1.6.0`, `@agency/data-db`, `@agency/core-types`
+- `package.json` — Dependencies: `better-auth@1.6.2`, `@better-auth/drizzle-adapter@1.6.2`, `@agency/data-db`, `@agency/core-types`
 - `tsconfig.json` — Extends `@agency/config-typescript`
-- `README.md` — Usage documentation with 1.6.0 notes
+- `README.md` — Usage documentation with 1.6.x notes
 - `src/index.ts` — Public exports
 - `src/auth.ts` — Better Auth server configuration
 - `src/client.ts` — Better Auth client
@@ -154,8 +154,8 @@ await auth.api.createOrganization({
 ## Migration from 1.5.x (If Applicable)
 
 If updating existing implementation:
-1. Update dependencies: `pnpm up better-auth@1.6.0`
-2. Install adapter: `pnpm add @better-auth/drizzle-adapter@1.6.0`
+1. Update dependencies: `pnpm up better-auth@1.6.2`
+2. Install adapter: `pnpm add @better-auth/drizzle-adapter@1.6.2`
 3. Update import path in `auth.ts`
 4. Review session freshness configuration
 5. Test thoroughly before deploying
@@ -164,5 +164,5 @@ If updating existing implementation:
 
 When complete, update:
 - [ ] `docs/tasks/61-auth-portal/05-auth-portal-qa-checklist.md` — Mark items complete
-- [ ] `CHANGELOG.md` in package — Document 1.6.0 implementation
+- [ ] `CHANGELOG.md` in package — Document 1.6.2 implementation
 - [ ] Create follow-up task for organization plugin if not implemented now

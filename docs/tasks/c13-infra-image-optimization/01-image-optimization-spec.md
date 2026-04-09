@@ -1,4 +1,22 @@
-# Image Optimization Specification
+# c13-infra-image-optimization: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires image optimization and standards |
+| **Minimum Consumers** | 1+ apps with image-heavy content |
+| **Dependencies** | Next.js 16.2.3, Sharp OR Cloudinary |
+| **Exit Criteria** | Image optimization configured and working |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit media need |
+| **Version Authority** | `DEPENDENCY.md` §2 — Next.js 16.2.3 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Image optimization `open`
+- Version pins: `DEPENDENCY.md` §2
+- Note: Optional; performance optimization for media
 
 ## Image Standards
 

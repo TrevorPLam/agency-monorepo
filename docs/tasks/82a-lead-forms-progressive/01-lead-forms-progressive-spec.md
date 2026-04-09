@@ -1,4 +1,22 @@
-# Lead Forms Progressive Specification
+# 82a-lead-forms-progressive: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires multi-step progressive lead forms |
+| **Minimum Consumers** | 1+ apps with complex form needs |
+| **Dependencies** | React 19.2.5, React Hook Form, `@agency/ui-design-system` |
+| **Exit Criteria** | Progressive forms package exported and used |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit form needs |
+| **Version Authority** | `DEPENDENCY.md` §2 — React 19.2.5 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Progressive forms `open`
+- Version pins: `DEPENDENCY.md` §2
+- Note: Sub-task of 82-lead-capture; advanced form patterns
 
 ## Files
 

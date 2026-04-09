@@ -1,4 +1,24 @@
-# Notifications Specification
+# 72-notifications: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires outbound operational notifications |
+| **Minimum Consumers** | 1+ apps explicitly requesting notifications |
+| **Dependencies** | Slack webhook, Discord webhook, or generic HTTP webhook |
+| **Exit Criteria** | Notification system exported and used in at least one app |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app-level opt-in |
+| **Version Authority** | `DEPENDENCY.md` §11 — provider SDKs optional; webhook-first outbound delivery |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Notifications `open` (evaluate during Task 72)
+- Version pins: `DEPENDENCY.md` §20
+- Architecture: `ARCHITECTURE.md` — Communication layer section
+- Note: Task 72 covers outbound operational notifications only; in-app realtime feeds and mobile push stay app-level until a dedicated task is justified
 
 ## Files
 ```
@@ -232,130 +252,15 @@ export function createWebhookProvider(config: WebhookConfig): NotificationProvid
 }
 ```
 
-### `src/sse.ts` (Server-Sent Events for In-App Notifications)
-```ts
-// Server-Sent Events implementation for real-time in-app notifications
-// SSE is preferred over WebSockets for one-way server-to-client push
+### Scope Boundary
 
-export interface SSEConfig {
-  endpoint: string;
-  headers?: Record<string, string>;
-  onMessage?: (data: unknown) => void;
-  onError?: (error: Error) => void;
-}
-
-export function createSSEConnection(config: SSEConfig): { close: () => void } {
-  const eventSource = new EventSource(config.endpoint);
-  
-  eventSource.onmessage = (event) => {
-    try {
-      const data = JSON.parse(event.data);
-      config.onMessage?.(data);
-    } catch (err) {
-      config.onError?.(err as Error);
-    }
-  };
-  
-  eventSource.onerror = (err) => {
-    config.onError?.(new Error("SSE connection error"));
-  };
-  
-  return {
-    close: () => eventSource.close()
-  };
-}
-
-// Server-side SSE stream for Next.js App Router
-export async function* createNotificationStream(
-  userId: string
-): AsyncGenerator<string, void, unknown> {
-  const encoder = new TextEncoder();
-  
-  while (true) {
-    // Check for new notifications
-    const notifications = await fetchPendingNotifications(userId);
-    
-    for (const notification of notifications) {
-      yield encoder.encode(`data: ${JSON.stringify(notification)}\n\n`);
-    }
-    
-    // Wait before next check
-    await new Promise(resolve => setTimeout(resolve, 1000));
-  }
-}
-
-async function fetchPendingNotifications(userId: string): Promise<unknown[]> {
-  // Implementation depends on @agency/data-db
-  return [];
-}
-```
-
-### `src/fcm.ts` (Firebase Cloud Messaging for Push Notifications)
-```ts
-// FCM is completely free with unlimited push notifications (2026)
-// Use for mobile push and web push
-
-interface FCMConfig {
-  serverKey: string;
-  projectId: string;
-}
-
-interface PushNotification {
-  token: string;
-  title: string;
-  body: string;
-  data?: Record<string, string>;
-  icon?: string;
-  clickAction?: string;
-}
-
-export function createFCMProvider(config: FCMConfig) {
-  return {
-    async send(notification: PushNotification): Promise<{ success: boolean }> {
-      const response = await fetch(
-        `https://fcm.googleapis.com/v1/projects/${config.projectId}/messages:send`,
-        {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${config.serverKey}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message: {
-              token: notification.token,
-              notification: {
-                title: notification.title,
-                body: notification.body,
-                image: notification.icon
-              },
-              data: notification.data,
-              webpush: notification.clickAction ? {
-                fcm_options: {
-                  link: notification.clickAction
-                }
-              } : undefined
-            }
-          })
-        }
-      );
-      
-      if (!response.ok) {
-        throw new Error(`FCM send failed: ${response.statusText}`);
-      }
-      
-      return { success: true };
-    }
-  };
-}
-```
+Task 72 is intentionally limited to outbound operational notifications such as Slack, Discord, and generic webhooks. In-app notification feeds, SSE streams, and mobile/web push belong in app code or a future dedicated task once the repo has a proven shared need.
 
 ### `src/index.ts`
 ```ts
 export { createSlackProvider } from "./slack";
 export { createDiscordProvider } from "./discord";
 export { createWebhookProvider } from "./webhook";
-export { createSSEConnection, createNotificationStream } from "./sse";
-export { createFCMProvider } from "./fcm";
 export type {
   NotificationPayload,
   NotificationProvider,
@@ -366,7 +271,7 @@ export type {
 ### README
 ```md
 # @agency/notifications
-Slack, Discord, webhooks, SSE (in-app), and FCM (push) notification providers.
+Outbound Slack, Discord, and webhook notification providers.
 
 ## Usage
 
@@ -384,35 +289,10 @@ await slack.send({
 });
 ```
 
-### In-App Notifications (SSE)
-```ts
-import { createSSEConnection } from "@agency/notifications";
+## Boundary
 
-// Client-side (React component)
-const { close } = createSSEConnection({
-  endpoint: "/api/notifications/stream",
-  onMessage: (notification) => {
-    // Add to notification bell UI
-  }
-});
-```
-
-### Push Notifications (FCM)
-```ts
-import { createFCMProvider } from "@agency/notifications/fcm";
-
-const fcm = createFCMProvider({
-  serverKey: process.env.FCM_SERVER_KEY,
-  projectId: process.env.FCM_PROJECT_ID
-});
-
-await fcm.send({
-  token: userDeviceToken,
-  title: "New Message",
-  body: "You have a new notification",
-  clickAction: "/notifications"
-});
-```
+- This package does not own in-app feeds, SSE connections, or FCM/Web Push delivery.
+- If an app needs those capabilities, keep them app-local until two consumers share the same realtime or push requirements.
 
 ## Webhook Security
 All webhook providers implement HMAC-SHA256 signature verification with timestamp validation to prevent replay attacks. Signatures older than 5 minutes are rejected.

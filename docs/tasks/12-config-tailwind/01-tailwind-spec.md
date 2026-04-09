@@ -1,5 +1,25 @@
 # 12-config-tailwind: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Repository initialization — always required |
+| **Minimum Consumers** | n/a (root infrastructure) |
+| **Dependencies** | Tailwind CSS 4.2.2, PostCSS, autoprefixer |
+| **Exit Criteria** | Root package.json, pnpm-workspace.yaml, turbo.json committed and verified |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §2 — Tailwind CSS 4.2.2 |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+## Cross-references
+
+- Decision status: `DECISION-STATUS.md` — Tailwind CSS v4 `locked`
+- Version pins: `DEPENDENCY.md` §2
+- Architecture: `ARCHITECTURE.md` — Final stack section
+
 ## Files
 ```
 packages/config/tailwind-config/

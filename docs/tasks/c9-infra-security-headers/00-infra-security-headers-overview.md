@@ -1,8 +1,13 @@
-# C9 Infra Security Headers
+# C9 Infra Security Headers (Superseded)
 
 
 ## Purpose
 Automated security headers (CSP, HSTS, etc.) validation and deployment for all client sites. Ensures compliance with Google Ads requirements, prevents XSS attacks, and maintains consistent security posture across the agency's deployed applications.
+
+
+## Status
+**Superseded by:** `c11-infra-security-headers`  
+**Reason:** c11 provides shared security policy package with comprehensive CSP configuration
 
 
 ## Condition Block

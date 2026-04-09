@@ -1,4 +1,23 @@
-# Compliance Security Headers Specification
+# 41a-compliance-security-headers: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires security header management |
+| **Minimum Consumers** | 1+ apps with security requirements |
+| **Dependencies** | Next.js 16.2.3, TypeScript 6.0 |
+| **Exit Criteria** | Security headers package exported and used |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app opt-in |
+| **Version Authority** | `DEPENDENCY.md` §1, §2 — TypeScript 6.0, Next.js 16.2.3 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Security headers `open`
+- Version pins: `DEPENDENCY.md` §1, §2
+- Related task: `c11-infra-security-headers` is the canonical infra implementation track; this task remains a conditional compliance-package layer
+- Note: Sub-task of 41-compliance; optional security hardening
 
 ## Files
 

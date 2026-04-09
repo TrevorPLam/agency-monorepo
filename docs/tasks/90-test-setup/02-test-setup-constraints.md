@@ -80,7 +80,7 @@ apps/* (test suites)
 | vitest | 4.1.3 | Turborepo 2.x compatibility |
 | @testing-library/react | 16.3.2 | React 19 support |
 | @playwright/test | 1.59.1 | Latest stable |
-| jsdom | latest | Browser environment |
+| jsdom | 29.0.2 | Browser environment |
 
 ### Configuration Standards
 - All configs must use `defineConfig` from Vitest

@@ -1,5 +1,24 @@
 # 25-core-testing: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | First app or package needs shared testing utilities |
+| **Minimum Consumers** | 2+ packages needing shared test utilities |
+| **Dependencies** | Vitest, React Testing Library, TypeScript 6.0 |
+| **Exit Criteria** | Test utilities exported and consumed by at least 2 packages |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §8 — Vitest, Testing Library |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Core testing package `approved`
+- Version pins: `DEPENDENCY.md` §8
+- Architecture: `ARCHITECTURE.md` — Core layer section
+
 ## Files
 ```
 packages/core/testing/

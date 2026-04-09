@@ -1,4 +1,21 @@
-# D3 Infra Deployment Guide Specification
+# d3-infra-deployment-guide: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Repository requires deployment documentation |
+| **Minimum Consumers** | All apps requiring deployment |
+| **Dependencies** | None (documentation) |
+| **Exit Criteria** | Deployment guides published and current |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | Repository governance |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Deployment guide `approved`
+- Note: Required documentation for deployment processes
 
 ## Files
 

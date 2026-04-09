@@ -1,4 +1,22 @@
-# Lead Enrichment Specification
+# 82b-lead-enrichment: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires lead data enrichment from external sources |
+| **Minimum Consumers** | 1+ apps with lead enrichment needs |
+| **Dependencies** | Clearbit OR Apollo API, TypeScript 6.0 |
+| **Exit Criteria** | Lead enrichment package exported and integrated |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit business need |
+| **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Lead enrichment `open`
+- Version pins: `DEPENDENCY.md` §1
+- Note: Sub-task of 82-lead-capture; optional data enhancement
 
 ## Files
 

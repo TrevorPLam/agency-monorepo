@@ -1,5 +1,24 @@
 # 01-config-biome-migration: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `deferred` — Evaluation pending Task 14 completion |
+| **Trigger** | Task 14 (14-config-biome) evaluation complete AND ADR recorded |
+| **Minimum Consumers** | n/a (transitional package) |
+| **Dependencies** | `@agency/config-eslint` (source), Biome toolchain |
+| **Exit Criteria** | Migration guide validated, rule mapping complete |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit human approval |
+| **Version Authority** | `DEPENDENCY.md` — Biome version TBD during evaluation |
+| **Supersedes** | `@agency/config-eslint` (if migration proceeds) |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Biome evaluation `open`
+- Version pins: `DEPENDENCY.md` §18 — Biome evaluation in progress
+- Architecture: `ARCHITECTURE.md` — Linting configuration section
+
 ## Files
 ```
 packages/config/biome-migration/

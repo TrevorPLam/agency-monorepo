@@ -21,7 +21,7 @@ Define hard boundaries and constraints for Changesets configuration to prevent c
 - **Changelog Generation**: Automatic changelog creation must be enabled
 
 ### Integration Requirements
-- **Turborepo Integration**: Changesets must work seamlessly with Turborepo 2.9.4+
+- **Turborepo Integration**: Changesets must work seamlessly with Turborepo 2.9.5+
 - **CI/CD Integration**: Must support automated release workflows
 - **Monorepo Support**: Workspace-aware configuration and dependency updates
 

@@ -1,4 +1,21 @@
-# Bundle Analysis Specification
+# c10-infra-bundle-analysis: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires bundle size monitoring and budgets |
+| **Minimum Consumers** | 1+ apps with performance budgets |
+| **Dependencies** | @next/bundle-analyzer, webpack-bundle-analyzer |
+| **Exit Criteria** | Bundle analysis integrated and monitoring sizes |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit performance need |
+| **Version Authority** | Next.js ecosystem |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Bundle analysis `open`
+- Note: Optional; performance monitoring tool
 
 ## What Bundle Analysis Checks
 

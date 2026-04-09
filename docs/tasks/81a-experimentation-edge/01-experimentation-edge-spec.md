@@ -1,4 +1,22 @@
-# Experimentation Edge Specification
+# 81a-experimentation-edge: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Feature flags require edge-based evaluation |
+| **Minimum Consumers** | 1+ apps with edge experimentation needs |
+| **Dependencies** | PostHog Edge OR `@vercel/edge-config@1.4.3`, Next.js 16.2.3 |
+| **Exit Criteria** | Edge experimentation package exported and deployed |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit edge need |
+| **Version Authority** | `DEPENDENCY.md` §2 — Next.js 16.2.3 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Edge experimentation `open`
+- Version pins: `DEPENDENCY.md` §2
+- Note: Sub-task of 81-experimentation; advanced edge-based flags
 
 ## Files
 
@@ -38,7 +56,7 @@ packages/experimentation/edge/
   },
   "dependencies": {
     "@agency/core-types": "workspace:*",
-    "@vercel/edge-config": "latest"
+    "@vercel/edge-config": "1.4.3"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",

@@ -1,4 +1,24 @@
-# Email Service Specification
+# 71-email-service: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | App requires transactional email delivery |
+| **Minimum Consumers** | 1+ apps explicitly requesting email delivery |
+| **Dependencies** | `resend@6.10.0`, `postmark@4.0.7`, `@getbrevo/brevo@5.0.3`, `@agency/email-templates` |
+| **Exit Criteria** | Email service exported and integrated in at least one app |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app-level opt-in |
+| **Version Authority** | `DEPENDENCY.md` §6 — `resend@6.10.0`, `postmark@4.0.7`, `@getbrevo/brevo@5.0.3` |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Email service `open` (vendor TBD during Task 71)
+- Version pins: `DEPENDENCY.md` §19
+- Architecture: `ARCHITECTURE.md` — Communication layer section
+- Note: Email delivery is optional; requires React Email templates first
 
 ## Files
 ```
@@ -32,11 +52,11 @@ packages/communication/email-service/
   },
   "dependencies": {
     "@agency/email-templates": "workspace:*",
-    "resend": "latest",
+    "resend": "6.10.0",
     "postmark": "4.0.7",
-    "@getbrevo/brevo": "latest",
-    "bullmq": "^5.0.0",
-    "ioredis": "^5.0.0"
+    "@getbrevo/brevo": "5.0.3",
+    "bullmq": "5.73.3",
+    "ioredis": "5.10.1"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",

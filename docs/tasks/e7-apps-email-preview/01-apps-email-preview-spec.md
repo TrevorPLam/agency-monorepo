@@ -1,4 +1,22 @@
-# Email Preview Application Specification
+# e7-apps-email-preview: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Team requires email template preview tool |
+| **Minimum Consumers** | 1 (preview app) |
+| **Dependencies** | Next.js 16.2.3, React 19.2.5, `@agency/email-templates` |
+| **Exit Criteria** | Email preview app deployed and accessible |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit need |
+| **Version Authority** | `DEPENDENCY.md` §2 — Next.js 16.2.3 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Email preview `open`
+- Version pins: `DEPENDENCY.md` §2
+- Note: Conditional; development tool for email template authors
 
 ## Application Structure
 

@@ -1,4 +1,22 @@
-# Workspace Boundaries Specification
+# c14-infra-workspace-boundaries: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Monorepo requires workspace boundary enforcement |
+| **Minimum Consumers** | All packages and apps |
+| **Dependencies** | @npmcli/package-selector OR custom scripts, TypeScript 6.0 |
+| **Exit Criteria** | Boundary enforcement active in CI |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Workspace boundaries `approved`
+- Version pins: `DEPENDENCY.md` §1
+- Note: Required for monorepo hygiene
 
 ## What Boundary Enforcement Checks
 

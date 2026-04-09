@@ -53,7 +53,7 @@ Use pnpm workspace **catalogs** for centralized dependency version management.
 **In `pnpm-workspace.yaml`:**
 ```yaml
 catalog:
-  react: ^19.2.4
+  react: ^19.2.5
 ```
 
 **In package.json:**

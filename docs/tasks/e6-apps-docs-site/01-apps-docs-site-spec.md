@@ -1,4 +1,22 @@
-# Documentation Site Specification
+# e6-apps-docs-site: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Team requires internal documentation site |
+| **Minimum Consumers** | 1 (docs site) |
+| **Dependencies** | Next.js 16.2.3, React 19.2.5, `@agency/ui-design-system` |
+| **Exit Criteria** | Docs site deployed and accessible |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit need |
+| **Version Authority** | `DEPENDENCY.md` §2 — Next.js 16.2.3 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Docs site `open`
+- Version pins: `DEPENDENCY.md` §2
+- Note: Conditional; alternative to static README docs
 
 ## Application Structure
 

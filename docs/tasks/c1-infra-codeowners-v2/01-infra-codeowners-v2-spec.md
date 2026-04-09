@@ -1,4 +1,22 @@
-# C1 Infra Codeowners V2 Specification
+# c1-infra-codeowners-v2: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `deferred` — Depends on repository growth |
+| **Trigger** | Team growth requires refined ownership rules |
+| **Minimum Consumers** | 3+ teams or 10+ contributors |
+| **Dependencies** | Task c0-infra-codeowners completed |
+| **Exit Criteria** | CODEOWNERS v2 published and active |
+| **Implementation Authority** | `REPO-STATE.md` — Deferred until team scales |
+| **Version Authority** | Repository governance |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — CODEOWNERS v2 `deferred`
+- Related task: Evolves c0-infra-codeowners after the team-scale trigger is met
+- Note: Deferred until team size justifies granular ownership
 
 ## Files
 

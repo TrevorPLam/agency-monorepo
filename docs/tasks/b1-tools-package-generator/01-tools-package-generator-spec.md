@@ -1,4 +1,21 @@
-# B1 Tools Package Generator Specification
+# b1-tools-package-generator: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Multiple packages need consistent scaffolding |
+| **Minimum Consumers** | 2+ packages to be generated |
+| **Dependencies** | Shell scripting, Node.js |
+| **Exit Criteria** | Generator script working and documented |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit need |
+| **Version Authority** | Repository governance |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Package generator `open`
+- Note: Optional automation; manual scaffolding is always valid
 
 ## Files
 ```
@@ -181,7 +198,7 @@ EOF
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",
     "@agency/config-typescript": "workspace:*",
-    "@types/react": "latest"
+    "@types/react": "19.2.14"
   },
   "publishConfig": {
     "access": "restricted"

@@ -11,7 +11,7 @@
 
 - [ ] `@typescript-eslint/eslint-plugin` ^8.0.0
 - [ ] `@typescript-eslint/parser` ^8.0.0
-- [ ] `eslint-config-next` 16.2.2
+- [ ] `eslint-config-next` 16.2.3
 - [ ] `eslint-plugin-import` ^2.31.0
 
 ## Configuration

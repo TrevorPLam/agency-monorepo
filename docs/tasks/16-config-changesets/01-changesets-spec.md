@@ -1,5 +1,26 @@
 # 16-config-changesets: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `deferred` — Legacy package-form draft; canonical track is c6-infra-changesets |
+| **Trigger** | n/a — root Changesets configuration is tracked in c6-infra-changesets |
+| **Minimum Consumers** | n/a (root infrastructure) |
+| **Dependencies** | Changesets CLI, TypeScript 6.0 |
+| **Exit Criteria** | n/a — see c6-infra-changesets |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §13 — Changesets CLI |
+| **Supersedes** | n/a |
+| **Superseded by** | c6-infra-changesets (canonical root implementation) |
+
+## Cross-references
+
+- Decision status: `DECISION-STATUS.md` — Changesets `approved`
+- Version pins: `DEPENDENCY.md` §13
+- Architecture: `ARCHITECTURE.md` — Final stack section
+- Note: Legacy package-form draft only; do not implement separately from c6-infra-changesets
+
 ## Files
 ```
 packages/config/changesets-config/

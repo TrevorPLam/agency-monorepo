@@ -1,5 +1,24 @@
 # 13-config-react-compiler: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Repository initialization — always required |
+| **Minimum Consumers** | n/a (root infrastructure) |
+| **Dependencies** | Next.js 16.2+, React 19.2.5, `eslint-plugin-react-compiler` |
+| **Exit Criteria** | Root package.json, pnpm-workspace.yaml, turbo.json committed and verified |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §2 — React Compiler opt-in via `reactCompiler: true` in next.config.ts |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+## Cross-references
+
+- Decision status: `DECISION-STATUS.md` — React Compiler `leaning` (stable but opt-in)
+- Version pins: `DEPENDENCY.md` §2
+
 ## Files
 
 ```

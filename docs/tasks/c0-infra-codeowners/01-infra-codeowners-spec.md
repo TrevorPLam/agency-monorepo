@@ -1,4 +1,23 @@
-# C0 Infra Codeowners Specification
+# c0-infra-codeowners: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Repository requires code ownership rules |
+| **Minimum Consumers** | All repository contributors |
+| **Dependencies** | GitHub repository |
+| **Exit Criteria** | CODEOWNERS file published and active |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | Repository governance |
+| **Superseded by** | n/a |
+| **Supersedes** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — CODEOWNERS `approved`
+- Location: `.github/CODEOWNERS`
+- Note: Canonical starting point for CODEOWNERS; c1 is a later-growth refinement, not a current replacement
 
 ## Files
 ```
@@ -7,7 +26,7 @@
 ```
 
 ### `.github/CODEOWNERS`
-```
+```markdown
 # Global fallback - Platform team owns everything not otherwise specified
 * @agency/platform-team
 

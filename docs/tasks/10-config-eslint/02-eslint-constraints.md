@@ -12,7 +12,7 @@
 | `@typescript-eslint/eslint-plugin` | ^8.0.0 | TypeScript rules |
 | `@typescript-eslint/parser` | ^8.0.0 | TypeScript parsing |
 | `eslint-plugin-import` | ^2.31.0 | Import restriction rules |
-| `eslint-config-next` | 16.2.2 | Next.js specific rules |
+| `eslint-config-next` | 16.2.3 | Next.js specific rules |
 
 ## Configuration Format
 

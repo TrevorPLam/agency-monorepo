@@ -1,5 +1,24 @@
 # 13-config-prettier: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Repository initialization — always required |
+| **Minimum Consumers** | n/a (root infrastructure) |
+| **Dependencies** | Prettier 3.5.0 |
+| **Exit Criteria** | Root package.json, pnpm-workspace.yaml, turbo.json committed and verified |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §13 — Prettier 3.5.0 |
+| **Supersedes** | n/a |
+| **Superseded by** | `01-config-biome-migration` (if Biome replaces Prettier) |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Prettier canonical until Biome evaluation complete
+- Version pins: `DEPENDENCY.md` §13
+- Related: Task 01 (biome-migration) may supersede if approved
+
 ## Files
 ```
 packages/config/prettier-config/

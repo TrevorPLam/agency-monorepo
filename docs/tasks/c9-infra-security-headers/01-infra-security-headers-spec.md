@@ -1,4 +1,22 @@
-# C9 Infra Security Headers Specification
+# c9-infra-security-headers: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `deferred` — Legacy config-focused draft superseded by c11-infra-security-headers |
+| **Trigger** | Security headers consolidation completed |
+| **Minimum Consumers** | 1+ apps with security requirements |
+| **Dependencies** | Next.js 16.2.3, TypeScript 6.0 |
+| **Exit Criteria** | Security headers package exported and configured |
+| **Implementation Authority** | `REPO-STATE.md` — Deferred; requires explicit security need |
+| **Version Authority** | `DEPENDENCY.md` §1, §2 — TypeScript 6.0, Next.js 16.2.3 |
+| **Superseded by** | c11-infra-security-headers (canonical infra implementation) |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Security headers config `open`
+- Version pins: `DEPENDENCY.md` §1, §2
+- Note: Legacy config-focused draft only; prefer c11-infra-security-headers for the active implementation path
 
 ## Files
 

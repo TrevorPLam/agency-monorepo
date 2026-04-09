@@ -1,5 +1,25 @@
 # 32-ui-design-system: Implementation Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Documented target; implementation not yet authorized |
+| **Trigger** | Repository initialization — always required |
+| **Minimum Consumers** | n/a (root infrastructure) |
+| **Dependencies** | React 19.2.5, `@agency/ui-theme`, `@agency/ui-icons`, shadcn/ui |
+| **Exit Criteria** | Root package.json, pnpm-workspace.yaml, turbo.json committed and verified |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §2, §17 — React 19.2.5, shadcn/ui |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+## Cross-references
+
+- Decision status: `DECISION-STATUS.md` — UI design system package `approved`
+- Version pins: `DEPENDENCY.md` §2, §17
+- Architecture: `ARCHITECTURE.md` — UI layer section
+
 ## Files
 ```
 packages/ui/design-system/
@@ -40,13 +60,13 @@ packages/ui/design-system/
   },
   "dependencies": {
     "@agency/ui-theme": "workspace:*",
-    "@radix-ui/react-label": "latest",
-    "@radix-ui/react-slot": "latest",
-    "class-variance-authority": "latest",
-    "clsx": "latest",
+    "@radix-ui/react-label": "2.1.8",
+    "@radix-ui/react-slot": "1.2.4",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "tailwind-merge": "latest"
+    "tailwind-merge": "3.5.0"
   },
   "devDependencies": {
     "@agency/config-typescript": "workspace:*"

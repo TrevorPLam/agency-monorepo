@@ -6,7 +6,7 @@ Define hard boundaries and constraints for Vite configuration to prevent configu
 ## Hard Constraints
 
 ### Version Management
-- **Vite Version Lock**: All packages must use exact Vite 6.0.0 from workspace catalog
+- **Vite Version Lock**: All packages must use exact Vite 8.0.8 from workspace catalog
 - **No Manual Version Overrides**: Individual packages cannot override Vite version in their own package.json
 - **Catalog-Only Dependencies**: Use `catalog:vite` reference instead of direct version specifiers
 
@@ -76,7 +76,7 @@ A Vite configuration is complete when:
 ## Review Process
 
 1. **Architecture Review**: Verify configuration follows ARCHITECTURE.md dependency flow rules
-2. **Version Audit**: Confirm all packages use catalog Vite 6.0.0
+2. **Version Audit**: Confirm all packages use catalog Vite 8.0.8
 3. **Performance Testing**: Validate Vite's 10x performance advantage
 4. **Integration Validation**: Test Next.js 16+ Vite integration in complex scenarios
 5. **Security Review**: Ensure no security vulnerabilities in Vite configuration

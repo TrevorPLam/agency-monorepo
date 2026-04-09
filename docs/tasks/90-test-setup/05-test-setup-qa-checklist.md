@@ -20,7 +20,7 @@
 - [ ] `vitest` pinned to 4.1.3
 - [ ] `@testing-library/react` pinned to 16.3.2
 - [ ] `@playwright/test` pinned to 1.59.1
-- [ ] `jsdom` latest (acceptable as environment shim)
+- [ ] `jsdom` pinned to 29.0.2
 
 ## Functionality Testing
 

@@ -1,4 +1,22 @@
-# Content Blocks Package Specification
+# f1-packages-content-blocks: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | CMS requires reusable content block schemas |
+| **Minimum Consumers** | 1+ apps using CMS with structured content |
+| **Dependencies** | Sanity OR Contentful SDK, TypeScript 6.0 |
+| **Exit Criteria** | Content blocks exported and used in at least one app |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit CMS need |
+| **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Content blocks `open`
+- Version pins: `DEPENDENCY.md` §1
+- Note: Conditional; only needed with CMS-based structured content
 
 ## Package Structure
 

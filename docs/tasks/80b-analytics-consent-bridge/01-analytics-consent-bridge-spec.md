@@ -1,4 +1,22 @@
-# Analytics Consent Bridge Specification
+# 80b-analytics-consent-bridge: Implementation Specification
+
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `conditional` — Package-controlled, opt-in only |
+| **Trigger** | Analytics requires GDPR consent integration |
+| **Minimum Consumers** | 1+ apps with consent-aware analytics |
+| **Dependencies** | `@agency/compliance`, PostHog OR Plausible, React 19.2.5 |
+| **Exit Criteria** | Consent bridge package exported and integrated |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit compliance need |
+| **Version Authority** | `DEPENDENCY.md` §2 — React 19.2.5 |
+| **Superseded by** | n/a |
+
+**Cross-references:**
+- Decision status: `DECISION-STATUS.md` — Consent bridge `open`
+- Version pins: `DEPENDENCY.md` §2
+- Note: Sub-task of 80-analytics; links analytics to compliance
 
 ## Files
 
@@ -39,7 +57,7 @@ packages/analytics/consent-bridge/
   },
   "dependencies": {
     "@agency/core-types": "workspace:*",
-    "zustand": "latest"
+    "zustand": "5.0.12"
   },
   "devDependencies": {
     "@agency/config-eslint": "workspace:*",

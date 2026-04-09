@@ -102,7 +102,7 @@ This guide covers the transition from legacy build tools to Vite's modern ESM-ba
 ## Troubleshooting
 
 ### Common Issues
-- **Vite Version Conflicts**: Ensure workspace catalog uses Vite 6.0.0+
+- **Vite Version Conflicts**: Ensure workspace catalog uses Vite 8.0.8+
 - **Legacy Plugins**: Some webpack plugins may not have Vite equivalents
 - **IDE Integration**: VS Code may need extension update to recognize Vite
 - **Environment Variables**: Vite uses different env var naming than webpack
