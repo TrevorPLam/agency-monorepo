@@ -5,15 +5,14 @@
 ### Package Structure
 - [ ] Package at `packages/communication/notifications/`
 - [ ] `package.json` name: `@agency/notifications`
-- [ ] Exports for Slack, Discord, webhook, SSE, FCM
+- [ ] Exports for Slack, Discord, webhook, and shared types only
 - [ ] No external provider dependencies in package.json (bring your own)
 
 ### Provider Implementations
 - [ ] Slack provider with webhook URL config
 - [ ] Discord provider with webhook URL config
 - [ ] Webhook provider with HMAC signature support
-- [ ] SSE client and server implementations
-- [ ] FCM provider with Firebase config
+- [ ] Outbound provider adapters stay limited to operational notification delivery
 
 ### Security
 - [ ] HMAC-SHA256 signature generation
@@ -77,23 +76,6 @@ async function testWebhookSecurity() {
   console.log("Webhook sent with HMAC signature");
 }
 
-// Test SSE
-import { createSSEConnection } from "@agency/notifications";
-
-async function testSSE() {
-  const connection = createSSEConnection({
-    endpoint: "http://localhost:3000/api/notifications/stream",
-    onMessage: (data) => {
-      console.log("Received:", data);
-    },
-    onError: (err) => {
-      console.error("SSE error:", err);
-    }
-  });
-  
-  // Close after test
-  setTimeout(() => connection.close(), 5000);
-}
 ```
 
 ## Pre-Release Verification
@@ -102,8 +84,7 @@ async function testSSE() {
 - [ ] Discord webhook tested
 - [ ] Webhook HMAC signature verified
 - [ ] Timestamp validation tested
-- [ ] SSE connection tested
-- [ ] FCM push tested (if configured)
+- [ ] Outbound provider delivery tested for required channels
 - [ ] Two consumers validated for package creation
 - [ ] Types compile
 - [ ] CHANGELOG.md updated

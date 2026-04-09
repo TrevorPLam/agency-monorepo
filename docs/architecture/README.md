@@ -14,7 +14,7 @@ This directory is not a replacement for:
 - `ARCHITECTURE.md` — the broad system blueprint,
 - `DEPENDENCY.md` — pinned versions and upgrade policy,
 - `docs/AGENTS.md` — behavioral rules for AI agents,
-- `TASKS.md` — implementation sequencing and execution details.
+- `docs/tasks/README.md` — implementation sequencing and task inventory.
 
 ## What belongs here
 
@@ -45,7 +45,7 @@ Do not put these here:
 
 - package usage guides; those belong in `docs/package-guides/`
 - step-by-step setup instructions; those belong in `docs/onboarding/`
-- implementation task breakdowns; those belong in `TASKS.md`
+- implementation task breakdowns; those belong in `docs/tasks/README.md` or the relevant `docs/tasks/*/` family
 - pinned versions; those belong in `DEPENDENCY.md`
 - temporary working notes for a single feature PR
 - low-impact coding conventions that are already obvious from linting or package docs
@@ -92,7 +92,7 @@ Use the following order when documents appear to overlap:
 3. Accepted ADRs for durable architectural decisions
 4. `docs/DECISION-STATUS.md` for in-flight decision status
 5. `ARCHITECTURE.md` for the broad system model and intended shape
-6. `TASKS.md` for implementation sequence and execution planning
+6. `docs/tasks/README.md` for implementation sequence and execution planning
 
 If two docs conflict, do not guess.
 Open the conflict explicitly and update the docs.
@@ -239,7 +239,7 @@ Do not duplicate package usage examples inside ADRs unless the example is necess
 
 ## Relationship to tasks
 
-`TASKS.md` is allowed to reference ADR work, but tasks should not become the permanent explanation layer.
+`docs/tasks/README.md` and the `docs/tasks/*/` families are allowed to reference ADR work, but task docs should not become the permanent explanation layer.
 
 Use this split:
 - task docs = build sequence and implementation output

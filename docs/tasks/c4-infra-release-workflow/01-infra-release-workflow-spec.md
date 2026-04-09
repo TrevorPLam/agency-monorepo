@@ -10,12 +10,13 @@
 | **Dependencies** | Changesets 2.30.0, GitHub Actions |
 | **Exit Criteria** | Release workflow publishing packages |
 | **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
-| **Version Authority** | `DEPENDENCY.md` §12 — Changesets 2.30.0 |
+| **Version Authority** | `DEPENDENCY.md` §3 — Changesets 2.30.0 |
 | **Superseded by** | n/a |
 
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — Release workflow `approved`
-- Version pins: `DEPENDENCY.md` §12
+- Version pins: `DEPENDENCY.md` §3
+- Dependency-truth policy: `docs/standards/dependency-truth.md`
 - Note: Required for automated package publishing
 
 ## Files

@@ -14,7 +14,7 @@
 > - `DEPENDENCY.md` — exact version authority for all dependencies
 > - `ARCHITECTURE.md` — target state design (reference only)
 
-*Last revised: April 2026. Synchronized with docs/tasks/README.md (95 tasks, verified April 9, 2026).*
+*Last revised: April 2026. Synchronized with docs/tasks/README.md (95 task families, verified April 9, 2026).*
 
 ***
 
@@ -91,10 +91,10 @@ Use one repository with **apps**, **packages**, **tools**, **docs**, and **GitHu
 agency-monorepo/
 ├── apps/
 │   ├── agency-website/                # @agency/agency-website — public marketing site
-│   ├── client-sites/
+│   ├── client-sites/                 # e10: client sites family owner
 │   │   ├── [client]-landing/
 │   │   ├── [client]-website/
-│   │   └── [client]-portal/           # only when a client requires a logged-in experience
+│   │   └── [client]-portal/           # e4 default path for client-owned portals
 │   └── internal-tools/
 │       ├── crm/                       # first internal tool; validates package APIs
 │       ├── project-tracker/
@@ -160,12 +160,14 @@ agency-monorepo/
 │
 ├── docs/
 │   ├── AGENTS.md                      # rules for AI coding agents (read this first)
+│   ├── analytics/                     # a7: repository-level analytics guides
 │   ├── architecture/                  # ADRs (Architecture Decision Records)
+│   ├── decisions/                     # a8: lightweight decision log
 │   ├── onboarding/                    # new contributor setup guides
 │   ├── package-guides/                # per-package usage documentation
-│   ├── analytics/                     # Plausible + PostHog setup guides
 │   ├── marketing/                     # marketing standards documentation
-│   └── decisions/                     # rationale log for non-obvious technical choices
+│   ├── standards/                     # a5/a6: cross-cutting governance standards
+│   └── tasks/                         # canonical task system and index
 │
 ├── .changeset/
 ├── .github/
@@ -176,7 +178,7 @@ agency-monorepo/
 │   └── CODEOWNERS
 ├── ARCHITECTURE.md                    # this file
 ├── DEPENDENCY.md                      # version locks and upgrade strategy
-├── TASKS.md                           # consolidated 85-task implementation guide
+├── tasks/                             # legacy planning stubs to migrate or archive
 ├── package.json
 ├── pnpm-workspace.yaml
 ├── turbo.json
@@ -187,7 +189,9 @@ agency-monorepo/
 
 | App | Task | Condition |
 |---|---|---|
-| `apps/client-portal/` | e4 | First client requiring a logged-in experience |
+| `apps/client-sites/[client]-landing/` | e10 | First approved client-site build distinct from the agency website |
+| `apps/client-sites/[client]-website/` | e10 | First approved client-owned website build |
+| `apps/client-sites/[client]-portal/` | e4 / e10 | First client requiring a logged-in experience |
 | `apps/docs-site/` | e6 | When internal documentation needs a publishable surface |
 | `apps/email-preview/` | e7 | When React Email template volume justifies a live preview environment |
 | `apps/studio/` | e8 | First Sanity-backed client site |
@@ -200,7 +204,7 @@ agency-monorepo/
 | `@agency/observability` | f0 | When monitoring needs exceed what `@agency/monitoring` covers |
 | `@agency/content-blocks` | f1 | First multi-client site sharing CMS content block schemas |
 | `@agency/i18n` | f2 | First app requiring internationalization |
-| `[client]-brand-foundation` | f3 | When a client site's brand tokens are complex enough to merit a dedicated package |
+| `@agency/[client]-brand-foundation` | f3 | When one client has multiple real surfaces that share non-trivial brand tokens or overrides |
 
 ***
 

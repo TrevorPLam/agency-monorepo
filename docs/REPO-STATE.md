@@ -35,9 +35,14 @@ The following items are approved at the documentation and planning level:
 - `README.md`
 - `ARCHITECTURE.md`
 - `DEPENDENCY.md`
-- `TASKS.md`
+- `docs/tasks/README.md`
+- `docs/tasks/1.md`
 - `docs/AGENTS.md`
 - `docs/REPO-STATE.md`
+- `docs/standards/tenant-isolation-data-governance.md`
+- `docs/standards/dependency-truth.md`
+- `docs/analytics/README.md`
+- `docs/decisions/README.md`
 
 ### Approved planning work
 - Repository structure planning
@@ -50,6 +55,12 @@ The following items are approved at the documentation and planning level:
 - Condition-trigger definitions
 - Risk identification
 - contradiction detection
+- Cross-cutting standards ownership
+- Analytics documentation ownership
+- Decision-log ownership
+- Client-sites family planning
+- Client-portal topology planning
+- Conditional E2E, Studio, API, and brand-foundation lane planning
 
 ### Approved implementation work
 None yet.
@@ -187,17 +198,36 @@ Use these exact state labels:
 | content pipeline | conditional | Build when AI-assisted content operations are real |
 | MCP server | deferred | Growth-stage tool, not a planning-phase build item |
 
+### Documentation task families
+| Task family | State | Notes |
+|---|---|---|
+| `a5-docs-tenant-isolation-data-governance` | approved | Documentation-authorized now; owns the tenant-isolation planning source |
+| `a6-docs-dependency-truth-version-authority` | approved | Documentation-authorized now; owns dependency-truth governance |
+| `a7-docs-analytics-guides` | approved | Documentation-authorized now; owns `docs/analytics/` |
+| `a8-docs-decisions-log` | approved | Documentation-authorized now; owns `docs/decisions/` |
+
 ### Apps
 | App | State | Notes |
 |---|---|---|
 | root repo shell | planned | Not scaffolded |
 | internal CRM / tools app | planned | First likely real app later |
 | agency website | planned | Important, but still not approved to build |
-| client portal | conditional | Build when a real login-enabled portal is required |
+| client sites family | conditional | Family owner exists; activate per approved client build |
+| client portal | conditional | Build when a real login-enabled portal is required; default path is `apps/client-sites/[client]-portal/` |
 | docs site | deferred | Nice-to-have, not current priority |
 | email preview app | deferred | Build only when email work becomes active |
 | Sanity Studio app | conditional | Build only with CMS activation |
 | API app | conditional | Build only if shared API surface becomes real |
+
+### App and package planning lanes added by gap fill
+| Task family | State | Notes |
+|---|---|---|
+| `e4-apps-client-portal` | conditional | Planning lane exists; implementation still gated |
+| `e5-apps-playwright-e2e` | conditional | Planning lane exists; implementation still gated |
+| `e8-apps-studio` | conditional | Planning lane exists; implementation still gated |
+| `e9-apps-api` | conditional | Planning lane exists; implementation still gated |
+| `e10-apps-client-sites-foundation` | conditional | Planning lane exists; implementation still gated |
+| `f3-apps-client-sites-brand-foundation` | conditional | Planning lane exists; implementation still gated |
 
 ## Locked decisions
 
@@ -253,3 +283,9 @@ Use this section for human-readable state transitions.
 - No packages approved for implementation yet
 - `docs/AGENTS.md` established as behavioral control file
 - `docs/REPO-STATE.md` established as current-state control file
+
+### 2026-04-09
+- Added documentation-authorized task families `a5` through `a8`
+- Added conditional planning lanes `e4`, `e5`, `e8`, `e9`, `e10`, and `f3`
+- Established `docs/tasks/README.md` as the canonical task index and marked top-level `tasks/` as legacy
+- Resolved the default client-portal topology to `apps/client-sites/[client]-portal/`

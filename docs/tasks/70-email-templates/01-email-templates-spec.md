@@ -16,8 +16,9 @@
 
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — React Email `leaning` (stable, evaluate during Task 70)
-- Version pins: `DEPENDENCY.md` §18
+- Version pins: `DEPENDENCY.md` §6
 - Architecture: `ARCHITECTURE.md` — Communication layer section
+- Dependency-truth policy: `docs/standards/dependency-truth.md`
 - Note: Transactional email is optional; not all apps require it
 
 ## Files

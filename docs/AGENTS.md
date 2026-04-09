@@ -27,7 +27,7 @@ Assume the repo is in **planning mode** unless the human explicitly says one of 
 - "Start coding"
 
 In planning mode, do **not**:
-- Scaffold packages, apps, or directories just because they appear in `README.md`, `TASKS.md`, or `ARCHITECTURE.md`
+- Scaffold packages, apps, or directories just because they appear in `README.md`, `docs/tasks/README.md`, or `ARCHITECTURE.md`
 - Install dependencies
 - Generate boilerplate code
 - Create `package.json` files for future packages
@@ -55,7 +55,7 @@ When documents disagree, use this precedence order:
 2. `DEPENDENCY.md`
 3. `ARCHITECTURE.md`
 4. The specific task folder files for the item being worked on
-5. `TASKS.md`
+5. `docs/tasks/README.md`
 6. `README.md`
 
 If conflict remains, stop and surface the conflict instead of guessing.
@@ -68,9 +68,18 @@ Before taking any meaningful action, read in this order:
 2. `DEPENDENCY.md`
 3. `ARCHITECTURE.md`
 4. The relevant task folder docs, if they exist
-5. `TASKS.md` for dependency order and cross-links
+5. `docs/tasks/README.md` for dependency order and cross-links
 6. `README.md` for phase navigation
 7. If touching an existing package: that package's `README.md`, `CHANGELOG.md`, and `package.json` `exports`
+
+## Required cross-cutting task families
+
+Before doing work in these areas, read the related task family as well:
+
+- Tenant-sensitive planning or implementation: `docs/tasks/a5-docs-tenant-isolation-data-governance/`
+- Dependency or version changes: `docs/tasks/a6-docs-dependency-truth-version-authority/`
+- Event taxonomy or analytics documentation changes: `docs/tasks/a7-docs-analytics-guides/`
+- Non-obvious technical choices that need durable notes: `docs/tasks/a8-docs-decisions-log/`
 
 ## Non-negotiable rules
 

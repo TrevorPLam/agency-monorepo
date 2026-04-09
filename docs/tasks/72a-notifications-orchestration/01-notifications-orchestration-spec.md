@@ -15,7 +15,7 @@
 
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — Notification orchestration `open`
-- Version pins: `DEPENDENCY.md` §2
+- Version pins: `DEPENDENCY.md` §11
 - Note: Sub-task of 72-notifications; do not build until there is a concrete shared workflow gap that simple outbound notifications cannot cover
 
 ## Files

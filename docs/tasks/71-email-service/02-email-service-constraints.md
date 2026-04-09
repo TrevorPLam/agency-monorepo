@@ -83,11 +83,11 @@ The following must be configured and verified:
 ```
 @agency/email-templates   - workspace:* (required)
 @agency/core-types        - workspace:* (required)
-resend                   - latest
+resend                   - 6.10.0
 postmark                 - 4.0.7
-@getbrevo/brevo          - latest (optional)
-bullmq                   - ^5.0.0 (optional, for queue mode)
-ioredis                  - ^5.0.0 (required if bullmq used)
+@getbrevo/brevo          - 5.0.3 (optional)
+bullmq                   - 5.73.3 (optional, for queue mode)
+ioredis                  - 5.10.1 (required if bullmq used)
 ```
 
 ## Exit Criteria

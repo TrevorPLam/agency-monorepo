@@ -16,7 +16,7 @@
 
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — Notifications `open` (evaluate during Task 72)
-- Version pins: `DEPENDENCY.md` §20
+- Version pins: `DEPENDENCY.md` §11
 - Architecture: `ARCHITECTURE.md` — Communication layer section
 - Note: Task 72 covers outbound operational notifications only; in-app realtime feeds and mobile push stay app-level until a dedicated task is justified
 

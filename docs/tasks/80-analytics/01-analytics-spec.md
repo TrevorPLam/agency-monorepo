@@ -5,29 +5,33 @@
 | Field | Value |
 |-------|-------|
 | **State** | `conditional` — Package-controlled, opt-in only |
-| **Trigger** | Repository initialization — always required |
-| **Minimum Consumers** | n/a (root infrastructure) |
-| **Dependencies** | Plausible OR PostHog OR Google Analytics 4, React 19.2.5 |
-| **Exit Criteria** | Root package.json, pnpm-workspace.yaml, turbo.json committed and verified |
-| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
-| **Version Authority** | `DEPENDENCY.md` §2 — React 19.2.5 |
+| **Trigger** | At least one app needs shared analytics helpers beyond app-local instrumentation |
+| **Minimum Consumers** | 1+ apps with a concrete analytics need |
+| **Dependencies** | Plausible OR PostHog, React 19.2.5 |
+| **Exit Criteria** | Shared analytics helpers exported and integrated in at least one app |
+| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app-level opt-in |
+| **Version Authority** | `DEPENDENCY.md` §2, §8 — React 19.2.5, selected analytics lane |
 | **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 ## Cross-references
 
 - Decision status: `DECISION-STATUS.md` — Analytics `open` (evaluate during Task 80)
-- Version pins: `DEPENDENCY.md` §2
+- Version pins: `DEPENDENCY.md` §8
 - Architecture: `ARCHITECTURE.md` — Analytics layer
+- Analytics docs: `docs/analytics/README.md`
+- Tenant isolation: `docs/standards/tenant-isolation-data-governance.md`
+- Dependency-truth policy: `docs/standards/dependency-truth.md`
+- Scope boundary: choose one provider lane per app; the package does not promise multi-provider fan-out within a single analytics manager
+- Tenant rule: tenant-sensitive analytics data, segmentation, and exports must follow `a5`
 
 ## Rationale (Package vs App)
 
 This is a **shared package** (not an app) because:
-- Every app (marketing sites, client portals, internal tools) needs analytics
-- Tracking patterns must be consistent for accurate cross-app attribution
-- Privacy-compliant tracking logic should be centralized and reusable
-- Multi-platform analytics (Plausible + PostHog + GA4) needs unified abstraction
-- Attribution tracking requires shared utilities across the entire user journey
+- Some apps may reuse the same event naming and consent-safe helpers
+- Marketing and product analytics are separate lanes, so shared code should stay thin and lane-specific
+- Privacy-compliant event sanitization is worth centralizing once reused
+- Advanced attribution and consent-bridge behavior belong to Tasks 80a and 80b only when duplication is proven
 
 
 ## Files
@@ -44,7 +48,6 @@ packages/analytics/
     │   ├── index.ts
     │   ├── plausible.ts
     │   ├── posthog.ts
-    │   ├── ga4.ts
     │   └── base.ts
     ├── components/
     │   ├── index.ts
@@ -77,7 +80,7 @@ packages/analytics/
   "name": "@agency/analytics",
   "version": "0.1.0",
   "private": true,
-  "description": "Multi-platform analytics tracking with privacy compliance",
+  "description": "Shared analytics helpers for one chosen provider lane",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
@@ -104,7 +107,7 @@ packages/analytics/
     "@agency/test-setup": "workspace:*",
     "@types/node": "25.5.2",
     "@types/react": "19.2.14",
-    "posthog-js": "1.365.5",
+    "posthog-js": "1.366.0",
     "posthog-node": "5.29.2",
     "react": "19.2.5",
     "react-dom": "19.2.5",
@@ -124,7 +127,7 @@ packages/analytics/
 ### `src/types/index.ts`
 
 ```typescript
-export type AnalyticsProvider = "plausible" | "posthog" | "ga4" | "all";
+export type AnalyticsProvider = "plausible" | "posthog";
 
 export interface AnalyticsEvent {
   name: string;
@@ -179,9 +182,6 @@ export interface AnalyticsConfig {
     apiKey: string;
     apiHost?: string;
     personProfiles?: "always" | "never" | "identified_only";
-  };
-  ga4?: {
-    measurementId: string;
   };
   debug?: boolean;
   enableInDevelopment?: boolean;
@@ -282,55 +282,53 @@ function anonymizeUserTraits(traits?: Record<string, unknown>) {
 import type { AnalyticsEvent, AnalyticsConfig } from "../types";
 import { PlausibleProvider } from "./plausible";
 import { PostHogProvider } from "./posthog";
-import { GA4Provider } from "./ga4";
 
 export class AnalyticsManager {
-  private providers: AnalyticsProvider[] = [];
+  private provider: AnalyticsRuntimeProvider | null = null;
   private config: AnalyticsConfig;
 
   constructor(config: AnalyticsConfig) {
     this.config = config;
-    this.initializeProviders();
+    this.initializeProvider();
   }
 
-  private initializeProviders() {
+  private initializeProvider() {
+    if (this.config.plausible && this.config.posthog) {
+      throw new Error("Choose one analytics provider lane per AnalyticsManager instance.");
+    }
+
     if (this.config.plausible) {
-      this.providers.push(new PlausibleProvider(this.config.plausible));
+      this.provider = new PlausibleProvider(this.config.plausible);
+      return;
     }
+
     if (this.config.posthog) {
-      this.providers.push(new PostHogProvider(this.config.posthog));
-    }
-    if (this.config.ga4) {
-      this.providers.push(new GA4Provider(this.config.ga4));
+      this.provider = new PostHogProvider(this.config.posthog);
     }
   }
 
   async track(event: AnalyticsEvent): Promise<void> {
-    if (!this.shouldTrack()) return;
+    if (!this.shouldTrack() || !this.provider) return;
 
-    const promises = this.providers.map((provider) =>
-      provider.track(event).catch((err) => {
-        if (this.config.debug) {
-          console.error(`[Analytics] ${provider.name} error:`, err);
-        }
-      })
-    );
-
-    await Promise.all(promises);
+    try {
+      await this.provider.track(event);
+    } catch (err) {
+      if (this.config.debug) {
+        console.error(`[Analytics] ${this.provider.name} error:`, err);
+      }
+    }
   }
 
   async identify(userId: string, traits?: Record<string, unknown>): Promise<void> {
-    if (!this.shouldTrack()) return;
+    if (!this.shouldTrack() || !this.provider) return;
 
-    const promises = this.providers.map((provider) =>
-      provider.identify(userId, traits).catch((err) => {
-        if (this.config.debug) {
-          console.error(`[Analytics] ${provider.name} identify error:`, err);
-        }
-      })
-    );
-
-    await Promise.all(promises);
+    try {
+      await this.provider.identify(userId, traits);
+    } catch (err) {
+      if (this.config.debug) {
+        console.error(`[Analytics] ${this.provider.name} identify error:`, err);
+      }
+    }
   }
 
   async page(properties: Record<string, unknown>): Promise<void> {
@@ -349,7 +347,7 @@ export class AnalyticsManager {
   }
 }
 
-interface AnalyticsProvider {
+interface AnalyticsRuntimeProvider {
   name: string;
   track(event: AnalyticsEvent): Promise<void>;
   identify(userId: string, traits?: Record<string, unknown>): Promise<void>;
@@ -479,7 +477,6 @@ export { useEventTracking } from "./hooks/use-event-tracking";
 export { AnalyticsManager } from "./providers/base";
 export { PlausibleProvider } from "./providers/plausible";
 export { PostHogProvider } from "./providers/posthog";
-export { GA4Provider } from "./providers/ga4";
 
 // Attribution
 export {
@@ -517,10 +514,6 @@ export default function RootLayout({ children }) {
     <AnalyticsProvider
       config={{
         plausible: { domain: "agency.com" },
-        posthog: {
-          apiKey: process.env.NEXT_PUBLIC_POSTHOG_KEY,
-          apiHost: process.env.NEXT_PUBLIC_POSTHOG_HOST,
-        },
         debug: process.env.NODE_ENV === "development",
       }}
     >
@@ -892,9 +885,6 @@ POSTHOG_SERVER_KEY=phc_... (server-side key, different from client key)
 
 # PostHog Feature Flags (server-side)
 POSTHOG_PERSONAL_API_KEY=phx_... (for local evaluation)
-
-# GA4
-NEXT_PUBLIC_GA4_MEASUREMENT_ID=G-...
 
 # Consent management (per docs/marketing/analytics)
 NEXT_PUBLIC_CONSENT_MODE=gdpr-ccpa

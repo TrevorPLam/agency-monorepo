@@ -10,15 +10,17 @@
 | **Dependencies** | Clerk 7.0.12 |
 | **Exit Criteria** | Auth package exported and integrated in at least one internal tool |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app-level opt-in |
-| **Version Authority** | `DEPENDENCY.md` §10 — Clerk 7.0.12 |
+| **Version Authority** | `DEPENDENCY.md` §5 — Clerk 7.0.12 |
 | **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — Clerk `leaning` (preferred for internal tools)
-- Version pins: `DEPENDENCY.md` §10
+- Version pins: `DEPENDENCY.md` §5
 - Architecture: `ARCHITECTURE.md` — Auth layer section
-- Note: Internal tools use Clerk; defer to Task 61 for portal auth
+- Tenant isolation: `docs/standards/tenant-isolation-data-governance.md` for internal tools that touch client-owned data
+- Dependency-truth policy: `docs/standards/dependency-truth.md`
+- Note: Internal tools use Clerk; defer to Task 61 for portal auth, and keep any client-owned data access aligned with `a5`
 
 ## Files
 ```

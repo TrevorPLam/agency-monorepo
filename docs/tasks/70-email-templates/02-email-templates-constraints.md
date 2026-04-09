@@ -39,10 +39,10 @@
 ## Dependencies
 ```
 @agency/core-types      - workspace:* (required)
-@react-email/components - latest (React Email 5.0+)
-react                   - ^19.0.0
-react-dom               - ^19.0.0
-tailwindcss             - ^4.x (dev)
+@react-email/components - 1.0.12
+react                   - 19.2.5
+react-dom               - 19.2.5
+tailwindcss             - 4.2.2 (dev)
 ```
 
 ## Exit Criteria

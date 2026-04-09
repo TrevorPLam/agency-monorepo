@@ -139,7 +139,7 @@ Why it was rejected as the default repository shape:
 
 - `ARCHITECTURE.md`
 - `DEPENDENCY.md`
-- `TASKS.md`
+- `docs/tasks/README.md`
 - `docs/architecture/ADRs/README.md`
 - `docs/architecture/ADRs/000-template.md`
 - `docs/architecture/ADRs/001-monorepo-tooling.md`

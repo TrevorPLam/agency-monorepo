@@ -17,9 +17,11 @@
 ## Cross-references
 
 - Decision status: `DECISION-STATUS.md` — Better Auth `leaning` (preferred for client portals)
-- Version pins: `DEPENDENCY.md` §10
+- Version pins: `DEPENDENCY.md` §5
 - Architecture: `ARCHITECTURE.md` — Auth layer section
-- Scope boundary: `@agency/auth-portal` standardizes the Better Auth portal lane only; alternative providers require a separate ADR and must not be bundled as a default fallback surface
+- Tenant isolation: `docs/standards/tenant-isolation-data-governance.md`
+- Dependency-truth policy: `docs/standards/dependency-truth.md`
+- Scope boundary: `@agency/auth-portal` standardizes the Better Auth portal lane only; sessions must resolve cleanly to one tenant boundary, and alternative providers require a separate ADR and must not be bundled as a default fallback surface
 
 ## Files
 ```

@@ -16,20 +16,22 @@
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — Lead capture `deferred`
 - Version pins: `DEPENDENCY.md` §2
-- Note: Deferred; reserved for future marketing automation needs
+- Tenant isolation: `docs/standards/tenant-isolation-data-governance.md`
+- Dependency-truth policy: `docs/standards/dependency-truth.md`
+- Note: Deferred; keep one-off forms app-local until a shared lead workflow is proven
 
 ## Status
 
 Reserved for future implementation
 
-This phase is reserved for lead capture and form handling infrastructure.
+This phase is reserved for lead capture and form-handling infrastructure that justifies a shared package instead of app-local form code.
 
 ## Planned Contents
 
 - `@agency/lead-capture` package
 - Form components and validation
 - CRM integration helpers
-- Lead scoring utilities
+- Consent-safe submission and storage helpers
 
 
 ## When to Implement
@@ -38,8 +40,14 @@ Add this package when:
 - Marketing site needs contact forms
 - Lead qualification workflow needed
 - Integration with external CRM required
+- Tenant-safe lead storage and consent handling must stay consistent across more than one surface
 
 
 ## Related Tasks
 
-- Task 51: Lead Capture Package specification (pending)
+- `41-compliance`
+- `50-data-db`
+- `72-notifications`
+- `80-analytics`
+- `82a-lead-forms-progressive`
+- `82b-lead-enrichment`

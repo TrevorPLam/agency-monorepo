@@ -160,7 +160,7 @@ Why it was rejected as the portal default:
 
 - `ARCHITECTURE.md`
 - `DEPENDENCY.md`
-- `TASKS.md`
+- `docs/tasks/README.md`
 - `docs/architecture/ADRs/000-template.md`
 - `docs/architecture/ADRs/001-monorepo-tooling.md`
 - `docs/architecture/ADRs/002-package-structure.md`

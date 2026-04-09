@@ -4,19 +4,19 @@
 
 | Field | Value |
 |-------|-------|
-| **State** | `conditional` — Package-controlled, opt-in only |
-| **Trigger** | Analytics requires GDPR consent integration |
-| **Minimum Consumers** | 1+ apps with consent-aware analytics |
-| **Dependencies** | `@agency/compliance`, PostHog OR Plausible, React 19.2.5 |
-| **Exit Criteria** | Consent bridge package exported and integrated |
-| **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit compliance need |
+| **State** | `deferred` — Reserved for a proven shared cross-provider need |
+| **Trigger** | 2+ analytics integrations require the same consent synchronization behavior |
+| **Minimum Consumers** | 2+ apps or provider lanes sharing one consent-sync contract |
+| **Dependencies** | `@agency/compliance-consent`, React 19.2.5 |
+| **Exit Criteria** | Shared consent-sync helpers are extracted only after direct app/provider integrations are duplicated |
+| **Implementation Authority** | `REPO-STATE.md` — Deferred until a shared cross-provider need is proven |
 | **Version Authority** | `DEPENDENCY.md` §2 — React 19.2.5 |
 | **Superseded by** | n/a |
 
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — Consent bridge `open`
 - Version pins: `DEPENDENCY.md` §2
-- Note: Sub-task of 80-analytics; links analytics to compliance
+- Note: Sub-task of 80-analytics; single-provider consent gating stays in the app or base analytics package until shared cross-provider duplication appears
 
 ## Files
 
@@ -31,7 +31,6 @@ packages/analytics/consent-bridge/
 │   ├── store.ts
 │   ├── providers/
 │   │   ├── index.ts
-│   │   ├── google-consent-mode.ts
 │   │   ├── posthog.ts
 │   │   └── plausible.ts
 │   └── hooks/
@@ -181,44 +180,6 @@ export const useConsentStore = create<ConsentStore>()(
 );
 ```
 
-### `src/providers/google-consent-mode.ts`
-
-```typescript
-import type { ConsentState, AnalyticsProvider } from '../types';
-
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-  }
-}
-
-export function createGoogleConsentModeProvider(): AnalyticsProvider {
-  return {
-    name: 'google-consent-mode',
-    
-    isReady: () => typeof window !== 'undefined' && typeof window.gtag === 'function',
-    
-    updateConsent: (state: ConsentState) => {
-      if (typeof window === 'undefined' || !window.gtag) return;
-
-      // Google Consent Mode v2
-      window.gtag('consent', 'update', {
-        ad_storage: state.marketing ? 'granted' : 'denied',
-        analytics_storage: state.analytics ? 'granted' : 'denied',
-        functionality_storage: state.necessary ? 'granted' : 'denied',
-        personalization_storage: state.personalization ? 'granted' : 'denied',
-        security_storage: 'granted', // Always granted
-        
-        // New v2 parameters
-        ad_user_data: state.marketing ? 'granted' : 'denied',
-        ad_personalization: state.marketing ? 'granted' : 'denied'
-      });
-    }
-  };
-}
-```
-
 ### `src/providers/posthog.ts`
 
 ```typescript
@@ -319,7 +280,6 @@ export { useConsentStore } from './store';
 export { useConsent } from './hooks/useConsent';
 export type { ConsentState, ConsentPreferences, AnalyticsProvider } from './types';
 
-export { createGoogleConsentModeProvider } from './providers/google-consent-mode';
 export { createPostHogConsentProvider } from './providers/posthog';
 export { createPlausibleConsentProvider } from './providers/plausible';
 ```
@@ -333,9 +293,9 @@ Unified consent management for multi-provider analytics.
 
 ## Problem Solved
 
-When sites use Plausible (marketing) + PostHog (product) + GTM (ads), consent must be synchronized:
-- User rejects analytics → All providers must stop tracking
-- User accepts marketing → Only GTM activates
+When sites use both Plausible and PostHog, consent must be synchronized:
+- User rejects analytics → Both providers stop tracking
+- User grants analytics consent → Both adopted providers can resume tracking
 - Consent changes must propagate everywhere instantly
 
 ## Usage
@@ -343,13 +303,13 @@ When sites use Plausible (marketing) + PostHog (product) + GTM (ads), consent mu
 ```typescript
 import { 
   useConsentStore, 
-  createGoogleConsentModeProvider,
-  createPostHogConsentProvider 
+  createPlausibleConsentProvider,
+  createPostHogConsentProvider,
 } from '@agency/analytics-consent-bridge';
 
 // Register providers on app init
-const unregisterGoogle = useConsentStore.getState()
-  .registerProvider(createGoogleConsentModeProvider());
+const unregisterPlausible = useConsentStore.getState()
+  .registerProvider(createPlausibleConsentProvider());
 
 const unregisterPostHog = useConsentStore.getState()
   .registerProvider(createPostHogConsentProvider());
@@ -361,21 +321,13 @@ const unregisterPostHog = useConsentStore.getState()
 |----------|----------|-------------|
 | Necessary | Site function, security | Always granted |
 | Analytics | Anonymous usage | Plausible, PostHog pageviews |
-| Marketing | Ad tracking, remarketing | GTM, Facebook Pixel |
+| Marketing | Non-analytics marketing tooling | Managed outside this package |
 | Personalization | User-specific content | Recommendation engines |
-
-## Google Consent Mode v2
-
-Full v2 support including new parameters:
-- `ad_user_data`
-- `ad_personalization`
-
-Required for continued Google Ads remarketing in EU/UK.
 ```
 
 
 ## Related Tasks
 
 - `41-compliance` - Core consent management UI
-- `80-analytics` - Analytics provider abstraction
+- `80-analytics` - Selected analytics lane helpers
 - `80a-analytics-attribution` - Cross-provider attribution

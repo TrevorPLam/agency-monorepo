@@ -5,18 +5,18 @@
 | Field | Value |
 |-------|-------|
 | **State** | `conditional` — Package-controlled, opt-in only |
-| **Trigger** | App requires multi-touch attribution tracking |
-| **Minimum Consumers** | 1+ apps with attribution modeling needs |
-| **Dependencies** | PostHog OR Plausible, React 19.2.5 |
-| **Exit Criteria** | Attribution package exported and integrated |
+| **Trigger** | 2+ consumers share the same attribution reporting questions beyond simple UTM capture |
+| **Minimum Consumers** | 2+ apps with attribution modeling needs |
+| **Dependencies** | `@agency/analytics`, `uuid` |
+| **Exit Criteria** | Attribution helpers are extracted only after two consumers prove the same reporting and storage requirements |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit analytics need |
-| **Version Authority** | `DEPENDENCY.md` §2 — React 19.2.5 |
+| **Version Authority** | `DEPENDENCY.md` §8 — selected analytics lane |
 | **Superseded by** | n/a |
 
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — Attribution `open`
-- Version pins: `DEPENDENCY.md` §2
-- Note: Sub-task of 80-analytics; optional attribution modeling
+- Version pins: `DEPENDENCY.md` §8
+- Note: Sub-task of 80-analytics; do not build by default, and keep simple UTM/session capture inside Task 80 until two consumers need the same attribution model
 
 ## Files
 
@@ -84,8 +84,7 @@ export type AttributionModel =
   | 'last_touch' 
   | 'linear' 
   | 'time_decay' 
-  | 'position_based' 
-  | 'data_driven';
+  | 'position_based';
 
 export interface Touchpoint {
   id: string;
@@ -98,7 +97,6 @@ export interface Touchpoint {
   content?: string;
   landingPage: string;
   device: 'desktop' | 'mobile' | 'tablet';
-  value?: number;  // For data-driven models
 }
 
 export interface Conversion {

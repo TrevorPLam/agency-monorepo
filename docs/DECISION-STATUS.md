@@ -54,22 +54,33 @@ Use these labels exactly:
 | ORM | Drizzle | locked | Required abstraction layer |
 | Database access pattern | All DB access through shared package | locked | Apps do not talk directly to DB providers |
 | Client data isolation default | Row-level `clientId` scoping | locked | Baseline multi-tenant rule |
+| Tenant-isolation governance owner | `a5` + `docs/standards/tenant-isolation-data-governance.md` | locked | Control-plane source for tenant-boundary rules |
 | Stronger isolation option | Schema-per-client | leaning | Reserved for stronger isolation cases |
 | Internal auth default | Clerk | leaning | Preferred lane for internal tools |
 | Portal auth default | Better Auth | leaning | Preferred lane for client portals |
+| Client-sites family owner | `e10-apps-client-sites-foundation` | locked | Governs `apps/client-sites/` topology |
+| Client portal default topology | `apps/client-sites/[client]-portal/` | locked | Default for client-owned portals |
+| Shared multi-tenant portal product | Separate `apps/client-portal/` lane | deferred | Only if later evidence justifies a shared portal platform |
 | Enterprise auth escalation | WorkOS | deferred | Only for real enterprise SSO need |
 | CMS default | Sanity | leaning | Preferred for structured content sites |
+| Studio deployment default | Separate Studio, embedded by exception | leaning | Separate by default once Studio is activated |
 | Self-hosted CMS lane | Strapi / Payload / Directus | leaning | Only when self-hosting or residency matters |
 | Email rendering | React Email | locked | Rendering only, no provider logic |
 | Email transport default | Resend | leaning | Default provider lane |
 | Premium email alternative | Postmark | leaning | High-deliverability alternative |
 | Marketing analytics | Plausible | leaning | Preferred public-site analytics lane |
 | Product analytics | PostHog | leaning | Preferred authenticated-app analytics lane |
+| Analytics documentation owner | `a7` + `docs/analytics/` | locked | Repository-level analytics governance layer |
 | Analytics abstraction | Shared package owns providers | locked | Apps should not import providers directly |
+| Decision-log middle layer | `a8` + `docs/decisions/` | locked | Lightweight layer between status register and ADRs |
 | Consent-to-analytics bridge | Separate bridge package | leaning | Only if multi-provider consent complexity appears |
 | Experimentation default | PostHog for product; Edge Config for edge marketing | leaning | Depends on actual use case |
 | Monitoring default | Vercel built-ins first | leaning | Extra monitoring only when justified |
+| Browser E2E lane | Dedicated Playwright workspace app when activated | leaning | Browser-context isolation and explicit CI policy |
+| Dedicated API extraction rule | Route handlers first; dedicated API only at threshold | locked | API lane stays conditional |
+| Client brand-foundation threshold | Two real surfaces before extraction | locked | Keep brand logic app-local until reuse is real |
 | Changesets | Required for shared-package versioning | locked | Version intent must be explicit |
+| Dependency-truth governance owner | `a6` + `docs/standards/dependency-truth.md` | locked | Policy layer above operational pin tables |
 | CODEOWNERS | Start early | locked | Governance begins before scale |
 | MCP server | Build later when repo complexity justifies it | deferred | Not a planning-phase implementation item |
 
@@ -154,3 +165,9 @@ A decision marked `locked` in this document does **not** automatically grant imp
 - Marked several provider choices as leaning rather than fully locked
 - Marked MCP server and enterprise auth escalation as deferred
 - Preserved unresolved first-build decisions as open
+
+### 2026-04-09
+- Added decision ownership entries for `a5`, `a6`, `a7`, and `a8`
+- Locked the default client-portal topology at `apps/client-sites/[client]-portal/`
+- Locked the route-handler-first API extraction rule and the client brand-foundation threshold
+- Recorded the Playwright lane and Studio deployment defaults as planning decisions

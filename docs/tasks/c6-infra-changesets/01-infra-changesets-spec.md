@@ -10,13 +10,14 @@
 | **Dependencies** | Changesets 2.30.0 |
 | **Exit Criteria** | Changesets config active and used |
 | **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
-| **Version Authority** | `DEPENDENCY.md` §12 — Changesets 2.30.0 |
+| **Version Authority** | `DEPENDENCY.md` §3 — Changesets 2.30.0 |
 | **Supersedes** | 16-config-changesets (legacy package draft) |
 | **Superseded by** | n/a |
 
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — Changesets `approved`
-- Version pins: `DEPENDENCY.md` §12
+- Version pins: `DEPENDENCY.md` §3
+- Dependency-truth policy: `docs/standards/dependency-truth.md`
 - Note: Canonical root-level Changesets track for the repo
 - Note: Required for monorepo versioning and releases
 

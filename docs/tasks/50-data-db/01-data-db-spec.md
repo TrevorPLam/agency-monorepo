@@ -16,9 +16,12 @@
 
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — Drizzle ORM `locked`, Neon `locked`
-- Version pins: `DEPENDENCY.md` §5, §6
+- Version pins: `DEPENDENCY.md` §4
 - Architecture: `ARCHITECTURE.md` — Data layer section
+- Tenant isolation: `docs/standards/tenant-isolation-data-governance.md`
+- Dependency-truth policy: `docs/standards/dependency-truth.md`
 - Scope boundary: shared query helpers target the Drizzle + Neon lane; Supabase support remains an explicit companion helper, not a drop-in provider switch for shared query modules
+- Tenant rule: client-owned query helpers must default to explicit `clientId` scoping rather than tenant-optional helpers
 
 ## Files
 ```

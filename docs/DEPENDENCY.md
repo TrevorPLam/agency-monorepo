@@ -13,9 +13,16 @@
 4. **When a client has unusual needs** — consult §15 Client-Profile Routing to select the right lane.
 5. **"Do not build yet" items** — packages marked 🔒 in §14 must not be scaffolded until their trigger is satisfied.
 
+For dependency-truth classifications, stale-pin correction rules, and source precedence, also read:
+
+- `docs/tasks/a6-docs-dependency-truth-version-authority/`
+- `docs/standards/dependency-truth.md`
+
 ***
 
 ## Dependency Truth Policy
+
+This section is the operational companion to `docs/tasks/a6-docs-dependency-truth-version-authority/` and `docs/standards/dependency-truth.md`.
 
 This section defines the classification system for dependency versions in this repository. Every dependency entry must fall into one of these four categories:
 

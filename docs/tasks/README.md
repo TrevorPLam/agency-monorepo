@@ -7,15 +7,21 @@ Complete implementation guide organized by execution phase. Each package has its
 | Phase | Folder | Package | Description |
 |-------|--------|---------|-------------|
 | 0 | [`00-foundation/`](./00-foundation/) | - | Root scaffolding |
+| 01 | [`01-config-biome-migration/`](./01-config-biome-migration/) | - | Biome migration strategy |
 | 10 | [`10-config-eslint/`](./10-config-eslint/) | `@agency/config-eslint` | ESLint configuration |
 | 11 | [`11-config-typescript/`](./11-config-typescript/) | `@agency/config-typescript` | TypeScript configuration |
 | 12 | [`12-config-tailwind/`](./12-config-tailwind/) | `@agency/config-tailwind` | Tailwind CSS configuration |
 | 13 | [`13-config-prettier/`](./13-config-prettier/) | `@agency/config-prettier` | Prettier configuration |
-| **13a** | **[`13-config-react-compiler/`](./13-config-react-compiler/)** | **`@agency/config-react-compiler`** | **React Compiler config (Next.js 16)** |
+| 13a | [`13-config-react-compiler/`](./13-config-react-compiler/) | `@agency/config-react-compiler` | React Compiler config (Next.js 16) |
+| 14 | [`14-config-biome/`](./14-config-biome/) | - | Biome configuration |
+| 15 | [`15-config-vite/`](./15-config-vite/) | - | Conditional Vite configuration |
+| 16 | [`16-config-changesets/`](./16-config-changesets/) | - | Changesets configuration |
 | 20 | [`20-core-types/`](./20-core-types/) | `@agency/core-types` | Domain types & Zod schemas |
 | 21 | [`21-core-utils/`](./21-core-utils/) | `@agency/core-utils` | Pure utility functions |
 | 22 | [`22-core-constants/`](./22-core-constants/) | `@agency/core-constants` | Enums & constants |
 | 23 | [`23-core-hooks/`](./23-core-hooks/) | `@agency/core-hooks` | React hooks |
+| 25 | [`25-core-testing/`](./25-core-testing/) | - | Core testing patterns |
+| 26 | [`26-core-performance/`](./26-core-performance/) | - | Core performance guidance |
 | 30 | [`30-ui-theme/`](./30-ui-theme/) | `@agency/ui-theme` | Design tokens |
 | 31 | [`31-ui-icons/`](./31-ui-icons/) | `@agency/ui-icons` | Icon components |
 | 32 | [`32-ui-design-system/`](./32-ui-design-system/) | `@agency/ui-design-system` | UI primitives |
@@ -34,6 +40,7 @@ Complete implementation guide organized by execution phase. Each package has its
 | 70 | [`70-email-templates/`](./70-email-templates/) | `@agency/email-templates` | React Email templates |
 | 71 | [`71-email-service/`](./71-email-service/) | `@agency/email-service` | Email delivery (Resend/Postmark) |
 | 72 | [`72-notifications/`](./72-notifications/) | `@agency/notifications` | Notification service |
+| 72a | [`72a-notifications-orchestration/`](./72a-notifications-orchestration/) | - | Notification orchestration escalation |
 | 80 | [`80-analytics/`](./80-analytics/) | `@agency/analytics` | Analytics package |
 | 80a | [`80a-analytics-attribution/`](./80a-analytics-attribution/) | `@agency/analytics-attribution` | Multi-touch attribution |
 | 80b | [`80b-analytics-consent-bridge/`](./80b-analytics-consent-bridge/) | `@agency/analytics-consent-bridge` | Consent-analytics bridge |
@@ -48,6 +55,11 @@ Complete implementation guide organized by execution phase. Each package has its
 | a1 | [`a1-docs-onboarding/`](./a1-docs-onboarding/) | - | Onboarding guide |
 | a2 | [`a2-docs-adrs/`](./a2-docs-adrs/) | - | Architecture Decision Records |
 | a3 | [`a3-docs-package-guides/`](./a3-docs-package-guides/) | - | Package documentation |
+| a4 | [`a4-docs-marketing-standards/`](./a4-docs-marketing-standards/) | - | Marketing standards documentation |
+| a5 | [`a5-docs-tenant-isolation-data-governance/`](./a5-docs-tenant-isolation-data-governance/) | - | Tenant isolation and data governance |
+| a6 | [`a6-docs-dependency-truth-version-authority/`](./a6-docs-dependency-truth-version-authority/) | - | Dependency truth and version authority |
+| a7 | [`a7-docs-analytics-guides/`](./a7-docs-analytics-guides/) | - | Analytics documentation ownership |
+| a8 | [`a8-docs-decisions-log/`](./a8-docs-decisions-log/) | - | Decision log ownership |
 | b0 | [`b0-tools-app-generator/`](./b0-tools-app-generator/) | - | App generator script |
 | b1 | [`b1-tools-package-generator/`](./b1-tools-package-generator/) | - | Package generator script |
 | b2 | [`b2-tools-db-seed/`](./b2-tools-db-seed/) | - | Database seed script |
@@ -74,23 +86,23 @@ Complete implementation guide organized by execution phase. Each package has its
 | e3 | [`e3-apps-agency-website/`](./e3-apps-agency-website/) | - | Agency website |
 | e4 | [`e4-apps-client-portal/`](./e4-apps-client-portal/) | - | Client portal |
 | e5 | [`e5-apps-playwright-e2e/`](./e5-apps-playwright-e2e/) | - | Playwright E2E tests |
-| **e6** | **[`e6-apps-docs-site/`](./e6-apps-docs-site/)** | **-** | **Documentation site app** |
-| **e7** | **[`e7-apps-email-preview/`](./e7-apps-email-preview/)** | **-** | **Email preview app** |
+| e6 | [`e6-apps-docs-site/`](./e6-apps-docs-site/) | - | Documentation site app |
+| e7 | [`e7-apps-email-preview/`](./e7-apps-email-preview/) | - | Email preview app |
 | e8 | [`e8-apps-studio/`](./e8-apps-studio/) | - | Sanity Studio app (conditional) |
 | e9 | [`e9-apps-api/`](./e9-apps-api/) | - | API app (conditional) |
-| **f0** | **[`f0-packages-monitoring/`](./f0-packages-monitoring/)** | **`@agency/observability`** | **Monitoring/observability (conditional)** |
-| **f1** | **[`f1-packages-content-blocks/`](./f1-packages-content-blocks/)** | **`@agency/content-blocks`** | **Content blocks for CMS (conditional)** |
-| **f2** | **[`f2-packages-i18n/`](./f2-packages-i18n/)** | **`@agency/i18n`** | **Internationalization (conditional)** |
+| e10 | [`e10-apps-client-sites-foundation/`](./e10-apps-client-sites-foundation/) | - | Client sites family foundation |
+| f0 | [`f0-packages-monitoring/`](./f0-packages-monitoring/) | `@agency/observability` | Monitoring/observability (conditional) |
+| f1 | [`f1-packages-content-blocks/`](./f1-packages-content-blocks/) | `@agency/content-blocks` | Content blocks for CMS (conditional) |
+| f2 | [`f2-packages-i18n/`](./f2-packages-i18n/) | `@agency/i18n` | Internationalization (conditional) |
 | f3 | [`f3-apps-client-sites-brand-foundation/`](./f3-apps-client-sites-brand-foundation/) | - | Brand-foundation split (conditional) |
-| **c10** | **[`c10-infra-bundle-analysis/`](./c10-infra-bundle-analysis/)** | **-** | **Bundle analysis in CI** |
-| **c11** | **[`c11-infra-security-headers/`](./c11-infra-security-headers/)** | **-** | **Shared security headers policy** |
-| **c12** | **[`c12-infra-rate-limiting/`](./c12-infra-rate-limiting/)** | **-** | **Rate limiting for public endpoints** |
-| **c13** | **[`c13-infra-image-optimization/`](./c13-infra-image-optimization/)** | **-** | **Image optimization policy** |
-| **c14** | **[`c14-infra-workspace-boundaries/`](./c14-infra-workspace-boundaries/)** | **-** | **Workspace boundary enforcement** |
-| **a4** | **[`a4-docs-marketing-standards/`](./a4-docs-marketing-standards/)** | **-** | **Marketing standards documentation** |
-| **g0** | **[`g0-infra-mcp-server/`](./g0-infra-mcp-server/)** | **`@agency/tools-mcp-server`** | **MCP server for AI tooling** |
+| c10 | [`c10-infra-bundle-analysis/`](./c10-infra-bundle-analysis/) | - | Bundle analysis in CI |
+| c11 | [`c11-infra-security-headers/`](./c11-infra-security-headers/) | - | Shared security headers policy |
+| c12 | [`c12-infra-rate-limiting/`](./c12-infra-rate-limiting/) | - | Rate limiting for public endpoints |
+| c13 | [`c13-infra-image-optimization/`](./c13-infra-image-optimization/) | - | Image optimization policy |
+| c14 | [`c14-infra-workspace-boundaries/`](./c14-infra-workspace-boundaries/) | - | Workspace boundary enforcement |
+| g0 | [`g0-infra-mcp-server/`](./g0-infra-mcp-server/) | `@agency/tools-mcp-server` | MCP server for AI tooling |
 
-**Total: 95 tasks** (67 original + 28 new/renumbered)
+**Total: 95 task families** (verified against the live `docs/tasks/` directory)
 
 ## Build Order (Dependency Flow)
 
@@ -98,17 +110,14 @@ Tasks are numbered to reflect the dependency flow:
 
 ```
 00 (foundation)
-  ↓
-10-13 (config) → 20-23 (core) → 30-32 (ui) → 40-42 (marketing utils)
-                                                  ↓
-50-52 (data) → 60-61 (auth) → 70-72 (communication)
-                  ↓                     ↓
-41a (compliance)  51a-b (federation)   81a (edge-exp)
-42a (rum)                               82a-b (forms)
-        ↓                               ↓
-80-82 (advanced features: analytics, experimentation, lead-capture)
-  ↓
-90-91 (testing) → a0-a3 (docs) → b0-b4 (tools) → c0-c9 (infra) → e0-e5 (apps)
+   ↓
+01, 10-16 (config) → 20-26 (core) → 30-32 (ui) → 40-42a (marketing, compliance, monitoring)
+                                                                                       ↓
+50-52 (data) → 60-61 (auth) → 70-72a (communication)
+            ↓                ↓                 ↓
+80-82b (analytics, experimentation, lead-capture)
+   ↓
+90-91 (testing) → a0-a8 (docs) → b0-b4 (tools) → c0-c14 (infra) → d0-d4 (guides) → e0-e10 (apps) → f0-f3 (conditional extension packages) → g0 (growth-stage tooling)
 ```
 
 ### Build Philosophy: Condition-Gated Implementation
@@ -219,11 +228,15 @@ tasks/
 
 | # | Task | File |
 |---|------|------|
+| 01 | Biome Migration Strategy | [`00-biome-migration-overview.md`](./01-config-biome-migration/00-biome-migration-overview.md) |
 | 1 | ESLint Config | [`00-eslint-overview.md`](./10-config-eslint/00-eslint-overview.md) |
 | 2 | TypeScript Config | [`00-typescript-overview.md`](./11-config-typescript/00-typescript-overview.md) |
 | 3 | Tailwind Config | [`00-tailwind-overview.md`](./12-config-tailwind/00-tailwind-overview.md) |
 | 34 | Prettier Config | [`00-prettier-overview.md`](./13-config-prettier/00-prettier-overview.md) |
 | 13a | React Compiler Config | [`00-config-react-compiler-overview.md`](./13-config-react-compiler/00-config-react-compiler-overview.md) |
+| 14 | Biome Configuration | [`00-biome-overview.md`](./14-config-biome/00-biome-overview.md) |
+| 15 | Vite Configuration | [`00-vite-overview.md`](./15-config-vite/00-vite-overview.md) |
+| 16 | Changesets Configuration | [`00-changesets-overview.md`](./16-config-changesets/00-changesets-overview.md) |
 
 ## Phase 2: Core Packages
 
@@ -233,6 +246,8 @@ tasks/
 | 5 | Core Utils | [`00-core-utils-overview.md`](./21-core-utils/00-core-utils-overview.md) |
 | 6 | Core Constants | [`00-core-constants-overview.md`](./22-core-constants/00-core-constants-overview.md) |
 | 10 | Core Hooks | [`00-core-hooks-overview.md`](./23-core-hooks/00-core-hooks-overview.md) |
+| 25 | Core Testing | [`00-core-testing-overview.md`](./25-core-testing/00-core-testing-overview.md) |
+| 26 | Core Performance | [`00-core-performance-overview.md`](./26-core-performance/00-core-performance-overview.md) |
 
 ## Phase 3: UI Packages
 
@@ -300,6 +315,7 @@ tasks/
 | 14 | Email Templates | [`00-email-templates-overview.md`](./70-email-templates/00-email-templates-overview.md) |
 | 15 | Email Service | [`00-email-service-overview.md`](./71-email-service/00-email-service-overview.md) |
 | 19 | Notifications | [`00-notifications-overview.md`](./72-notifications/00-notifications-overview.md) |
+| 72a | Notifications Orchestration | [`00-notifications-orchestration-overview.md`](./72a-notifications-orchestration/00-notifications-orchestration-overview.md) |
 
 ## Phase 7: Testing
 
@@ -317,6 +333,10 @@ tasks/
 | 23 | Architecture Decision Records | [`00-docs-adrs-overview.md`](./a2-docs-adrs/00-docs-adrs-overview.md) |
 | 43 | Package Guides | [`00-docs-package-guides-overview.md`](./a3-docs-package-guides/00-docs-package-guides-overview.md) |
 | 44 | Marketing Standards | [`00-marketing-standards-overview.md`](./a4-docs-marketing-standards/00-marketing-standards-overview.md) |
+| a5 | Tenant Isolation and Data Governance | [`00-docs-tenant-isolation-data-governance-overview.md`](./a5-docs-tenant-isolation-data-governance/00-docs-tenant-isolation-data-governance-overview.md) |
+| a6 | Dependency Truth and Version Authority | [`00-docs-dependency-truth-version-authority-overview.md`](./a6-docs-dependency-truth-version-authority/00-docs-dependency-truth-version-authority-overview.md) |
+| a7 | Analytics Documentation Ownership | [`00-docs-analytics-guides-overview.md`](./a7-docs-analytics-guides/00-docs-analytics-guides-overview.md) |
+| a8 | Decision Log Ownership | [`00-docs-decisions-log-overview.md`](./a8-docs-decisions-log/00-docs-decisions-log-overview.md) |
 
 ## Phase 9: CI/CD & Infrastructure
 
@@ -356,12 +376,22 @@ tasks/
 | 37 | CRM Application | [`00-apps-crm-overview.md`](./e1-apps-crm/00-apps-crm-overview.md) |
 | 44 | Analytics Integration | [`00-apps-analytics-overview.md`](./e2-apps-analytics/00-apps-analytics-overview.md) |
 | 45 | Agency Website App | [`00-apps-agency-website-overview.md`](./e3-apps-agency-website/00-apps-agency-website-overview.md) |
-| 54 | Client Portal App | Reserved (e4-apps-client-portal/) |
-| 55 | Playwright E2E Tests | Reserved (e5-apps-playwright-e2e/) |
+| 54 | Client Portal App | [`00-apps-client-portal-overview.md`](./e4-apps-client-portal/00-apps-client-portal-overview.md) |
+| 55 | Playwright E2E Tests | [`00-apps-playwright-e2e-overview.md`](./e5-apps-playwright-e2e/00-apps-playwright-e2e-overview.md) |
 | 63 | Documentation Site | [`00-docs-site-overview.md`](./e6-apps-docs-site/00-docs-site-overview.md) |
 | 64 | Email Preview App | [`00-email-preview-overview.md`](./e7-apps-email-preview/00-email-preview-overview.md) |
-| 65 | Sanity Studio | Reserved (e8-apps-studio/) |
-| 66 | API App | Reserved (e9-apps-api/) |
+| 65 | Sanity Studio | [`00-apps-studio-overview.md`](./e8-apps-studio/00-apps-studio-overview.md) |
+| 66 | API App | [`00-apps-api-overview.md`](./e9-apps-api/00-apps-api-overview.md) |
+| e10 | Client Sites Family Foundation | [`00-apps-client-sites-foundation-overview.md`](./e10-apps-client-sites-foundation/00-apps-client-sites-foundation-overview.md) |
+
+## Phase 11a: Conditional Extension Packages
+
+| # | Task | File |
+|---|------|------|
+| f0 | Monitoring / Observability | [`00-monitoring-overview.md`](./f0-packages-monitoring/00-monitoring-overview.md) |
+| f1 | Content Blocks | [`00-content-blocks-overview.md`](./f1-packages-content-blocks/00-content-blocks-overview.md) |
+| f2 | Internationalization | [`00-i18n-overview.md`](./f2-packages-i18n/00-i18n-overview.md) |
+| f3 | Client Brand Foundation | [`00-apps-client-sites-brand-foundation-overview.md`](./f3-apps-client-sites-brand-foundation/00-apps-client-sites-brand-foundation-overview.md) |
 
 ## Phase 12: Infrastructure Guides
 
@@ -376,49 +406,17 @@ tasks/
 
 ---
 
-## Adding New Tasks
+## Task Maintenance
 
-To add a new task without renumbering:
+`docs/tasks/` is the canonical task system.
 
-1. **Within a phase**: Use the next available sequence number
-   - Example: Adding a new config package → `01-config/04-semantic-release.md`
+- Use `docs/tasks/README.md` as the canonical task index.
+- Use `docs/tasks/1.md` as the canonical file-and-folder convention reference.
+- Treat the top-level `tasks/` directory as legacy material unless a specific migration task says otherwise.
 
-2. **New phase**: Create a new numbered folder
-   - Example: Adding monitoring → `13-monitoring/00-setup.md`
+When adding or changing task families:
 
-3. **Between phases**: Use decimal-like naming
-   - Example: Between phase 1 and 2 → create `01a-validate/00-schema-check.md`
-
-## File Naming Convention
-
-```
-tasks/
-├── {phase}-{name}/
-│   └── {sequence}-{brief-description}.md
-```
-
-- **phase**: 2-digit number (00-99)
-- **name**: Short category slug
-- **sequence**: Order within phase (00-99)
-- **brief-description**: Semantic name (kebab-case)
-
-## Legacy Mapping
-
-| Old Name | New Location |
-|----------|-------------|
-| `TASK_0.md` | `00-foundation/00-root-scaffolding.md` |
-| `TASK_1.md` | `01-config/00-eslint.md` |
-| `TASK_2.md` | `01-config/01-typescript.md` |
-| ... | ... |
-| `TASK_44.md` | `11-apps/02-analytics.md` |
-| `TASK_45.md` | `03a-seo/00-seo-package.md` |
-| `TASK_46.md` | `03b-compliance/00-consent-package.md` |
-| `TASK_47.md` | `03c-analytics/00-analytics-package.md` |
-| `TASK_48.md` | `04-data/03-cms-preview.md` |
-| `TASK_49.md` | `03d-monitoring/00-monitoring-package.md` |
-| `TASK_50.md` | `03e-experimentation/00-experimentation-package.md` |
-| `TASK_51.md` | `03f-lead-capture/00-lead-capture-package.md` |
-| `TASK_52.md` | `09-cicd/08-accessibility-audit.md` |
-| `TASK_53.md` | `12-infra/04-sentry.md` |
-| `TASK_54.md` | `11-apps/04-client-portal.md` |
-| `TASK_55.md` | `07-testing/02-playwright-e2e.md` |
+1. Add or update the directory under `docs/tasks/`.
+2. Follow the 7-file convention from `docs/tasks/1.md`.
+3. Update this index so it matches the live directory tree.
+4. Update related control docs if the new task changes ownership, status, or architecture references.

@@ -6,7 +6,7 @@ Define hard boundaries and constraints for React Compiler configuration to ensur
 ## Hard Constraints
 
 ### Version Management
-- **React Compiler Version**: Must match React version (19.2.4)
+- **React Compiler Version**: Must match React version (19.2.5)
 - **Babel Plugin**: Use `babel-plugin-react-compiler` from workspace catalog
 - **No Manual Overrides**: Never override compiler defaults without ADR approval
 

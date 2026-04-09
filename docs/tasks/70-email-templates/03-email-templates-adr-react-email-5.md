@@ -52,7 +52,7 @@ const html = await render(<WelcomeEmail name="John" />);
 ```
 
 ## Migration Guide
-1. Update `package.json` dependencies to `latest`
+1. Update `package.json` dependencies to the approved versions from `docs/DEPENDENCY.md`
 2. Replace all `renderAsync` with `render`
 3. Convert inline styles to Tailwind utility classes
 4. Test all templates in Mailtrap sandbox

@@ -9,8 +9,8 @@ Create these files in `packages/communication/email-templates/`:
 
 ### package.json
 - Name: `@agency/email-templates`
-- Dependencies: `@react-email/components@latest`, `react@^19.0.0`
-- DevDependencies: `react-email@latest`, `tailwindcss@^4.x`
+- Dependencies: `@react-email/components@1.0.12`, `react@19.2.5`, `react-dom@19.2.5`
+- DevDependencies: `react-email@5.2.10`, `tailwindcss@4.2.2`
 - Exports for: base layout, welcome, password-reset, invoice-receipt templates
 
 ### src/layouts/base.tsx

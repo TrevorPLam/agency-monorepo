@@ -15,8 +15,10 @@
 
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — CRM app `open`
-- Version pins: `DEPENDENCY.md` §2, §10
+- Version pins: `DEPENDENCY.md` §2, §5
 - Architecture: `ARCHITECTURE.md` — Apps layer
+- Tenant isolation: `docs/standards/tenant-isolation-data-governance.md` if CRM touches client-owned data
+- Dependency-truth policy: `docs/standards/dependency-truth.md`
 - Note: Conditional; depends on agency operational needs
 
 ## Files

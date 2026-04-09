@@ -15,7 +15,9 @@
 
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — Environment mgmt `approved`
-- Note: Required for consistent environment handling
+- Tenant isolation: `docs/standards/tenant-isolation-data-governance.md`
+- Dependency-truth policy: `docs/standards/dependency-truth.md`
+- Note: Required for consistent environment handling and client-safe environment separation
 
 ## Files
 
@@ -411,7 +413,7 @@ pnpm env:validate --schema=internal --strict
 
 
 ## Related Tasks
-- TASK_11: Database Package (DATABASE_URL setup)
-- TASK_12: Internal Auth (Clerk keys)
-- TASK_13: Portal Auth (Better Auth secrets)
-- TASK_39: Deployment Guide (Vercel env setup)
+- `50-data-db` — `DATABASE_URL` setup
+- `60-auth-internal` — Clerk keys
+- `61-auth-portal` — Better Auth secrets
+- `d3-infra-deployment-guide` — deployment-time environment setup

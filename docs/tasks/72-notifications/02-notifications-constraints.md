@@ -43,38 +43,6 @@ All webhook implementations MUST:
 - **Embed limits**: 10 embeds per message, 6000 characters total
 - **File attachments**: 25MB maximum (with Nitro: 100MB)
 
-### FCM (Firebase Cloud Messaging)
-- **Cost**: Completely free (no usage limits as of 2026)
-- **Token expiry**: iOS tokens can expire; implement token refresh
-- **APNs dependency**: Requires Apple Developer account for iOS push
-
-## In-App Notification Constraints
-
-### Server-Sent Events (SSE)
-- **Connection limit**: Browser default 6 connections per domain
-- **Reconnection**: Client must implement exponential backoff reconnection
-- **Heartbeat**: Server should send comment lines (`: ping`) every 30s to keep alive
-
-### Notification Feed Data Model
-```typescript
-interface Notification {
-  id: string;
-  userId: string;
-  type: string;
-  title: string;
-  message: string;
-  read: boolean;
-  createdAt: Date;
-  actionUrl?: string;
-  metadata?: Record<string, unknown>;
-}
-```
-
-### Retention Policy
-- **Unread notifications**: 90 days
-- **Read notifications**: 30 days
-- **Archived/deleted**: Immediate hard delete (GDPR compliance)
-
 ## Scaling Constraints
 
 ### When to Escalate to Orchestration
@@ -91,27 +59,16 @@ Consider `72a-notifications-orchestration` (Knock/Novu) when:
 | 100k/mo | Free | $250/mo | $200/mo |
 | 1M/mo | Free | Custom | Enterprise |
 
-## Real-Time Delivery Constraints
+## Scope Boundary
 
-### SSE vs WebSocket Decision Matrix
-| Factor | SSE | WebSocket |
-|--------|-----|-----------|
-| Direction | Server→Client only | Bidirectional |
-| Protocol | HTTP (port 80/443) | ws/wss (custom port) |
-| Reconnection | Built-in | Manual implementation |
-| Use case | Notifications, updates | Chat, collaborative editing |
-
-### FCM Delivery Reliability
-- **Best effort**: FCM does not guarantee delivery
-- **TTL**: Set appropriate time-to-live (default 4 weeks)
-- **Priority**: Use `high` priority for critical notifications only
+This task is limited to outbound operational notifications. In-app feeds, SSE streams, and mobile/web push are outside the baseline scope and remain app-level concerns until a dedicated shared task is justified.
 
 ## Dependencies
 ```
 @agency/core-types        - workspace:* (required)
 @agency/email-service      - workspace:* (optional, for email notifications)
-@slack/web-api            - latest (optional, for Slack)
-bullmq                    - ^5.0.0 (optional, for queue workers)
+@slack/web-api            - 7.15.0 (optional, for Slack)
+bullmq                    - 5.73.3 (optional, for queue workers)
 ```
 
 ## Exit Criteria
@@ -119,5 +76,4 @@ bullmq                    - ^5.0.0 (optional, for queue workers)
 - [ ] At least 2 consumers validated
 - [ ] Provider rate limiting respected
 - [ ] Retry logic with exponential backoff functional
-- [ ] SSE/FCM in-app delivery working (if implemented)
-- [ ] Token refresh mechanism (FCM) implemented
+- [ ] Outbound provider adapters validated for Slack, Discord, or webhooks as required

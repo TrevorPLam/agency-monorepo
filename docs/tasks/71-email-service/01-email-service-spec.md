@@ -16,8 +16,9 @@
 
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — Email service `open` (vendor TBD during Task 71)
-- Version pins: `DEPENDENCY.md` §19
+- Version pins: `DEPENDENCY.md` §6
 - Architecture: `ARCHITECTURE.md` — Communication layer section
+- Dependency-truth policy: `docs/standards/dependency-truth.md`
 - Note: Email delivery is optional; requires React Email templates first
 
 ## Files

@@ -10,13 +10,15 @@
 | **Dependencies** | Sentry 10.x OR PostHog, React 19.2.5 |
 | **Exit Criteria** | RUM package exported and integrated |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app opt-in |
-| **Version Authority** | `DEPENDENCY.md` §2, §16 — React 19.2.5, Sentry 10.x |
+| **Version Authority** | `DEPENDENCY.md` §2, §10 — React 19.2.5, Sentry 10.x |
 | **Superseded by** | n/a |
 
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — RUM `open`
-- Version pins: `DEPENDENCY.md` §2, §16
-- Note: Sub-task of 42-monitoring; optional performance analytics
+- Version pins: `DEPENDENCY.md` §2, §10
+- Tenant isolation: `docs/standards/tenant-isolation-data-governance.md`
+- Dependency-truth policy: `docs/standards/dependency-truth.md`
+- Note: Sub-task of 42-monitoring; optional field-performance lane only when app-local or platform-native analytics are insufficient
 
 ## Files
 

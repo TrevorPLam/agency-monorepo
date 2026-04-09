@@ -85,10 +85,10 @@ packages/lead-capture/
     "@agency/config-eslint": "workspace:*",
     "@agency/config-typescript": "workspace:*",
     "@agency/test-setup": "workspace:*",
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "@types/node": "25.5.2",
+    "@types/react": "19.2.14",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "typescript": "6.0.0"
   },
   "peerDependencies": {

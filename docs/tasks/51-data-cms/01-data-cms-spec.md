@@ -16,8 +16,9 @@
 
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — Sanity CMS `leaning` (evaluate during Task 51)
-- Version pins: `DEPENDENCY.md` §9
+- Version pins: `DEPENDENCY.md` §7
 - Architecture: `ARCHITECTURE.md` — Data layer section
+- Dependency-truth policy: `docs/standards/dependency-truth.md`
 - Note: CMS is optional; not all apps require content management
 
 ## Files
