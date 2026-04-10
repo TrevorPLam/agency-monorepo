@@ -11,6 +11,7 @@
 | **Exit Criteria** | Boundary enforcement active in CI |
 | **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
 | **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

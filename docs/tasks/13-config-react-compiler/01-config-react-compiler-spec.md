@@ -158,14 +158,15 @@ export const reactCompilerStrictConfig = {
 
 ```typescript
 // ESLint configuration for React Compiler
-// React Compiler rules are now included in eslint-plugin-react-hooks@latest
+// The upstream preset name includes "recommended-latest" as an API label.
+// It is not version guidance for how this repo should pin dependencies.
 
 import reactHooks from 'eslint-plugin-react-hooks';
 
 /**
  * React Compiler ESLint config (Flat Config format)
- * Uses eslint-plugin-react-hooks recommended-latest preset
- * which includes React Compiler rules
+ * Uses the upstream eslint-plugin-react-hooks `recommended-latest` preset,
+ * which includes the React Compiler rules.
  */
 export const reactCompilerESLintConfig = [
   reactHooks.configs['recommended-latest'],

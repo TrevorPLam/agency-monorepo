@@ -11,6 +11,7 @@
 | **Exit Criteria** | Base notifications prove insufficient and one orchestrator is integrated behind a narrow routing surface |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; advanced escalation only after Task 72 proves insufficient |
 | **Version Authority** | `DEPENDENCY.md` §2 — React 19.2.5 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

@@ -16,7 +16,7 @@
 
 ## Cross-references
 
-- Decision status: `DECISION-STATUS.md` — Vite `leaning` (demoted from primary build tool)
+- Decision status: `DECISION-STATUS.md` — Vite remains conditional for non-Next consumers only
 - Version pins: `DEPENDENCY.md` §2
 - Architecture: `ARCHITECTURE.md` — Final stack section
 - Note: Next.js apps rely on Turbopack by default; Vite is not foundational for this repo
@@ -73,49 +73,16 @@ export const baseConfig = defineConfig({
   }
 })
 
-export const nextjsConfig = defineConfig({
-  plugins: [],
-  build: {
-    target: 'es2022',
-    lib: ['es2022', 'dom'],
-    format: 'esm',
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        manualChunks: undefined,
-        chunkFileNames: 'static/[name]-[hash].js'
-      }
-    }
-  },
-  optimizeDeps: {
-    include: ['react', 'react-dom']
-  },
-  experimental: {
-    appBundleTarget: 'app'
-  },
-  server: {
-    fs: {
-      strict: false
-    }
-  }
-})
-
 export default baseConfig
-export { nextjsConfig }
 ```
 
 ## Configuration Details
 
 ### Base Configuration
-- **Modern ES2022 Target**: Latest JavaScript features with broad browser support
+- **Modern ES2022 Target**: Stable modern JavaScript target with broad support
 - **ESM Output**: Native ES modules for optimal tree-shaking
 - **Source Maps**: Enabled for debugging and source mapping
 - **Dependency Optimization**: Pre-bundles React and React-DOM
-
-### Next.js Configuration
-- **App Bundle Target**: Optimized for Next.js 16+ App Router
-- **Static Output**: Proper chunk naming for static assets
-- **Experimental Features**: Latest Next.js Vite integration features
 
 ### Development Server
 - **File System Watching**: Efficient HMR with strict file system disabled
@@ -137,13 +104,6 @@ export { nextjsConfig }
 }
 ```
 
-### Next.js Integration
-```json
-{
-  "viteConfig": "@agency/config-vite/nextjs"
-}
-```
-
 ### Root Integration
 ```json
 {
@@ -160,4 +120,4 @@ export { nextjsConfig }
 - **Instant HMR** for development experience
 - **Native ESM** support with optimal tree-shaking
 - **Plugin ecosystem** for custom optimizations
-- **Next.js 16+** integration with App Router support
+- **Conditional use** for non-Next consumers that justify Vite explicitly

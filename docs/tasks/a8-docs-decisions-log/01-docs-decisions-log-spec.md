@@ -10,7 +10,7 @@
 | **Dependencies** | `docs/DECISION-STATUS.md`, `a2-docs-adrs`, `docs/architecture/README.md`, `docs/AGENTS.md` |
 | **Exit Criteria** | The repo has a clear separation between status register, decision log, and ADRs |
 | **Implementation Authority** | `docs/REPO-STATE.md` — documentation-only authority |
-| **Version Authority** | Repository governance only |
+| **Version Authority** | `docs/DEPENDENCY.md` — repository version-governance baseline for decision logging |
 | **Supersedes** | n/a |
 | **Superseded by** | n/a |
 

@@ -10,7 +10,8 @@
 | **Dependencies** | @next/bundle-analyzer, webpack-bundle-analyzer |
 | **Exit Criteria** | Bundle analysis integrated and monitoring sizes |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit performance need |
-| **Version Authority** | Next.js ecosystem |
+| **Version Authority** | `DEPENDENCY.md` — repository toolchain baseline and validated Next.js ecosystem pins |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

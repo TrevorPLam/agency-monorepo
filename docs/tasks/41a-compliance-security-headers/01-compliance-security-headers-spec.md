@@ -11,6 +11,7 @@
 | **Exit Criteria** | Security headers package exported and used |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app opt-in |
 | **Version Authority** | `DEPENDENCY.md` §1, §2 — TypeScript 6.0, Next.js 16.2.3 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

@@ -10,7 +10,7 @@
 | **Dependencies** | None (meta documentation) |
 | **Exit Criteria** | Marketing standards published and referenced |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app opt-in |
-| **Version Authority** | Repository governance |
+| **Version Authority** | `DEPENDENCY.md` — repository version-governance baseline for marketing documentation |
 | **Supersedes** | n/a |
 | **Superseded by** | n/a |
 

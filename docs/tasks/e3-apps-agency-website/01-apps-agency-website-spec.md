@@ -11,6 +11,7 @@
 | **Exit Criteria** | Website deployed and publicly accessible |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit business need |
 | **Version Authority** | `DEPENDENCY.md` §2, §17 — Next.js 16.2.3, shadcn/ui |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**
@@ -104,7 +105,7 @@ apps/agency-website/
     "dev": "next dev --port 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf .next"
   },

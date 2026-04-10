@@ -11,6 +11,7 @@
 | **Exit Criteria** | Release workflow publishing packages |
 | **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
 | **Version Authority** | `DEPENDENCY.md` §3 — Changesets 2.30.0 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

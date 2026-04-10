@@ -16,6 +16,7 @@
 
 ## Cross-references
 
+- Decision status: `DECISION-STATUS.md` — browser E2E coverage remains conditional and later-slice dependent
 - Related task families: `90-test-setup`, `91-test-fixtures`, `25-core-testing`, `c2-infra-ci-workflow`, `c3-infra-ci-workflow-v2`
 - First adopters: `e1-apps-crm`, `e3-apps-agency-website`, `e4-apps-client-portal`, `e6-apps-docs-site`, `e7-apps-email-preview` as applicable
 

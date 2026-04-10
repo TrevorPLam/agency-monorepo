@@ -16,6 +16,7 @@
 
 ## Cross-references
 
+- Decision status: `DECISION-STATUS.md` — a dedicated API app remains conditional behind route-handler-first policy
 - Next.js backend-for-frontend guidance in `docs/tasks/3.md`
 - Related tasks: `50-data-db`, `52-data-api-client`, `60-auth-internal`, `61-auth-portal`, `c12-infra-rate-limiting`
 

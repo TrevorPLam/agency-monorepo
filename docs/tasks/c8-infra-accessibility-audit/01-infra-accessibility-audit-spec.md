@@ -11,6 +11,7 @@
 | **Exit Criteria** | Accessibility audit package exported and integrated |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit a11y need |
 | **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

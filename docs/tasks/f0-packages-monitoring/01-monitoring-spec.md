@@ -11,6 +11,7 @@
 | **Exit Criteria** | Monitoring package exported and used by at least 2 apps |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app opt-in |
 | **Version Authority** | `DEPENDENCY.md` §1, §16 — TypeScript 6.0, Sentry 10.x |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

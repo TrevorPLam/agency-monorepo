@@ -7,17 +7,18 @@
 | **State** | `deferred` — Evaluation pending Task 14 completion |
 | **Trigger** | Task 14 (14-config-biome) evaluation complete AND ADR recorded |
 | **Minimum Consumers** | n/a (transitional package) |
-| **Dependencies** | `@agency/config-eslint` (source), Biome toolchain |
+| **Dependencies** | `@agency/config-eslint`, `@agency/config-prettier`, `14-config-biome` |
 | **Exit Criteria** | Migration guide validated, rule mapping complete |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit human approval |
-| **Version Authority** | `DEPENDENCY.md` — Biome version TBD during evaluation |
-| **Supersedes** | `@agency/config-eslint` (if migration proceeds) |
+| **Version Authority** | `DEPENDENCY.md` §18 — no approved Biome pin until evaluation completes |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**
 - Decision status: `DECISION-STATUS.md` — Biome evaluation `open`
 - Version pins: `DEPENDENCY.md` §18 — Biome evaluation in progress
 - Architecture: `ARCHITECTURE.md` — Linting configuration section
+- Note: Evaluation-only migration planning; do not treat this task as approval to change the default lint/format lane
 
 ## Files
 ```
@@ -116,7 +117,7 @@ Compare ESLint rules vs Biome equivalents using rule mapping.
 
 ### 2.1 Install Biome
 ```bash
-pnpm add -D -w @biomejs/biome@latest
+pnpm add -D -w @biomejs/biome@<validated-version-from-dependency-md>
 ```
 
 ### 2.2 Initialize Configuration
@@ -124,13 +125,13 @@ pnpm add -D -w @biomejs/biome@latest
 npx @biomejs/biome init
 ```
 
-### 2.3 Configure Hybrid Approach
-Update `biome.json` to use Biome for:
+### 2.3 Configure Evaluation Approach
+Update `biome.json` to use Biome for bounded comparison only:
 - Formatting and core linting
 - Import organization
 - Basic style rules
 
-Keep ESLint for:
+Keep ESLint + Prettier as the canonical repo defaults during evaluation:
 - React Hooks rules
 - Unicorn rules
 - Custom agency plugins

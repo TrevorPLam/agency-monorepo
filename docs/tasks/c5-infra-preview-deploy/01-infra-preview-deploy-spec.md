@@ -10,7 +10,8 @@
 | **Dependencies** | Vercel OR Netlify, GitHub Actions |
 | **Exit Criteria** | Preview deploys working on PRs |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit need |
-| **Version Authority** | Platform provider (Vercel/Netlify) |
+| **Version Authority** | `DEPENDENCY.md` — repository toolchain baseline; provider examples remain validation-based |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

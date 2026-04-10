@@ -1,42 +1,42 @@
 # 14-config-biome: Handoff Prompt
 
 ## Purpose
-AI agent instructions for implementing Biome configuration with performance-focused linting and formatting in the agency monorepo.
+AI agent instructions for running a bounded Biome evaluation without changing the repo's default linting or formatting lane.
 
 ## Context
-You are implementing Biome configuration for a monorepo that uses:
+You are evaluating Biome in a monorepo that currently uses:
 - pnpm 10.33.0 with workspace catalog
 - TypeScript 6.0.0 with Project References
 - Turborepo 2.9.5 with tasks-based configuration
-- ESLint compatibility layer for gradual migration
+- ESLint + Prettier as the canonical linting and formatting lane
+- `DEPENDENCY.md` and `DECISION-STATUS.md` as the authority for any tooling-lane change
 
 ## Implementation Instructions
 
 ### Primary Goal
-Create a unified Biome configuration system that enables:
-1. 56x faster linting performance than ESLint
-2. Single tool for linting and formatting
-3. Workspace-aware boundary enforcement
-4. Rust-based performance optimizations
-5. ESLint compatibility during migration
+Create isolated Biome evaluation artifacts that:
+1. Benchmark Biome against the current ESLint + Prettier baseline
+2. Verify rule coverage and boundary-enforcement parity
+3. Capture editor, CI, and migration costs before any adoption decision
+4. Avoid changing default root or package scripts to Biome
+5. Produce evidence for a later decision review rather than silently changing the toolchain
 
 ### Key Requirements
 
-#### 1. Base Configuration (`biome.json`)
-- Performance-focused Biome 1.9.0 configuration
-- Strict linting rules for type safety
-- Modern JavaScript/TypeScript support
-- Import boundary enforcement
+#### 1. Evaluation Configuration (`biome.json`)
+- Use a repo-approved Biome version from `DEPENDENCY.md`
+- Keep the configuration isolated to evaluation targets
+- Do not replace canonical ESLint or Prettier configs during evaluation
 
-#### 2. Workspace Integration
-- Workspace-aware configuration for monorepo
-- Proper handling of node_modules and build artifacts
-- TypeScript integration with strict type checking
+#### 2. Isolated Integration
+- Use opt-in evaluation scripts such as `lint:biome:eval` and `format:biome:eval`
+- Limit evaluation to approved packages, fixtures, or benchmark targets
+- Keep default `lint`, `format`, and CI commands on ESLint + Prettier
 
-#### 3. Performance Optimization
-- Rust-based performance optimizations enabled
-- Memory usage kept under 512MB limit
-- Incremental analysis where possible
+#### 3. Validation Requirements
+- Compare lint and format output with the canonical lane
+- Capture missing rules, workflow gaps, and migration blockers
+- Document whether editor and CI ergonomics are acceptable
 
 ### Critical Implementation Details
 
@@ -47,9 +47,9 @@ Create a unified Biome configuration system that enables:
     "@agency/config-biome": "workspace:*"
   },
   "scripts": {
-    "lint": "biome check .",
-    "format": "biome format .",
-    "lint:fix": "biome check . --apply"
+    "lint:biome:eval": "biome check .",
+    "format:biome:eval": "biome format .",
+    "lint:biome:fix:eval": "biome check . --apply"
   }
 }
 ```
@@ -58,56 +58,54 @@ Create a unified Biome configuration system that enables:
 ```json
 {
   "scripts": {
-    "lint": "biome check .",
-    "format": "biome format .",
-    "lint:fix": "biome check . --apply"
+    "lint:biome:eval": "pnpm --filter <evaluation-target> lint:biome:eval",
+    "format:biome:eval": "pnpm --filter <evaluation-target> format:biome:eval"
   }
 }
 ```
 
-### Performance Targets
-- **56x Faster Linting**: Achieve 56x performance improvement over ESLint
-- **Single Tool Complexity**: Eliminate dual-tool complexity (ESLint + Prettier)
-- **Memory Efficiency**: Keep language server under 512MB limit
-- **Build Performance**: Enable incremental analysis and caching
+### Evaluation Targets
+- **Benchmarking**: Measure runtime against the current ESLint + Prettier baseline
+- **Parity**: Verify whether Biome can match required rule and boundary coverage
+- **Memory / CI**: Confirm the evaluation lane behaves acceptably in editor and automation
+- **Migration Cost**: Identify what would need to change before any wider adoption
 
-### Migration Strategy
-1. **Phase 1**: Biome for new projects, maintain ESLint for existing
-2. **Phase 2**: Gradual migration with compatibility layer
-3. **Phase 3**: Complete ESLint removal once migration validated
+### Evaluation Strategy
+1. **Phase 1**: Add isolated evaluation config and scripts
+2. **Phase 2**: Benchmark representative targets and record gaps
+3. **Phase 3**: Update decision docs only if evaluation results justify wider adoption
 
 ### Quality Gates
-- All Biome rules must pass without errors
-- Performance improvements must be measurable
-- ESLint compatibility layer must work for legacy projects
-- TypeScript integration must be fully functional
+- Biome evaluation must not change the repo's default lint or format commands
+- Benchmark and parity findings must be documented
+- Any gaps or blockers must be recorded before recommending adoption
+- Canonical ESLint + Prettier workflows must remain intact throughout evaluation
 
 ### Testing Strategy
-1. Performance benchmarking against ESLint baseline
-2. Type checking across workspace boundaries
-3. IDE integration testing with VS Code Biome extension
-4. Migration path testing for existing projects
+1. Benchmark Biome against ESLint + Prettier on representative targets
+2. Compare lint and format output on at least one realistic package
+3. Test IDE integration with the VS Code Biome extension
+4. Validate opt-in evaluation commands in CI or local automation
 
 ## Success Criteria
 Implementation is complete when:
-1. All new packages use Biome configuration by default
-2. Performance improvements are measurable and significant
-3. ESLint compatibility layer enables gradual migration
-4. IDE integration provides optimal development experience
-5. Documentation is comprehensive and tested
+1. Biome evaluation artifacts exist without changing repo defaults
+2. Benchmark and parity findings are documented
+3. Any evaluation package uses Biome through opt-in scripts only
+4. Adoption blockers or required follow-up work are explicit
+5. Documentation points back to the decision and version authorities
 
 ## Common Pitfalls to Avoid
 
-- ❌ **ESLint Dependencies**: Don't add both ESLint and Biome to same package
-- ❌ **Performance Overrides**: Don't disable Rust-based optimizations
-- ❌ **Workspace Ignorance**: Don't ignore monorepo boundaries in configuration
-- ❌ **Migration Blocking**: Don't remove ESLint until Biome migration is validated
+- ❌ **Silent Default Switches**: Don't replace default `lint` or `format` scripts with Biome
+- ❌ **Unapproved Version Drift**: Don't install arbitrary Biome versions outside `DEPENDENCY.md`
+- ❌ **Workspace Drift**: Don't spread evaluation config across packages that were not approved for the experiment
+- ❌ **Premature Migration**: Don't remove ESLint or Prettier before a decision update explicitly approves it
 
 ## Next Steps After Implementation
-1. Update all shared package README files with Biome usage examples
-2. Create performance benchmarks for Biome vs ESLint
-3. Add Biome-specific migration documentation
-4. Update root package.json scripts for unified Biome usage
-5. Consider removing ESLint from workspace catalog once migration complete
+1. Record benchmark and parity findings in the relevant decision docs
+2. Keep ESLint + Prettier as the only default lane unless the decision docs change
+3. Add migration planning only if evaluation results justify it
+4. Document any required rule-gap, CI, or editor follow-up work
 
-Remember: Biome provides significant performance advantages while maintaining strict type safety and code quality. Follow the gradual migration strategy to ensure smooth transition for existing projects.
+Remember: this task exists to evaluate Biome, not to authorize a repo-wide tooling switch.

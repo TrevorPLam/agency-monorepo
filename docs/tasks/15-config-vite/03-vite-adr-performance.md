@@ -1,31 +1,31 @@
 # 15-config-vite: ADR - Performance-Focused Build Tooling
 
 ## Status
-**Accepted** - Adopt Vite as primary build tool for new projects in the monorepo.
+**Superseded** - Earlier draft overstated Vite's role in a Next-first repo.
 
 ## Context
-All new projects in the monorepo will use Vite by default for development and build tooling. Existing webpack configurations will remain for gradual migration compatibility.
+The repository is Next-first, with Turbopack as the default build lane for Next.js apps. Vite remains relevant only for non-Next packages, standalone tools, or other explicitly approved edge cases.
 
 ## Decision
-We will standardize on Vite as the primary build tooling solution for performance and developer experience.
+Do not standardize on Vite as the primary build tool for the repo. Keep it as a conditional option for non-Next consumers only.
 
 ### Rationale
-1. **10x Performance**: Vite's native ESM bundling delivers 10x faster builds than webpack according to 2026 benchmarks
-2. **Instant HMR**: Hot Module Replacement provides sub-100ms development feedback
-3. **Modern Architecture**: Built for modern JavaScript/TypeScript with first-class plugin ecosystem
-4. **Next.js 16+ Integration**: Native Vite integration in Next.js 16+ with Turbopack
-5. **Plugin Ecosystem**: Rich plugin system for custom optimizations and integrations
+1. Vite can be useful for non-Next consumers with real bundling needs
+2. Next.js apps already have a default build lane through Turbopack
+3. Treating Vite as universal would create unnecessary parallel-tooling ambiguity
+4. The repo should not imply that Next.js apps use Vite via Turbopack
+5. Conditional tooling reduces blast radius and documentation drift
 
 ### Implementation Details
-- All new packages will use `@agency/config-vite` by default
-- Existing packages can opt into Vite migration when ready
-- Vite will handle both development server and production builds
-- Performance improvements immediate upon Vite adoption
+- No new Next.js apps use `@agency/config-vite` by default
+- Only non-Next consumers with explicit need may adopt this lane
+- Vite is not a foundational repo package
+- Any future adoption must stay scoped to the consumer that justifies it
 
 ## Migration Strategy
-1. **Phase 1**: Vite for all new projects, webpack for existing
-2. **Phase 2**: Gradual migration of existing packages to Vite-only
-3. **Phase 3**: Complete webpack removal once all packages migrated
+1. Keep Turbopack as the default for Next.js apps
+2. Use Vite only where a non-Next consumer proves the need
+3. Avoid repo-wide migration language unless the repo strategy changes
 
 ## Consequences
-This decision delivers significant performance improvements and modern development experience while maintaining flexibility during the migration period. Long-term, this simplifies the build toolchain and reduces maintenance overhead.
+This keeps the repo's build-tool story aligned with its Next-first architecture while preserving Vite as a narrow, optional lane.

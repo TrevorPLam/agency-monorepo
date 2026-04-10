@@ -11,6 +11,7 @@
 | **Exit Criteria** | Image optimization configured and working |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit media need |
 | **Version Authority** | `DEPENDENCY.md` §2 — Next.js 16.2.3 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

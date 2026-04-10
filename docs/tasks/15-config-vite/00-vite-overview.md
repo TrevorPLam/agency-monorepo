@@ -2,12 +2,12 @@
 
 ## Purpose
 
-Provide modern build tooling for agency monorepo using Vite as **conditional** build tool for specific use cases, not as default Next.js bundler.
+Document the conditional Vite lane for non-Next consumers without implying that Vite is a default repo-wide build tool.
 
 ## Dependencies
 
 - None (uses external Vite packages only)
-- Consumed by: All packages and apps (replaces custom webpack configurations)
+- Consumed by: Non-Next packages, standalone tools, or other explicitly approved consumers only
 
 ## Scope
 
@@ -18,17 +18,18 @@ This package provides:
 - Plugin ecosystem integration
 - TypeScript integration
 
+This task does **not** make Vite the standard bundler for Next.js apps.
+
 **Important**: Next.js 16 uses Turbopack by default. Vite is only used when:
 - Building standalone tools that don't use Next.js
-- Creating edge-optimized builds for specific performance requirements
-- Migrating legacy webpack configurations away from Next.js apps
+- Supporting a non-Next package or app with a real Vite requirement
+- Replacing custom bundling only where a non-Next consumer justifies it
 
-## Critical Features
+## Conditional Use Cases
 
 - **Lightning-fast builds**: Vite's native ESM bundling and dev server
 - **HMR**: Hot Module Replacement for instant development feedback
 - **Plugin Ecosystem**: Rich plugin system for custom build optimizations
-- **Next.js Integration**: Native Next.js 16+ Vite integration
 - **Monorepo Support**: Workspace-aware configuration and dependency optimization
 
 ## Migration Strategy
@@ -39,12 +40,12 @@ Vite is positioned as **conditional/supplementary** tool:
 2. **Phase 2**: Optional migration for specific performance cases
 3. **Phase 3**: Legacy webpack replacement where appropriate
 
-**Note**: Next.js 16 uses Turbopack by default. Vite does not replace Turbopack for standard Next.js applications.
+**Note**: Vite does not replace Turbopack for standard Next.js applications.
 
 ## Next Steps
-1. All new packages use Vite configuration by default
-2. Existing packages can opt into Vite migration when ready
-3. Next.js apps use Turbopack by default (Vite is optional)
+1. Do not add Vite to Next.js apps by default
+2. Use Vite only when a non-Next consumer proves the need
+3. Keep Turbopack as the default Next.js build lane
 
 ## Performance Benefits
 - **10x faster builds** than webpack-based configurations

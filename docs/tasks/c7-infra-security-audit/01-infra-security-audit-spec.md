@@ -11,6 +11,7 @@
 | **Exit Criteria** | Security audit docs published and followed |
 | **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
 | **Version Authority** | Repository governance |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

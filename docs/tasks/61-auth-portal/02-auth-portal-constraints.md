@@ -33,8 +33,8 @@
 ## Operational Limits
 
 ### Database Performance
-- Enable `experimental.joins` in Better Auth 1.6.0+ for 2-3x performance improvement
-- Requires Drizzle relations in schema — run `npx auth@latest generate` to update
+- Enable `experimental.joins` in Better Auth 1.6.x for 2-3x performance improvement
+- Requires Drizzle relations in schema — run the Better Auth schema generator command from the setup guide to update
 - Monitor query performance for `/get-session` and `/get-full-organization` endpoints
 
 ### Scalability Limits

@@ -4,9 +4,9 @@
 Provide shared ESLint configuration to enforce monorepo dependency flow and provide reusable TypeScript/Next.js linting setup.
 
 ## Dependencies
-- **Required**: `11-config-typescript` for TypeScript parser
-- **Required**: `13-config-react-compiler` for React Compiler ESLint rules
-- **Required**: `01-config-biome-migration` for migration strategy
+- **Required**: `11-config-typescript` for TypeScript-aware linting
+- **Required when enabled**: `13-config-react-compiler` for React Compiler ESLint rules
+- **Related evaluation tracks**: `14-config-biome`, `01-config-biome-migration`
 - **Consumed by**: All packages and apps
 
 ## Scope
@@ -15,19 +15,19 @@ This task establishes:
 - Next.js-specific configuration with React Hooks and performance rules
 - Monorepo dependency boundary enforcement
 - Import/export validation rules
-- Hybrid ESLint + Biome migration strategy
+- The canonical lint lane for the current repo phase
 
 ## Critical Context
 
-ESLint 9 flat config is the current standard. The old `.eslintrc.js` configuration system is deprecated. All shared configurations must export flat config objects directly for use in `eslint.config.js`. `@typescript-eslint` v8.57.0 (latest minor versions ~8.57.1) includes all TypeScript linting rules and ESLint parser. `eslint-config-next` v16.2.3 is the latest official Next.js configuration and includes Next-specific rules plus React and React Hooks recommendations.
+ESLint 9 flat config is the canonical lint lane for this repository. The old `.eslintrc.js` configuration system is deprecated. All shared configurations must export flat config objects directly for use in `eslint.config.js`. Use the approved ranges and exact pins from `DEPENDENCY.md` rather than minor-version claims in task prose.
 
 The `@agency/config-eslint` package enforces the monorepo's critical dependency flow rules using `no-restricted-paths` and `no-restricted-imports`. This prevents packages from importing from apps and ensures proper domain boundaries are respected.
 
-## Migration Strategy
+## Tooling Lane
 
-This configuration supports a hybrid approach with Biome migration:
-- **ESLint**: Retained for specialized rules (React Hooks, Unicorn, custom agency plugins)
-- **Biome**: Handles formatting and core linting (25-56x faster performance)
-- **Transition**: Gradual migration over 4 weeks with rollback safety
+The current default is intentionally simple:
+- **ESLint** remains the canonical linter
+- **Prettier** remains the canonical formatter
+- **Biome** remains evaluation-only until a decision update explicitly changes the lane
 
-See `01-config-biome-migration` task for complete migration guidance.
+See `14-config-biome` and `01-config-biome-migration` only as evaluation tracks, not as parallel defaults.

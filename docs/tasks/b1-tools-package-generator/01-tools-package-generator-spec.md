@@ -10,7 +10,8 @@
 | **Dependencies** | Shell scripting, Node.js |
 | **Exit Criteria** | Generator script working and documented |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit need |
-| **Version Authority** | Repository governance |
+| **Version Authority** | `DEPENDENCY.md` §1, §3 — Node.js and repo toolchain baseline |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

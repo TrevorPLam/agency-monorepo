@@ -15,7 +15,7 @@
 | **Superseded by** | `01-config-biome-migration` (if Biome replaces Prettier) |
 
 **Cross-references:**
-- Decision status: `DECISION-STATUS.md` — Prettier canonical until Biome evaluation complete
+- Decision status: `DECISION-STATUS.md` — Prettier remains canonical while Biome evaluation stays deferred
 - Version pins: `DEPENDENCY.md` §13
 - Related: Task 01 (biome-migration) may supersede if approved
 

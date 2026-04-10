@@ -1,116 +1,91 @@
 # 14-config-biome: Migration Guide
 
 ## Purpose
-Guide developers through migrating from ESLint to Biome for linting and formatting in the agency monorepo.
+Guide developers through evaluating Biome against the canonical ESLint + Prettier lane without turning that evaluation into an unapproved repo-wide migration.
 
 ## Migration Overview
 
-This guide covers the transition from ESLint + Prettier to Biome-only configuration for performance and maintainability benefits.
+This guide covers how to run a bounded Biome comparison on approved targets so decision owners can judge whether adoption is justified later.
 
 ## Prerequisites
-- Complete `@agency/config-biome` package installation
-- All packages updated to Biome 1.9.0+
-- Existing ESLint configurations preserved for compatibility
+- Complete `@agency/config-biome` package installation for the evaluation lane
+- Use only the Biome version approved in `DEPENDENCY.md`
+- Preserve existing ESLint + Prettier configurations as the canonical default
 
-## Step-by-Step Migration
+## Step-by-Step Evaluation
 
 ### Phase 1: Preparation
-1. **Backup Current Configuration**
-   ```bash
-   cp eslint.config.js eslint.config.js.backup
-   cp package.json package.json.backup
-   ```
+1. **Choose an Evaluation Target**
+   Select a representative package, fixture, or isolated workspace target and document why it was chosen.
 
-2. **Update Root Scripts**
+2. **Add Opt-In Evaluation Scripts**
    ```json
    {
      "scripts": {
-       "lint": "biome check .",
-       "format": "biome format .",
-       "lint:fix": "biome check . --apply"
+       "lint:biome:eval": "biome check .",
+       "format:biome:eval": "biome format .",
+       "lint:biome:fix:eval": "biome check . --apply"
      }
    }
    ```
 
-3. **Test Biome Installation**
+3. **Test Biome on the Evaluation Target**
    ```bash
-   # Test in a single package
-   cd packages/core-utils && npx biome check . --apply
-   
-   # Test across workspace
-   pnpm biome check . --apply
+   pnpm --filter <evaluation-target> lint:biome:eval
+   pnpm --filter <evaluation-target> format:biome:eval
    ```
 
-### Phase 2: Package-by-Package Migration
-1. **Start with Non-Critical Packages**
-   Begin with packages that have fewer dependencies and simpler configurations.
+### Phase 2: Comparison
+1. **Compare Against the Current Baseline**
+   Run the evaluation target through both the Biome lane and the canonical ESLint + Prettier lane.
 
-2. **Update Package Configuration**
-   For each package:
-   ```json
-   {
-     "devDependencies": {
-       "@agency/config-biome": "workspace:*"
-     },
-     "scripts": {
-       "lint": "biome check .",
-       "format": "biome format ."
-     }
-   }
-   ```
+2. **Capture Gaps and Tradeoffs**
+   Record rule differences, workflow friction, editor behavior, and any missing boundary checks.
 
-3. **Remove ESLint Dependencies**
+3. **Keep Default Scripts Intact**
+   Do not replace root or package `lint` / `format` commands during evaluation.
+
+4. **Validate the Evaluation Result**
    ```bash
-   pnpm remove eslint @typescript-eslint/parser eslint-config-next
+   pnpm --filter <evaluation-target> lint
+   pnpm --filter <evaluation-target> lint:biome:eval
+   pnpm --filter <evaluation-target> build
    ```
 
-4. **Validate Migration**
-   ```bash
-   # Run Biome check
-   pnpm biome check .
-   
-   # Verify formatting
-   pnpm biome format --check .
-   
-   # Test build still works
-   pnpm --filter @agency/core-utils build
-   ```
+### Phase 3: Assessment
+1. **Document Findings**
+   Summarize performance, parity, and operational tradeoffs clearly.
 
-### Phase 3: Cleanup
-1. **Remove ESLint Configuration Files**
-   ```bash
-   rm eslint.config.js
-   rm package.json.backup
-   ```
+2. **Preserve the Canonical Lane**
+   Leave ESLint + Prettier in place unless a human decision explicitly authorizes a tooling change.
 
-2. **Update Documentation**
-   Update all package README files with Biome usage examples
+3. **Prepare Decision Follow-Up**
+   If the evaluation is promising, point decision owners to the remaining blockers and adoption requirements.
 
 ## Troubleshooting
 
 ### Common Issues
-- **Biome Version Conflicts**: Ensure workspace catalog uses Biome 1.9.0+
+- **Biome Version Conflicts**: Do not install Biome in the repo until `DEPENDENCY.md` records a validated evaluation pin
 - **Legacy Rules**: Some ESLint rules may not have Biome equivalents
 - **IDE Integration**: VS Code may need extension update to recognize Biome
 
 ### Validation Checklist
-- [ ] All packages use `@agency/config-biome`
-- [ ] No ESLint dependencies remain
-- [ ] Biome check passes without errors
-- [ ] Biome format works correctly
-- [ ] Build processes unaffected
-- [ ] IDE integration functional
+- [ ] Evaluation scope is explicit and bounded
+- [ ] ESLint + Prettier remain the canonical default lane
+- [ ] Biome checks can be compared directly to the current baseline
+- [ ] Build processes remain unaffected by evaluation work
+- [ ] IDE integration is verified before any rollout recommendation
 
-## Benefits
-- **56x Faster Linting**: Significant performance improvement
-- **Single Tool**: Unified linting and formatting
-- **Reduced Complexity**: One configuration file instead of multiple
-- **Modern Features**: Rust-based performance and latest JavaScript/TypeScript support
+## Potential Benefits Under Evaluation
+- **Potential Faster Linting**: Performance benefit if later adopted
+- **Potential Single Tooling Surface**: Could unify linting and formatting
+- **Potential Reduced Complexity**: Only after boundary and workflow parity are proven
+- **Modern Implementation Model**: Rust-based tooling with modern language support
 
 ## Success Criteria
-Migration is complete when:
-1. All packages successfully use Biome configuration
-2. No functionality regressions introduced
-3. Performance improvements measurable and significant
-4. Developer experience maintains or improves
-5. Documentation updated with Biome examples
+Evaluation is complete when:
+1. Feature and boundary-rule parity have been assessed honestly
+2. No default-lane language remains ambiguous
+3. Performance improvements are measurable and relevant
+4. Developer workflow tradeoffs are documented clearly
+5. Decision owners can choose whether adoption is justified

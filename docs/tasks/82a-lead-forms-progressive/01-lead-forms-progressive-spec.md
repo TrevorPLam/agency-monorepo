@@ -11,6 +11,7 @@
 | **Exit Criteria** | Progressive forms package exported and used |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit form needs |
 | **Version Authority** | `DEPENDENCY.md` §2 — React 19.2.5 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

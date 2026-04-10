@@ -11,6 +11,7 @@
 | **Exit Criteria** | Rate limiting implemented and protecting endpoints |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit API need |
 | **Version Authority** | `DEPENDENCY.md` §1, §2 — TypeScript 6.0, Next.js 16.2.3 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

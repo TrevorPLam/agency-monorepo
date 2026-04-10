@@ -10,7 +10,8 @@
 | **Dependencies** | Task c2-infra-ci-workflow completed |
 | **Exit Criteria** | CI v2 workflow deployed and stable |
 | **Implementation Authority** | `REPO-STATE.md` — Deferred until needs justify upgrade |
-| **Version Authority** | Repository governance |
+| **Version Authority** | `DEPENDENCY.md` §1, §3 — Node.js, pnpm, and Turborepo baseline |
+| **Supersedes** | `c2-infra-ci-workflow` (only when CI v2 is explicitly adopted) |
 | **Superseded by** | n/a |
 
 **Cross-references:**

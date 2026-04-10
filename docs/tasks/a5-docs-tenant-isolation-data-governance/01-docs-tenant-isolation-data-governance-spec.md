@@ -10,7 +10,7 @@
 | **Dependencies** | `50-data-db`, `60-auth-internal`, `61-auth-portal`, `80-analytics`, `42-monitoring`, `42a-monitoring-rum`, `82-lead-capture`, `d1-infra-db-migrations`, `d2-infra-environment-mgmt` |
 | **Exit Criteria** | Every tenant-sensitive planning task can point to one default model, one escalation path, and one anti-pattern list |
 | **Implementation Authority** | `docs/REPO-STATE.md` — documentation-only authority; tenant-sensitive code remains gated |
-| **Version Authority** | Repository governance only |
+| **Version Authority** | `docs/DEPENDENCY.md` — repository version-governance language applies even when this task owns no package pins |
 | **Supersedes** | n/a |
 | **Superseded by** | n/a |
 

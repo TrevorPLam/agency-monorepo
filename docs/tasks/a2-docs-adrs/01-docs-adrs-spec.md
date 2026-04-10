@@ -10,7 +10,7 @@
 | **Dependencies** | None (meta documentation) |
 | **Exit Criteria** | ADR structure published and used |
 | **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
-| **Version Authority** | Repository governance |
+| **Version Authority** | `DEPENDENCY.md` — repository version-governance baseline referenced by ADRs |
 | **Supersedes** | n/a |
 | **Superseded by** | n/a |
 

@@ -11,6 +11,7 @@
 | **Exit Criteria** | Lead enrichment package exported and integrated |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit business need |
 | **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

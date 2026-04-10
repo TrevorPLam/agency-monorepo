@@ -1,5 +1,25 @@
 # D0 Infra Vscode Specification
 
+## Task Header
+
+| Field | Value |
+|-------|-------|
+| **State** | `planned` — Workspace-support guidance, not implementation authority by itself |
+| **Trigger** | Repository contributors need shared VS Code defaults |
+| **Minimum Consumers** | Contributors using VS Code in this repository |
+| **Dependencies** | VS Code, ESLint, Prettier, workspace TypeScript |
+| **Exit Criteria** | `.vscode/` defaults are documented with clear scope, ownership, and non-goals |
+| **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
+| **Version Authority** | `DEPENDENCY.md` §1, §3, §13 — Node/pnpm/TypeScript and lint-format baseline |
+| **Supersedes** | n/a |
+| **Superseded by** | n/a |
+
+## Cross-references
+
+- Decision status: `DECISION-STATUS.md` — editor defaults remain subordinate to locked repo tooling decisions
+- Related: `10-config-eslint`, `13-config-prettier`, `d2-infra-environment-mgmt`
+- Note: Editor guidance only; do not let local editor defaults override repo CLI behavior
+
 ## Files
 
 ```

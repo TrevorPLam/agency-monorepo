@@ -16,6 +16,7 @@
 
 ## Cross-references
 
+- Decision status: `DECISION-STATUS.md` — client-portal activation remains conditional behind launch-slice sequencing
 - Family owner: `e10-apps-client-sites-foundation`
 - Auth lane: `61-auth-portal`
 - Data lane: `50-data-db`

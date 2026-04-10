@@ -11,6 +11,7 @@
 | **Exit Criteria** | Email preview app deployed and accessible |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit need |
 | **Version Authority** | `DEPENDENCY.md` §2 — Next.js 16.2.3 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

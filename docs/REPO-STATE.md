@@ -22,13 +22,17 @@
 
 ### What this means
 The repository is still in planning mode.  
-Implementation should be limited to the approved launch slice and the governance spine required to keep AI-assisted scaffolding from drifting.
+Implementation should be limited to:
+- the approved launch slice
+- the governance spine
+- the foundational packages explicitly approved here
 
 ### Not allowed
 - broad repo-wide scaffolding based only on target-state architecture
 - activating conditional packages before their trigger is satisfied
 - creating new shared packages without explicit approval here
-- adding tooling or infra because it is “future useful”
+- widening milestone scope because a future package/app seems “close enough”
+- adding tooling or infrastructure because it is “future useful”
 
 ---
 
@@ -43,7 +47,11 @@ A package listed in `ARCHITECTURE.md` or `DEPENDENCY.md` is still **not approved
 - this file says it is approved
 
 ### Rule 3 — Smallest correct milestone wins
-Implementation follows the smallest real milestone that respects dependency activation rules and package extraction rules.
+Implementation follows the smallest real milestone that respects:
+- dependency activation rules
+- package extraction rules
+- launch-slice rules
+- current locked topic decisions
 
 ### Rule 4 — App-local first
 If a capability can stay inside an app for the current milestone, keep it app-local unless a shared-package approval exists here.
@@ -62,6 +70,11 @@ If there is any conflict between target-state architecture and this file, follow
 | 3. Domain-grouped package boundaries and extraction rules | Locked | App-local first; new shared packages need approval |
 | 4. Launch-slice strategy | Locked | Agency website is the first validating app |
 | 5. Dependency-truth and version-governance | Locked | `DEPENDENCY.md` is version authority; machine drift checks required |
+| 6. Tenant isolation and client-data safety | Locked | Future data/auth work must use row-level tenant scoping + RLS defense-in-depth |
+| 7. Marketing-site architecture in shared monorepo | Locked | Public-site apps stay separate; branded/campaign logic stays app-local by default |
+| 8. Next.js 16 as the repo-wide application platform | Locked | Next.js App Router is the default app framework; Route Handlers first; `apps/api` remains deferred |
+| 9. React 19 and React Compiler adoption policy | Locked | Compiler-ready but off by default; lint first; annotation-mode pilot before broader enablement |
+| 10. Tailwind v4 and source-owned design system strategy | Locked | CSS-first Tailwind; token/setup/component ownership split across approved UI packages |
 
 ---
 
@@ -74,7 +87,7 @@ These items are approved immediately because they are required to make later imp
 - `DECISION-STATUS.md`
 - `DEPENDENCY.md`
 - `docs/AGENTS.md`
-- ADRs for Topics 1–5
+- ADRs for Topics 1–10
 
 ### Repo governance and enforcement
 - `.github/CODEOWNERS`
@@ -85,6 +98,16 @@ These items are approved immediately because they are required to make later imp
 - `workspace:*` for internal dependencies
 - root lockfile governance
 - dependency drift-check job
+
+### Governance review documents
+- `docs/governance/shared-package-acceptance-checklist.md`
+- `docs/governance/new-package-proposal-template.md`
+- `docs/governance/version-authority-audit-checklist.md`
+- `docs/governance/tenant-isolation-review-checklist.md`
+- `docs/governance/public-site-boundary-checklist.md`
+- `docs/governance/dedicated-api-extraction-checklist.md`
+- `docs/governance/react-compiler-adoption-checklist.md`
+- `docs/governance/ui-boundary-review-checklist.md`
 
 ---
 
@@ -111,7 +134,10 @@ These items are approved immediately because they are required to make later imp
 - repo-specific MCP server
 - private package registry
 - dedicated API app
+- separate backend framework by default
+- worker/service infrastructure by default
 - enterprise-scale CI/distribution features
+- platform-portability infrastructure beyond approved app needs
 
 ---
 
@@ -123,6 +149,7 @@ The repository uses a **two-step launch-slice strategy**.
 **First validating app:** `apps/agency-website/`
 
 #### Approved now in Milestone 1
+
 ##### Config packages
 - `@agency/config-eslint`
 - `@agency/config-typescript`
@@ -147,10 +174,14 @@ Only the packages actually needed by the first app:
 - `apps/agency-website/`
 
 #### Approved implementation style in Milestone 1
+- Next.js App Router is the default app framework
+- Route Handlers inside App Router if server endpoints are needed
 - app-local SEO if only one public surface exists
 - app-local analytics if only one app exists
 - app-local monitoring if package triggers are not met
-- Route Handlers inside App Router if server endpoints are needed
+- branded sections and page/campaign composition remain app-local
+- React Compiler config package may exist, but compiler rollout remains off by default
+- Tailwind v4 CSS-first setup with approved shared UI package boundaries
 
 #### Not approved in Milestone 1
 - `apps/internal-tools/crm/`
@@ -164,17 +195,24 @@ Only the packages actually needed by the first app:
 - `@agency/monitoring`
 - `@agency/monitoring-rum`
 - `@agency/data-cms`
+- `@agency/data-content-federation`
+- `@agency/data-ai-enrichment`
+- `@agency/data-api-client`
 - `@agency/notifications`
 - `@agency/experimentation`
 - `@agency/experimentation-edge`
 - `@agency/analytics-attribution`
 - `@agency/analytics-consent-bridge`
-- `@agency/data-api-client`
-- `@agency/data-content-federation`
-- `@agency/data-ai-enrichment`
 - `@agency/lead-capture`
+- `@agency/lead-capture-progressive`
+- `@agency/lead-capture-enrichment`
 - `@agency/test-setup`
 - `@agency/test-fixtures`
+- `@agency/content-blocks`
+- client-specific brand-foundation packages
+- Storybook or Ladle activation unless separately approved
+- separate backend frameworks
+- worker/service infrastructure
 
 #### Milestone 1 rule
 Do not activate a shared package in Milestone 1 if the need can be satisfied app-locally and the package trigger is not yet met.
@@ -190,7 +228,7 @@ Do not activate a shared package in Milestone 1 if the need can be satisfied app
 - `@agency/auth-internal`
 
 #### Conditionally approvable within Milestone 2
-Only if the app actually requires them:
+Only if the app actually requires them and the relevant trigger is satisfied:
 - `@agency/email-templates`
 - `@agency/email-service`
 - `@agency/compliance`
@@ -213,10 +251,16 @@ Unless separately approved after trigger review:
 - `@agency/data-content-federation`
 - `@agency/data-ai-enrichment`
 - `@agency/lead-capture`
+- `@agency/lead-capture-progressive`
+- `@agency/lead-capture-enrichment`
 - `@agency/test-setup`
 - `@agency/test-fixtures`
+- `@agency/content-blocks`
+- client-specific brand-foundation packages
 - repo-specific MCP server
 - Nx
+- separate backend framework by default
+- worker/service infrastructure by default
 
 ---
 
@@ -255,6 +299,8 @@ Even if listed in architecture, these require explicit trigger satisfaction plus
 - `@agency/lead-capture-enrichment`
 - `@agency/test-setup`
 - `@agency/test-fixtures`
+- `@agency/content-blocks`
+- client-specific brand-foundation packages
 
 ---
 
@@ -290,6 +336,9 @@ If any of these are false, the code stays app-local.
 - Nx migration work
 - distributed task execution
 - private registry publishing
+- repo-wide Storybook/Ladle adoption
+- repo-wide portability infrastructure
+- worker/service platform scaffolding
 
 ---
 
@@ -305,7 +354,125 @@ If any of these are false, the code stays app-local.
 ### Required cleanup before broad implementation
 - normalize exact version references in `DEPENDENCY.md`
 - remove or de-authorize duplicated exact pin tables outside `DEPENDENCY.md`
+- normalize React Compiler integration/lint wording in `DEPENDENCY.md`
+- normalize Tailwind/shadcn ownership wording in `DEPENDENCY.md`
 - add dependency drift checks to CI
+
+---
+
+## Tenant-isolation implementation state
+
+### Current approval effect
+Topic 6 is locked as repository policy, but it does not activate new Milestone 1 packages.
+
+### Milestone 1
+Still not approved:
+- `@agency/data-db`
+- `@agency/auth-internal`
+- `@agency/auth-portal`
+
+### Milestone 2 rule
+When Milestone 2 begins and `@agency/data-db` is activated:
+- every client-owned table must include `client_id`
+- client-owned query helpers must require explicit tenant scope
+- RLS must be applied to client-owned tables as defense-in-depth
+- dual-tenant leakage tests are required before the package is considered stable
+
+### Escalation rule
+Do not move to schema-per-tenant or database-per-tenant by default.  
+Use stronger isolation only when an approved tenant/app requirement justifies it.
+
+---
+
+## Public-site implementation state
+
+### Current approval effect
+Topic 7 is locked as repository policy, but it does not widen Milestone 1 package approval.
+
+### Milestone 1 public-site rule
+For the agency website:
+- keep branded sections app-local
+- keep campaign/page composition app-local
+- keep SEO/analytics/monitoring app-local unless package triggers are explicitly satisfied and approved
+
+### Future client-site rule
+Do not define detailed client-sites family standards yet.  
+Handle that later when the client-sites family topic is activated by a real approved client site.
+
+---
+
+## Application-platform implementation state
+
+### Current approval effect
+Topic 8 is locked as repository policy, but it does not widen Milestone 1 approval.
+
+### Approved now
+- Next.js 16 App Router is the default app framework for approved app surfaces
+- Route Handlers are the default early server model
+
+### Still not approved
+- `apps/api`
+- separate backend framework adoption by default
+- worker/service infrastructure
+- portability infrastructure beyond approved app needs
+
+### Dedicated API rule
+Do not create `apps/api` unless a later explicit review confirms the extraction trigger.
+
+---
+
+## React Compiler implementation state
+
+### Current approval effect
+Topic 9 is locked as repository policy.
+
+### Approved now
+- `@agency/config-react-compiler` may exist in Milestone 1
+- compiler-related lint preparation is allowed
+
+### Not approved by default
+- enabling React Compiler in all apps
+- app-wide infer-mode enablement in Milestone 1
+- compiler-driven shared-package refactors
+- mass memoization cleanup
+
+### Pilot rule
+If React Compiler is enabled in an approved app during early phases:
+- use annotation mode first
+- keep scope intentionally limited
+- preserve rollback simplicity
+
+---
+
+## UI implementation state
+
+### Current approval effect
+Topic 10 is locked as repository policy.
+
+### Approved now
+- `@agency/config-tailwind`
+- `@agency/ui-theme`
+- `@agency/ui-icons`
+- `@agency/ui-design-system`
+
+### UI ownership rule
+Use the approved split:
+- config-tailwind = Tailwind setup
+- ui-theme = semantic tokens
+- ui-icons = icons
+- ui-design-system = shared primitives
+
+### Milestone 1 UI rule
+For `apps/agency-website/`:
+- shared primitives may be consumed from the approved UI packages
+- branded sections and page composition stay app-local
+- do not widen the design-system package with one-app marketing components
+
+### Not approved by default
+- extra UI subpackages
+- client-brand token packages
+- shared content-block packages
+- Storybook/Ladle activation unless separately approved
 
 ---
 
@@ -316,6 +483,9 @@ If any of these are false, the code stays app-local.
 - build only within the current approved milestone
 - keep logic app-local by default
 - use Route Handlers instead of creating `apps/api` in early phases
+- use Next.js App Router as the default approved app framework
+- prepare compiler lint/config support without broadly enabling React Compiler
+- use the approved UI package split for primitives/tokens/setup/icons
 - propose, but not scaffold, deferred packages
 
 ### AI tools must not
@@ -327,6 +497,10 @@ If any of these are false, the code stays app-local.
 - create `apps/api` in Milestone 1
 - activate data/auth/email/CMS packages in Milestone 1 unless explicitly approved here
 - treat future reuse as current justification
+- enable React Compiler broadly by assumption
+- move branded/page-specific UI into `@agency/ui-design-system`
+- introduce schema-per-tenant or database-per-tenant as a default repo model
+- introduce separate backend frameworks or worker/service lanes without explicit approval
 
 ---
 
@@ -338,6 +512,9 @@ Milestone 1 is considered complete when:
 - approved config/core/ui packages are consumed successfully
 - no non-approved packages were activated
 - package extraction stayed app-local where required
+- branded/public-site composition remained app-local where required
+- no premature React Compiler rollout occurred
+- no premature data/auth/backend lane was activated
 
 Milestone 2 may begin only when:
 - Milestone 1 is stable

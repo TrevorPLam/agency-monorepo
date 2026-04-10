@@ -36,6 +36,8 @@ AUTH_PROVIDER=supabase
 
 ### 3. Generate Better Auth Schema
 
+The command below is allowed **tool-only CLI usage**. It does not change the runtime version pins governed by `DEPENDENCY.md`.
+
 ```bash
 # Generate Drizzle schema for Better Auth tables
 npx auth@latest generate

@@ -10,7 +10,8 @@
 | **Dependencies** | Shell scripting, Node.js |
 | **Exit Criteria** | Generator script working and documented |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit need |
-| **Version Authority** | Repository governance |
+| **Version Authority** | `DEPENDENCY.md` §1, §3 — Node.js and repo toolchain baseline |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**
@@ -132,7 +133,7 @@ cat > "${APP_DIR}/package.json" << EOF
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

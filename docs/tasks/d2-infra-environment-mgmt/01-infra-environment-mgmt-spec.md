@@ -10,7 +10,8 @@
 | **Dependencies** | None (documentation/tooling) |
 | **Exit Criteria** | Environment docs published and followed |
 | **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
-| **Version Authority** | Repository governance |
+| **Version Authority** | `DEPENDENCY.md` — repository version-governance and environment baseline |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

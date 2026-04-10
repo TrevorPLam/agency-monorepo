@@ -261,6 +261,8 @@ pnpm --filter @agency/ui-design-system test
 
 ## shadcn/ui v4 Setup
 
+These commands are allowed **tool-only CLI usage**. They do not define runtime dependency pins for repo manifests.
+
 ### Initializing in Monorepo
 
 ```bash

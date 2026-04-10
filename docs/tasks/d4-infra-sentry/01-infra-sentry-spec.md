@@ -11,6 +11,7 @@
 | **Exit Criteria** | Sentry package exported and error tracking active |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit monitoring need |
 | **Version Authority** | `DEPENDENCY.md` §2, §16 — React 19.2.5, Sentry 10.x |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

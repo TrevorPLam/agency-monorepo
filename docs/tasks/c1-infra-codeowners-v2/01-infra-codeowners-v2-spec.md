@@ -10,7 +10,8 @@
 | **Dependencies** | Task c0-infra-codeowners completed |
 | **Exit Criteria** | CODEOWNERS v2 published and active |
 | **Implementation Authority** | `REPO-STATE.md` — Deferred until team scales |
-| **Version Authority** | Repository governance |
+| **Version Authority** | `DEPENDENCY.md` §1, §3 — repository toolchain baseline for ownership automation |
+| **Supersedes** | `c0-infra-codeowners` (only when v2 is explicitly adopted) |
 | **Superseded by** | n/a |
 
 **Cross-references:**

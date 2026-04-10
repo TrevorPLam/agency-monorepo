@@ -1,131 +1,114 @@
 # 15-config-vite: Migration Guide
 
 ## Purpose
-Guide developers through migrating from webpack/custom build configurations to Vite for modern development and build performance.
+Guide developers through adopting Vite for an approved non-Next consumer that benefits from a Vite-based dev/build workflow.
 
 ## Migration Overview
 
-This guide covers the transition from legacy build tools to Vite's modern ESM-based bundling and development server.
+This guide covers the transition from a legacy or custom build setup to Vite for a named non-Next package, app, or standalone tool. It does not authorize a repo-wide bundler migration or any change to the default Next.js Turbopack lane.
 
 ## Prerequisites
-- Complete `@agency/config-vite` package installation
-- All packages updated to compatible versions
-- pnpm workspace configured with catalog dependencies
+- A documented, approved non-Next consumer with a real Vite requirement
+- `@agency/config-vite` available for that consumer
+- Workspace catalog configured with the approved Vite version
 
 ## Step-by-Step Migration
 
 ### Phase 1: Preparation
-1. **Backup Existing Configuration**
-   ```bash
-   cp webpack.config.js webpack.config.js.backup
-   cp package.json package.json.backup
-   ```
+1. **Confirm the Target Consumer**
+  Identify the exact non-Next package, app, or tool that will adopt Vite and document why it needs it.
 
-2. **Update Root Scripts**
-   ```json
-   {
-     "scripts": {
-       "dev": "vite",
-       "build": "vite build",
-       "preview": "vite preview"
-     }
-   }
-   ```
+2. **Backup Existing Consumer Configuration**
+  ```bash
+  cp vite.config.ts vite.config.ts.backup
+  cp package.json package.json.backup
+  ```
 
-3. **Test Vite Installation**
-   ```bash
-   # Test in a single package
-   cd packages/core-utils && npx vite build
-   
-   # Test across workspace
-   pnpm vite build
-   ```
+3. **Add Consumer-Level Scripts**
+  ```json
+  {
+    "scripts": {
+     "dev": "vite",
+     "build": "vite build",
+     "preview": "vite preview"
+    }
+  }
+  ```
 
-### Phase 2: Package-by-Package Migration
-1. **Start with Non-Critical Packages**
-   Begin with packages that have fewer dependencies and simpler configurations.
+4. **Test Vite Installation in the Target Consumer**
+  ```bash
+  pnpm --filter <approved-consumer> build
+  pnpm --filter <approved-consumer> dev
+  ```
+
+### Phase 2: Consumer Migration
+1. **Start with the Lowest-Risk Approved Consumer**
+  Begin with the approved consumer that has the simplest build surface.
 
 2. **Update Package Configuration**
-   For each package:
-   ```json
-   {
-     "devDependencies": {
-       "@agency/config-vite": "workspace:*"
-     },
-     "scripts": {
-       "dev": "vite",
-       "build": "vite build"
-     }
-   }
-   ```
+  ```json
+  {
+    "devDependencies": {
+     "@agency/config-vite": "workspace:*"
+    },
+    "scripts": {
+     "dev": "vite",
+     "build": "vite build",
+     "preview": "vite preview"
+    }
+  }
+  ```
 
-3. **Remove Legacy Dependencies**
-   ```bash
-   pnpm remove webpack webpack-cli
-   ```
+3. **Remove Replaced Legacy Dependencies**
+  ```bash
+  pnpm --filter <approved-consumer> remove webpack webpack-cli
+  ```
 
 4. **Validate Migration**
-   ```bash
-   # Run Vite build
-   pnpm vite build
-   
-   # Verify development server
-   pnpm vite dev
-   ```
+  ```bash
+  pnpm --filter <approved-consumer> build
+  pnpm --filter <approved-consumer> dev
+  ```
 
-### Phase 3: Next.js Integration
-1. **Update Next.js Configuration**
-   ```json
-   {
-     "scripts": {
-       "dev": "next dev --turbo",
-       "build": "next build"
-     }
-   }
-   ```
+### Phase 3: Consumer Validation
+1. **Verify Scope Boundaries**
+  Confirm that only the approved non-Next consumer adopted Vite.
 
-2. **Configure Vite for Next.js**
-   ```typescript
-   // vite.config.ts for Next.js
-   import { defineConfig } from 'vite'
-   
-   export default defineConfig({
-     plugins: [],
-     build: {
-       target: 'es2022',
-       lib: ['es2022', 'dom'],
-       format: 'esm'
-     }
-   })
-   ```
+2. **Preserve Next.js Defaults**
+  Keep standard Next.js applications on `next dev --turbo` and `next build`.
+
+3. **Document Rollback and Follow-Up**
+  Record how to revert the consumer if Vite does not provide the expected benefit.
 
 ## Troubleshooting
 
 ### Common Issues
-- **Vite Version Conflicts**: Ensure workspace catalog uses Vite 8.0.8+
-- **Legacy Plugins**: Some webpack plugins may not have Vite equivalents
-- **IDE Integration**: VS Code may need extension update to recognize Vite
-- **Environment Variables**: Vite uses different env var naming than webpack
+- **Vite Version Conflicts**: Ensure the workspace catalog uses the approved Vite version
+- **Legacy Plugins**: Some webpack plugins may not have direct Vite equivalents
+- **IDE Integration**: VS Code may need updated tooling to recognize Vite config and scripts
+- **Environment Variables**: Vite uses different env var naming than some legacy bundlers
 
 ### Validation Checklist
-- [ ] All packages use `@agency/config-vite`
-- [ ] No webpack dependencies remain
-- [ ] Vite build passes without errors
-- [ ] Vite dev server works correctly
-- [ ] Build processes unaffected
-- [ ] IDE integration functional
+- [ ] The approved non-Next consumer uses `@agency/config-vite`
+- [ ] No unauthorized Next.js app adopted Vite
+- [ ] Replaced legacy dependencies were removed where appropriate
+- [ ] Vite build passes without errors for the target consumer
+- [ ] Vite dev server works correctly for the target consumer
+- [ ] Other workspace build lanes are unaffected
+- [ ] IDE integration is functional
 
 ## Benefits
-- **10x Faster Builds**: Significant performance improvement
-- **Instant HMR**: Sub-100ms hot module replacement
+- **Faster Builds**: Potential performance improvement for the approved consumer
+- **Instant HMR**: Fast development feedback where a dev server is part of the workflow
 - **Native ESM**: Modern module resolution and tree shaking
-- **Plugin Ecosystem**: Rich optimization and integration options
-- **Next.js 16+ Integration**: Seamless Turbopack support
+- **Plugin Ecosystem**: Useful extension points for non-Next build needs
+- **Scoped Adoption**: Improved tooling for the target consumer without changing the repo default build lane
 
 ## Success Criteria
 Migration is complete when:
-1. All packages successfully use Vite configuration
-2. No functionality regressions introduced
-3. Performance improvements measurable and significant
-4. Developer experience maintains or improves
-5. Documentation updated with Vite examples
+1. The approved non-Next consumer successfully uses shared Vite configuration
+2. No functionality regressions are introduced in that consumer
+3. Performance improvements are measurable and significant for that consumer
+4. Developer experience for that consumer maintains or improves
+5. Next.js applications remain on Turbopack by default
+6. Documentation is updated with consumer-specific Vite usage examples

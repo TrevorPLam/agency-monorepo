@@ -1,50 +1,48 @@
 # 15-config-vite: Handoff Prompt
 
 ## Purpose
-AI agent instructions for implementing Vite configuration with modern build tooling for the agency monorepo.
+AI agent instructions for implementing shared Vite configuration for approved non-Next consumers without turning Vite into the repo's default build lane.
 
 ## Context
-You are implementing Vite configuration for a monorepo that uses:
+You are implementing Vite configuration in a monorepo that uses:
 - pnpm 10.33.0 with workspace catalog
 - TypeScript 6.0.0 with Project References
 - Turborepo 2.9.5 with tasks-based configuration
-- Next.js 16+ with Turbopack integration
-- ESLint compatibility layer for gradual migration from webpack
+- Next.js 16+ with Turbopack as the default Next.js build lane
+- ESLint as the canonical linting lane and Vite only where an approved non-Next consumer needs it
 
 ## Implementation Instructions
 
 ### Primary Goal
-Create a unified Vite configuration system that enables:
-1. 10x faster builds than webpack-based configurations
-2. Native ESM support with optimal tree shaking
-3. Instant HMR for sub-100ms development feedback
-4. Seamless Next.js 16+ integration with Turbopack
-5. Modern plugin ecosystem for custom optimizations
+Create a shared Vite configuration system that enables:
+1. Faster dev/build workflows for an approved non-Next consumer
+2. Native ESM support with good tree shaking
+3. Fast HMR where a dev server is part of that consumer's workflow
+4. Consumer-specific plugin support without widening scope
+5. Preservation of Turbopack as the default lane for standard Next.js apps
 
 ### Key Requirements
 
 #### 1. Base Configuration (`vite.config.ts`)
-- Performance-focused Vite 8.0.8 configuration
-- Native ESM bundling with strict module resolution
-- Modern ES2022 target with broad browser support
-- TypeScript integration with strict type checking
+- Use the approved Vite 8.0.8 configuration from `DEPENDENCY.md`
+- Provide native ESM bundling with strict module resolution
+- Target modern runtimes appropriately for the approved consumer
+- Maintain strict TypeScript integration
 
-#### 2. Next.js Integration
-- Turbopack integration for Next.js 16+ App Router
-- App bundle target for optimal Next.js builds
-- Static asset optimization for production builds
-- Development server configuration for HMR
+#### 2. Consumer Scope
+- Wire Vite only into the named non-Next package, app, or tool that justifies it
+- Do not add Vite as the default dev/build tool for standard Next.js apps
+- Document the consumer rationale and keep the blast radius explicit
 
 #### 3. Workspace Integration
-- Workspace-aware configuration for monorepo
-- Proper handling of node_modules and build artifacts
-- TypeScript integration with strict type checking
+- Keep configuration workspace-aware for the approved consumer
+- Handle `node_modules` and build artifacts correctly
+- Ensure other workspace build lanes remain unaffected
 
 #### 4. Performance Optimization
-- Native ESM bundling enabled
-- Tree shaking for dead code elimination
-- Build artifact optimization for production
-- Development server performance tuning
+- Enable native ESM bundling
+- Use tree shaking and build optimization where they help the approved consumer
+- Tune dev-server performance only where that workflow exists
 
 ### Critical Implementation Details
 
@@ -66,57 +64,55 @@ Create a unified Vite configuration system that enables:
 ```json
 {
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev:<approved-consumer>": "pnpm --filter <approved-consumer> dev",
+    "build:<approved-consumer>": "pnpm --filter <approved-consumer> build"
   }
 }
 ```
 
 ### Performance Targets
-- **10x Faster Builds**: Achieve 10x performance improvement over webpack baseline
-- **Instant HMR**: Sub-100ms hot module replacement latency
-- **Native ESM**: Full ES module support with optimal tree shaking
-- **Bundle Optimization**: 30%+ smaller bundles through modern optimizations
+- **Faster Builds**: Improve the approved consumer's baseline build performance
+- **Fast HMR**: Provide responsive dev-server feedback where applicable
+- **Native ESM**: Preserve ES module output and tree shaking
+- **Scoped Optimization**: Improve the target consumer without changing repo-wide defaults
 
 ### Migration Strategy
-1. **Phase 1**: Vite for new projects, webpack for existing
-2. **Phase 2**: Gradual migration of existing packages to Vite-only
-3. **Phase 3**: Complete webpack removal once all packages migrated
+1. **Phase 1**: Add Vite for the approved non-Next consumer only
+2. **Phase 2**: Validate performance, DX, and operational impact
+3. **Phase 3**: Consider additional approved non-Next consumers only if the current migration succeeds
 
 ### Quality Gates
-- All Vite builds must pass without errors
-- Performance improvements must be measurable
-- ESLint compatibility layer must work for legacy projects
+- All Vite builds for the approved consumer must pass without errors
+- Performance improvements must be measurable for that consumer
+- Standard Next.js applications must remain on Turbopack
 - TypeScript integration must be fully functional
 
 ### Testing Strategy
-1. Performance benchmarking against webpack baseline
-2. Type checking across workspace boundaries
-3. IDE integration testing with VS Code Vite extension
-4. Migration path testing for existing projects
+1. Benchmark the approved consumer against its previous build/dev baseline
+2. Run type checking across affected workspace boundaries
+3. Test IDE integration for the approved consumer with Vite tooling
+4. Confirm that unrelated Next.js apps and packages are unaffected
 
 ## Success Criteria
 Implementation is complete when:
-1. All packages use unified Vite configuration from workspace catalog
-2. Performance improvements are measurable and significant
-3. ESLint compatibility layer enables gradual migration
-4. IDE integration provides optimal development experience
-5. Documentation is comprehensive and tested
-6. Migration path is clear and functional
+1. At least one approved non-Next consumer uses the shared Vite configuration
+2. Performance improvements are measurable and significant for that consumer
+3. Turbopack remains the default build lane for standard Next.js apps
+4. IDE integration provides a good development experience for the target consumer
+5. Documentation is comprehensive and scoped correctly
+6. The path for additional approved non-Next consumers is clear without implying repo-wide adoption
 
 ## Common Pitfalls to Avoid
 
-- ❌ **Webpack Dependencies**: Don't add both webpack and Vite to same package
+- ❌ **Next.js Drift**: Don't add Vite to standard Next.js apps as a default build lane
+- ❌ **Scope Expansion**: Don't spread Vite across the workspace without a documented consumer need
 - ❌ **Performance Overrides**: Don't disable HMR or tree shaking for convenience
-- ❌ **Workspace Ignorance**: Don't ignore monorepo boundaries in configuration
-- ❌ **Migration Blocking**: Don't remove webpack until Vite migration is validated
+- ❌ **Migration Blocking**: Don't remove the prior build lane until the approved consumer is validated
 
 ## Next Steps After Implementation
-1. Update all shared package README files with Vite usage examples
-2. Create performance benchmarks for Vite vs webpack
-3. Add Vite-specific migration documentation
-4. Update root package.json scripts for unified Vite usage
-5. Consider removing webpack from workspace catalog once migration complete
+1. Update docs for the approved consumer with Vite usage examples
+2. Record performance findings against the prior baseline
+3. Add scoped migration notes for similar non-Next consumers if needed
+4. Keep Turbopack as the standard Next.js lane unless decision docs change
 
-Remember: Vite provides significant performance advantages while maintaining strict type safety and code quality. Follow the gradual migration strategy to ensure smooth transition for existing projects.
+Remember: Vite is conditional in this repo. Use it where a non-Next consumer clearly benefits, not as a silent replacement for the default Next.js build path.

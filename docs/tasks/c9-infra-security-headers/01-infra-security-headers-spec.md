@@ -11,6 +11,7 @@
 | **Exit Criteria** | Security headers package exported and configured |
 | **Implementation Authority** | `REPO-STATE.md` — Deferred; requires explicit security need |
 | **Version Authority** | `DEPENDENCY.md` §1, §2 — TypeScript 6.0, Next.js 16.2.3 |
+| **Supersedes** | n/a |
 | **Superseded by** | c11-infra-security-headers (canonical infra implementation) |
 
 **Cross-references:**

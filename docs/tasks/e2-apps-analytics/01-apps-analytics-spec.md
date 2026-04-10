@@ -11,6 +11,7 @@
 | **Exit Criteria** | Analytics app deployed and displaying data |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit business need |
 | **Version Authority** | `DEPENDENCY.md` §2 — Next.js 16.2.3, React 19.2.5 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

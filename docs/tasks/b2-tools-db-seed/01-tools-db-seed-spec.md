@@ -11,6 +11,7 @@
 | **Exit Criteria** | Seed script working and documented |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit need |
 | **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

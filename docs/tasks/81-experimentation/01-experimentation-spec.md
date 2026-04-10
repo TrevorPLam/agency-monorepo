@@ -11,6 +11,7 @@
 | **Exit Criteria** | Experimentation utilities exported and used in at least one app |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app-level opt-in |
 | **Version Authority** | `DEPENDENCY.md` §2 — React 19.2.5 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

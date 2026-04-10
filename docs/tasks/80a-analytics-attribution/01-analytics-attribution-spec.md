@@ -11,6 +11,7 @@
 | **Exit Criteria** | Attribution helpers are extracted only after two consumers prove the same reporting and storage requirements |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit analytics need |
 | **Version Authority** | `DEPENDENCY.md` §8 — selected analytics lane |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

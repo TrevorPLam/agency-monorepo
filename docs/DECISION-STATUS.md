@@ -274,6 +274,236 @@ If exact version references disagree across documents:
 
 ---
 
+## Topic 6 — Tenant isolation and client-data safety
+
+### Status
+**Locked**
+
+### Core decision
+The repository adopts a default pooled multi-tenant isolation model with:
+- mandatory row-level `client_id` scoping for client-owned data
+- explicit tenant scope in client-owned query modules
+- RLS as defense-in-depth for client-owned tables
+- stronger isolation only by explicit trigger
+
+### Approved
+- row-level `client_id` scoping as the repository default
+- explicit tenant scope in all client-owned query helpers
+- RLS for client-owned tables once `@agency/data-db` is active
+- dual-tenant leakage testing for client-owned query paths
+- explicit exception paths for admin/reporting/migration/incident access
+
+### Conditional
+- schema-per-tenant isolation
+- dedicated database per tenant
+- dedicated deployment stamp per tenant class
+- stronger audit/compliance controls when a tenant or app requires them
+
+### Deferred
+- implementation of Topic 6 controls before Milestone 2 activation of `@agency/data-db`
+- portal-specific tenant-isolation implementation before `@agency/auth-portal` is approved
+
+### Rejected
+- auth/session alone as the isolation boundary
+- Neon branching as a tenant-security control
+- blanket “all client portals must be schema-per-tenant”
+- database-per-tenant as the repo-wide default
+- unscoped client-owned queries
+
+### Operating rule
+If a feature touches client-owned operational data:
+- tenant scope is mandatory
+- cross-tenant access is exceptional
+- stronger isolation requires explicit trigger review rather than default adoption
+
+---
+
+## Topic 7 — Marketing-site architecture in a shared monorepo
+
+### Status
+**Locked**
+
+### Core decision
+Public-facing sites live as separate apps in the shared monorepo.
+
+They share:
+- config
+- core
+- UI
+
+They do not centralize branded, page-specific, or campaign-specific logic by default.
+
+Marketing-domain packages remain thin, conditional infrastructure packages rather than an early shared website platform.
+
+### Approved
+- `apps/agency-website/` as the first validating public-site app
+- separate-app model for future public-facing sites
+- app-local-first handling of branded/page-specific/campaign-specific logic
+- trigger-based extraction of reusable marketing infrastructure
+
+### Conditional
+- `@agency/seo`
+- `@agency/compliance`
+- `@agency/compliance-security-headers`
+- `@agency/monitoring`
+- `@agency/monitoring-rum`
+- `@agency/data-cms`
+- `@agency/content-blocks`
+- client-specific brand-foundation packages
+
+### Deferred
+- full client-sites family standards
+- generalized multi-client website platform
+- early shared content-block architecture
+- client-site family conventions before a real client site is approved
+
+### Rejected
+- turning the agency website into a generalized public-site platform too early
+- extracting branded sections into shared packages early
+- using target-state package listings as approval for public-site package scaffolding
+- centralizing client-specific branding in shared packages
+
+### Operating rule
+If a public-facing site can work with app-local marketing logic in the current milestone:
+- keep it app-local
+- do not create shared marketing packages early
+
+---
+
+## Topic 8 — Next.js 16 as the repo-wide application platform
+
+### Status
+**Locked**
+
+### Core decision
+The repository adopts Next.js 16 App Router as the default framework for approved app surfaces.
+
+Route Handlers inside `app/` are the default early server model.
+
+A dedicated `apps/api` remains a later extraction path rather than a launch-default app.
+
+### Approved
+- Next.js 16 App Router as the default app platform
+- Route Handlers as the default early server interface
+- Vercel as the primary hosting target
+- adapter-aware portability as a design guardrail
+
+### Conditional
+- `apps/api`
+- separate worker/service processes
+- non-Vercel adapter work tied to a real approved app deployment
+
+### Deferred
+- `apps/api` in Milestone 1
+- separate backend framework adoption by default
+- early portability infrastructure
+- worker/service infrastructure before a real workload requires it
+
+### Rejected
+- creating `apps/api` in the launch slice
+- introducing a separate backend framework by default
+- treating target-state `apps/api` presence as implementation approval
+- treating “Next.js for all apps” as “all backend work must live inside Next.js forever”
+
+### Operating rule
+If an approved app needs server behavior:
+- use Route Handlers first
+- do not extract `apps/api` unless a real boundary and trigger exist
+
+---
+
+## Topic 9 — React 19 and React Compiler adoption policy
+
+### Status
+**Locked**
+
+### Core decision
+The repository is compiler-ready, but React Compiler remains off by default.
+
+The first approved enablement path is:
+- lint-first preparation
+- annotation-mode pilot in one approved app
+- broader enablement only after real pilot experience
+
+### Approved
+- `@agency/config-react-compiler` as the shared config lane
+- compiler-off-by-default posture
+- lint-first preparation
+- annotation mode as the first approved enablement mode
+- preserving manual memoization unless real cleanup is justified
+
+### Conditional
+- annotation-mode pilot in an approved app
+- later app-wide `infer` mode
+- shared-package compiler-related refactors under normal package-governance rules
+
+### Deferred
+- repo-wide default enablement in Milestone 1
+- infer-mode rollout by default
+- compiler-driven broad memoization cleanup
+
+### Rejected
+- blind compiler enablement at launch
+- `compilationMode: 'all'`
+- ad hoc per-app compiler policy outside the shared config lane
+- mass removing `useMemo` / `useCallback` by assumption
+
+### Operating rule
+If an app wants React Compiler:
+- prepare lint first
+- pilot annotation mode first
+- do not infer broader approval from framework support alone
+
+---
+
+## Topic 10 — Tailwind v4 and source-owned design system strategy
+
+### Status
+**Locked**
+
+### Core decision
+The repository adopts Tailwind v4’s CSS-first model with a source-owned shared design system.
+
+Package ownership is split as follows:
+- `@agency/config-tailwind` = Tailwind setup lane
+- `@agency/ui-theme` = semantic token lane
+- `@agency/ui-icons` = icon lane
+- `@agency/ui-design-system` = shared primitive/component lane
+
+### Approved
+- CSS-first Tailwind v4 architecture
+- explicit source-detection handling for shared UI packages
+- shadcn monorepo-aware shared design-system workflow by default
+- primitive-focused shared UI boundaries
+
+### Conditional
+- shared content blocks
+- client-specific brand-foundation packages
+- Storybook/Ladle activation
+- additional UI package splits
+
+### Deferred
+- branded/page-level shared compositions
+- client-brand token packages before real approval
+- content-block architecture before multiple real consumers exist
+
+### Rejected
+- JS preset-first Tailwind architecture as the default
+- token ownership spread across multiple packages
+- design-system use as a dumping ground for branded/page-specific code
+- early extraction of marketing sections into shared UI packages
+
+### Operating rule
+If a UI concern is:
+- branded,
+- page-specific,
+- campaign-specific, or
+- only used by one app,
+
+keep it app-local instead of moving it into `@agency/ui-design-system`.
+
+---
+
 ## Active repository decisions
 
 These are currently active and should govern implementation.
@@ -291,6 +521,12 @@ These are currently active and should govern implementation.
 | Dependency truth | `DEPENDENCY.md` only | Approved |
 | Internal dependency specifier | `workspace:*` only | Approved |
 | Exact-version duplication outside `DEPENDENCY.md` | not allowed | Rejected |
+| Tenant default | pooled row-level isolation + RLS defense-in-depth | Approved |
+| Public-site model | separate apps, app-local branded logic | Approved |
+| App platform | Next.js App Router by default | Approved |
+| Early server model | Route Handlers first | Approved |
+| React Compiler rollout posture | off by default, annotation-first pilot | Approved |
+| UI architecture | Tailwind v4 CSS-first, primitive-focused shared design system | Approved |
 | MCP server at current phase | not approved | Deferred |
 
 ---
@@ -301,13 +537,13 @@ These remain open and must not be auto-resolved by AI tools.
 
 | Decision | Status | Notes |
 |---|---|---|
-| Topic 6 — tenant isolation and client-data safety | Open | Not yet taken through the formal topic process |
-| Topic 7 — marketing-site architecture in shared monorepo | Open | Not yet taken through the formal topic process |
-| React Compiler launch enablement policy details | Open | High-level direction exists, but implementation policy still needs explicit doc if treated as active |
 | Biome adoption | Open | Explicitly pending evaluation in current repo docs |
 | Exact future generator requirements | Open | Generators are directionally approved later, but enforcement policy is not yet locked |
 | Rulesets vs classic branch protection implementation choice | Open | Governance intent is locked; GitHub mechanism detail may still be chosen |
 | Final pnpm catalog scope | Open | Selective catalog strategy is locked, exact initial catalog set is not yet finalized |
+| Detailed client-sites family architecture | Open | Deferred until a real client-facing site activates that lane |
+| Dedicated worker/service platform standards | Open | Deferred until a real workload requires it |
+| Repo-wide Storybook vs Ladle workbench decision | Open | Remains conditional/deferred until an actual component-workbench need exists |
 
 ### Open-decision rule
 If implementation touches an open decision:
@@ -343,6 +579,36 @@ The first validating app is the smallest correct real milestone: the agency webs
 **Replaced by:**  
 Exact version authority belongs in `DEPENDENCY.md` only.
 
+### Superseded assumption
+“Client portals should default to schema-per-tenant isolation.”
+
+**Replaced by:**  
+Default tenant isolation is pooled row-level scoping with RLS defense-in-depth; stronger isolation is trigger-based.
+
+### Superseded assumption
+“The agency website should evolve into a shared website platform immediately.”
+
+**Replaced by:**  
+Public-site apps stay separate; branded/public-site composition stays app-local until real reuse proves otherwise.
+
+### Superseded assumption
+“Next.js for all apps means every backend concern should live inside Next.js forever.”
+
+**Replaced by:**  
+Next.js App Router is the default app platform; dedicated API or worker/service lanes remain later, trigger-based extractions.
+
+### Superseded assumption
+“React Compiler support means enable it broadly.”
+
+**Replaced by:**  
+Compiler support and compiler rollout are different decisions; rollout is lint-first and annotation-first.
+
+### Superseded assumption
+“Shared design system means shared page compositions.”
+
+**Replaced by:**  
+The shared design system owns primitive reusable UI, not branded or page-specific compositions.
+
 ---
 
 ## Change control for this document
@@ -365,3 +631,4 @@ This document should be reviewed when:
 - a governance conflict appears between source docs
 - an AI implementation failure exposes missing or ambiguous decision logic
 - the repo enters a new milestone
+- a later QA pass finds factual/tooling drift in a locked topic

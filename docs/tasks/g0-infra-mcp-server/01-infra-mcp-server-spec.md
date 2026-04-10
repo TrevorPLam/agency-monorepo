@@ -11,6 +11,7 @@
 | **Exit Criteria** | MCP server deployed and serving context |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit tooling need |
 | **Version Authority** | `DEPENDENCY.md` §1 — Node.js 20.9.0, TypeScript 6.0 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

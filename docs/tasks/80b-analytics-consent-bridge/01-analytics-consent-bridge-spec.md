@@ -11,6 +11,7 @@
 | **Exit Criteria** | Shared consent-sync helpers are extracted only after direct app/provider integrations are duplicated |
 | **Implementation Authority** | `REPO-STATE.md` — Deferred until a shared cross-provider need is proven |
 | **Version Authority** | `DEPENDENCY.md` §2 — React 19.2.5 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

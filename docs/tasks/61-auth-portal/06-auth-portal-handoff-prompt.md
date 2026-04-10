@@ -99,7 +99,7 @@ export function createAuth(db: DatabaseClient) {
 ## Database Schema Requirements
 
 Before using this package:
-1. Run `npx auth@latest generate` to create Drizzle schema
+1. Run the Better Auth CLI generator command from the setup guide to create Drizzle schema
 2. Apply migrations: `pnpm --filter @agency/data-db drizzle:migrate`
 3. Verify tables: `user`, `session`, `account`, `verification`
 4. If using organizations: also `organization`, `member`, `invitation`
@@ -140,7 +140,7 @@ await auth.api.createOrganization({
 1. Build passes: `pnpm --filter @agency/auth-portal build`
 2. Typecheck passes: `pnpm --filter @agency/auth-portal typecheck`
 3. Lint passes: `pnpm --filter @agency/auth-portal lint`
-4. Schema generates: `npx auth@latest generate` works
+4. Schema generation step from the setup guide works
 5. Migrations apply: `drizzle-kit migrate` succeeds
 6. Test app can: sign up, sign in, access protected route, sign out
 

@@ -11,7 +11,7 @@
 ### Technical Constraints
 
 ### Version Requirements
-- **Biome**: v2.3+ (latest stable)
+- **Biome**: Validation pending until `DEPENDENCY.md` approves an exact evaluation pin
 - **ESLint**: Keep existing v9.3+ during migration
 - **Node.js**: 20.9.0+ (required for both tools)
 - **pnpm**: 10.33.0 (workspace protocol compatibility)

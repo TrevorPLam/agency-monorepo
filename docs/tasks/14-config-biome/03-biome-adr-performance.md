@@ -1,31 +1,31 @@
 # 14-config-biome: ADR - Performance-Focused Tooling
 
 ## Status
-**Accepted** - Adopt Biome as the primary linting and formatting tool for new projects.
+**Draft** - Evaluation note only; not accepted as the repo default.
 
 ## Context
-All new projects in the monorepo will use Biome by default for linting and formatting. Existing ESLint configurations will remain for gradual migration compatibility.
+The repository currently standardizes on ESLint for linting and Prettier for formatting. Biome may be evaluated later, but no repo-wide adoption is approved in the current planning phase.
 
 ## Decision
-We will standardize on Biome as the primary tooling solution for performance and maintainability.
+Keep Biome as a documented evaluation lane only. Do not adopt it as the primary tooling solution unless the decision and repo-state docs are updated first.
 
 ### Rationale
-1. **56x Performance**: Biome's Rust-based architecture delivers 56x faster linting than ESLint according to 2026 benchmarks
-2. **Single Tool**: Biome handles both linting and formatting, eliminating toolchain complexity
-3. **Modern Architecture**: Built for modern JavaScript/TypeScript with first-class TypeScript support
-4. **Gradual Migration**: Biome provides ESLint compatibility layer for smooth transition from existing ESLint setups
-5. **Workspace Awareness**: Native understanding of monorepo boundaries and workspace protocols
+1. The repo needs one canonical lane until there is explicit approval to change it
+2. Performance claims alone are not enough without boundary-rule and workflow parity
+3. Biome versioning is still evaluation-bound in `DEPENDENCY.md`
+4. A parallel default would increase documentation and implementation drift
+5. Any migration cost must be justified by real operational benefit
 
 ### Implementation Details
-- All new packages will use `@agency/config-biome` by default
-- Existing packages can opt into Biome migration when ready
-- ESLint compatibility layer available during transition period
-- Performance improvements immediate upon Biome adoption
+- No new packages use `@agency/config-biome` by default
+- Evaluation remains isolated to tooling research or explicit pilot work
+- ESLint + Prettier remain the canonical defaults until decision state changes
+- Any future adoption requires an explicit update to `DECISION-STATUS.md` and `REPO-STATE.md`
 
 ## Migration Strategy
-1. **Phase 1**: Biome for all new projects, ESLint for existing
-2. **Phase 2**: Gradual migration of existing packages to Biome-only
-3. **Phase 3**: Complete ESLint removal once all packages migrated
+1. Validate feature parity and repo fit first
+2. Record a decision update before any default-lane change
+3. Only then define a migration sequence for real consumers
 
 ## Consequences
-This decision delivers significant performance improvements while maintaining tooling flexibility during the migration period. Long-term, this simplifies the developer experience and reduces maintenance overhead.
+This keeps the tooling lane stable and prevents Biome from sounding canonical before the repo is ready to adopt it.

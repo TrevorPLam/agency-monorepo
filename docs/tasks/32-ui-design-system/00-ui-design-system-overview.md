@@ -58,6 +58,9 @@ Builds after theme and icons packages.
 ```
 
 ## shadcn/ui v4 Setup
+
+These commands are allowed **tool-only CLI usage**. They do not define runtime dependency pins for the repo.
+
 ```bash
 # Initialize in monorepo
 pnpm dlx shadcn@latest init -t next --monorepo

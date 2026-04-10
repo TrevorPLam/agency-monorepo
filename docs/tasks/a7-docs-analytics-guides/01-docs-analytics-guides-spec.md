@@ -16,6 +16,7 @@
 
 ## Cross-references
 
+- Decision status: `DECISION-STATUS.md` — analytics lanes and provider scope remain conditional outside this docs family
 - Owned directory: `docs/analytics/`
 - Related packages: `80-analytics`, `80a-analytics-attribution`, `80b-analytics-consent-bridge`, `81-experimentation`, `42-monitoring`
 - Marketing standards: `a4-docs-marketing-standards`

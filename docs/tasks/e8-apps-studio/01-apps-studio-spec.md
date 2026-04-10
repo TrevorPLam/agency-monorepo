@@ -16,6 +16,7 @@
 
 ## Cross-references
 
+- Decision status: `DECISION-STATUS.md` — Studio activation remains conditional on a real Sanity-backed site
 - Data lane: `51-data-cms`
 - Client-site family: `e10-apps-client-sites-foundation`
 - Environment management: `d2-infra-environment-mgmt`

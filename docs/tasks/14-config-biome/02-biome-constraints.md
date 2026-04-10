@@ -1,29 +1,29 @@
 # 14-config-biome: Implementation Constraints
 
 ## Purpose
-Define hard boundaries and constraints for Biome configuration to prevent configuration drift and ensure consistency across the monorepo.
+Define hard boundaries for Biome evaluation so the repo can compare it against the canonical ESLint + Prettier lane without drifting into unapproved default adoption.
 
 ## Hard Constraints
 
 ### Version Management
-- **Biome Version Lock**: All packages must use exact Biome 1.9.0 from workspace catalog
-- **No Manual Version Overrides**: Individual packages cannot override Biome version in their own package.json
-- **Catalog-Only Dependencies**: Use `catalog:biome` reference instead of direct version specifiers
+- **Biome Version Lock**: Evaluation targets must use the Biome version approved in `DEPENDENCY.md`
+- **No Manual Version Overrides**: Individual evaluation targets cannot override the approved Biome version in their own `package.json`
+- **Catalog-Only Dependencies**: Use catalog references or the repo-approved evaluation pin rather than ad hoc version specifiers
 
 ### Configuration Extensibility
-- **Base Configuration Only**: Packages must extend from base configuration, never configure Biome from scratch
-- **No Extending Extends Chains**: Maximum of one level of extension (base → specific overrides)
-- **Shared biome.json**: All packages must use `biome.json` filename, not project-specific names
+- **Base Configuration Only**: Evaluation targets should extend from the shared base configuration instead of inventing multiple Biome setups
+- **No Extending Extends Chains**: Maximum of one level of extension (base → target overrides)
+- **Shared `biome.json`**: Use `biome.json` consistently where Biome is being evaluated
 
 ### Performance Constraints
-- **56x Performance**: Must leverage Biome's Rust-based performance advantages
-- **Single Tool**: Biome must handle both linting and formatting, no separate formatter needed
-- **Workspace-Aware**: Configuration must respect monorepo boundaries and workspace protocol
+- **Measured Benchmarking**: Benchmark Biome against ESLint + Prettier on representative targets; do not treat marketing ratios as guaranteed outcomes
+- **No Default Toolchain Switch**: Biome evaluation must not replace ESLint + Prettier as the default lane
+- **Workspace-Aware**: Evaluation config must respect monorepo boundaries and workspace protocol
 
 ### Integration Requirements
-- **ESLint Compatibility**: Biome must provide ESLint compatibility layer for gradual migration
-- **TypeScript Integration**: Full TypeScript support with strict type checking
-- **IDE Integration**: VS Code Biome extension must work across workspace
+- **Canonical Lane Preservation**: ESLint + Prettier must remain intact while Biome is evaluated
+- **TypeScript Integration**: Evaluate TypeScript support against current strict type-checking expectations
+- **IDE Integration**: VS Code Biome extension must be assessed before any adoption recommendation
 
 ## Forbidden Patterns
 
@@ -46,36 +46,37 @@ Define hard boundaries and constraints for Biome configuration to prevent config
 - **Per-package biome.json**: Don't extend from other packages, only from `@agency/config-biome`
 - **Ignoring Biome errors**: Never use `// biome-ignore` without filing a Biome issue or ADR
 - **Performance Overrides**: Don't disable performance optimizations for convenience
+- **Silent Adoption**: Don't switch root `lint` or `format` scripts to Biome during evaluation
 
 ## Compliance Requirements
 
 ### Linting Rules
-- **Type Safety**: All type errors must be caught at lint time, not just build time
-- **Import Boundaries**: Enforce proper import boundaries via Biome rules
-- **Code Quality**: Maintain 90%+ code quality score across workspace
+- **Type Safety**: Assess whether Biome can cover required type-safety expectations without weakening the current lane
+- **Import Boundaries**: Verify that boundary-enforcement needs can be matched before recommending adoption
+- **Code Quality**: Compare rule coverage honestly rather than assuming parity
 
 ### Testing Requirements
-- **TypeScript Testing**: Use Biome's integrated test runner
-- **Type Coverage**: Maintain 90%+ type coverage for all shared packages
+- **Representative Targets**: Run Biome on realistic packages or fixtures that reflect actual repo needs
+- **Baseline Comparison**: Compare output and ergonomics against the current ESLint + Prettier lane
 
 ## Exit Criteria
 
-A Biome configuration is complete when:
-1. All packages extend from catalog-based base configuration
-2. Biome performance optimizations are enabled and working
-3. Linting catches type errors without configuration conflicts
-4. IDE integration provides full IntelliSense across workspace
-5. Documentation is comprehensive and tested
-6. Performance meets or exceeds baseline measurements
+A Biome evaluation is complete when:
+1. At least one approved evaluation target extends the shared Biome configuration
+2. Benchmark results are recorded against the current lint/format baseline
+3. Linting and boundary-enforcement gaps are documented honestly
+4. IDE integration and workflow tradeoffs are assessed
+5. Documentation is comprehensive and scoped to evaluation work
+6. The repo's default ESLint + Prettier lane remains unchanged
 
 ## Review Process
 
-1. **Architecture Review**: Verify configuration follows ARCHITECTURE.md dependency flow rules
-2. **Version Audit**: Confirm all packages use catalog Biome 1.9.0
-3. **Performance Testing**: Validate Biome's 56x performance advantage
-4. **IDE Validation**: Test VS Code Biome extension in complex package scenarios
-5. **Security Review**: Ensure no security vulnerabilities in Biome configuration
+1. **Architecture Review**: Verify evaluation work follows `ARCHITECTURE.md` dependency flow rules
+2. **Version Audit**: Confirm evaluation targets use the Biome version approved in `DEPENDENCY.md`
+3. **Performance Testing**: Benchmark Biome against the current ESLint + Prettier baseline
+4. **IDE Validation**: Test the VS Code Biome extension in representative package scenarios
+5. **Security Review**: Ensure Biome evaluation does not introduce unnecessary risk or workflow drift
 
 ## Consequences
 
-This decision enables significant performance improvements while maintaining strict type safety and code quality standards. The migration path allows gradual adoption while preserving existing ESLint setups during transition.
+This evaluation lane makes it possible to assess Biome rigorously while preserving the existing ESLint + Prettier defaults until a human decision explicitly changes them.

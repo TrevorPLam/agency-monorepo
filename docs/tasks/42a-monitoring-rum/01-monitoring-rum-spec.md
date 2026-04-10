@@ -11,6 +11,7 @@
 | **Exit Criteria** | RUM package exported and integrated |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit app opt-in |
 | **Version Authority** | `DEPENDENCY.md` §2, §10 — React 19.2.5, Sentry 10.x |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

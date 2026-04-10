@@ -11,6 +11,7 @@
 | **Exit Criteria** | Content blocks exported and used in at least one app |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit CMS need |
 | **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

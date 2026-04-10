@@ -11,6 +11,7 @@
 | **Exit Criteria** | CI workflow running on all PRs and main branch |
 | **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
 | **Version Authority** | `DEPENDENCY.md` §1, §3 — pnpm 10.33.0, Turborepo 2.9.5 |
+| **Supersedes** | n/a |
 | **Superseded by** | c3-infra-ci-workflow-v2 (deferred) |
 
 **Cross-references:**

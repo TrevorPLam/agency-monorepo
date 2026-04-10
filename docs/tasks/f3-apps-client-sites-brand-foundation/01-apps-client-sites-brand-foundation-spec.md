@@ -16,6 +16,7 @@
 
 ## Cross-references
 
+- Decision status: `DECISION-STATUS.md` — client brand-foundation extraction remains conditional
 - UI foundation: `30-ui-theme`, `32-ui-design-system`
 - Family owner: `e10-apps-client-sites-foundation`
 

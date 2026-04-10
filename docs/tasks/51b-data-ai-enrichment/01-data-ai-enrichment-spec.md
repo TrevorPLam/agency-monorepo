@@ -11,6 +11,7 @@
 | **Exit Criteria** | AI enrichment package exported and used |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit AI need |
 | **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**

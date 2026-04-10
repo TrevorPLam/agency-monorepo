@@ -10,7 +10,8 @@
 | **Dependencies** | None (documentation) |
 | **Exit Criteria** | Deployment guides published and current |
 | **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
-| **Version Authority** | Repository governance |
+| **Version Authority** | `DEPENDENCY.md` — repository toolchain baseline and provider validation rules |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**
@@ -41,8 +42,10 @@ Vercel is the **primary** deployment target for Next.js applications in this mon
 ### 1. Install Vercel CLI
 
 ```bash
-npm i -g vercel@latest
+npm i -g vercel
 ```
+
+This is tool-only CLI installation guidance. It does not authorize runtime `latest` usage in repo manifests.
 
 ### 2. Login to Vercel
 

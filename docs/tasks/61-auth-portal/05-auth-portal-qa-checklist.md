@@ -18,7 +18,7 @@
 - [ ] No imports from higher-level domains except `@agency/data-db`
 
 ### Database Schema
-- [ ] Better Auth tables created via `npx auth@latest generate`
+- [ ] Better Auth tables created via the approved Better Auth CLI generation step
 - [ ] Migrations applied to database
 - [ ] Relations defined in Drizzle schema (if using experimental joins)
 - [ ] Indexes on session table for performance

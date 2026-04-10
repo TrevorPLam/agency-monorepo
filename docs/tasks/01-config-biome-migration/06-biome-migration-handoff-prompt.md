@@ -2,7 +2,7 @@
 
 ## Task Context
 
-Implement Biome migration strategy for the agency monorepo, providing a gradual transition from ESLint + Prettier to Biome while maintaining rule coverage and minimizing risk.
+Evaluate the Biome migration strategy for the agency monorepo without changing the canonical ESLint + Prettier default lane unless the control docs are updated first.
 
 ## Required Reading
 
@@ -27,11 +27,11 @@ Create the Biome migration package with these files:
 
 ## Constraints
 
-- Use Biome v2.3+ for latest features
-- Follow hybrid migration approach from ADR
+- Use only the Biome version validated in `DEPENDENCY.md`; do not use `@latest`
+- Follow the evaluation-first approach from the ADR
 - Maintain ESLint for React Hooks and Unicorn rules
 - Ensure all packages work during transition
-- Complete migration within 4 weeks total
+- Do not change the default repo tooling lane during this task
 
 ## Verification Steps
 
@@ -55,7 +55,7 @@ Create the Biome migration package with these files:
 
 After migration completion:
 - Task 14: Update Biome configuration with team training results
-- Task 10: Update ESLint configuration with hybrid approach examples
+- Task 10: Update ESLint configuration only if a later decision changes the default lane
 
 ## Reference Materials
 

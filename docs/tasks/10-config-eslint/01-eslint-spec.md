@@ -10,21 +10,16 @@
 | **Dependencies** | ESLint 9.x, `@typescript-eslint/*`, `eslint-config-next@16.2.3` |
 | **Exit Criteria** | Root package.json, pnpm-workspace.yaml, turbo.json committed and verified |
 | **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
-| **Version Authority** | `DEPENDENCY.md` §1, §3 — pnpm 10.33.0 locked via packageManager |
+| **Version Authority** | `DEPENDENCY.md` §3 — ESLint, `@typescript-eslint`, and `eslint-config-next` |
 | **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 ## Cross-references
 
-- Decision status: `DECISION-STATUS.md` — pnpm workspaces + Turborepo `locked`
-- Version pins: `DEPENDENCY.md` §1, §3
-- Architecture: `ARCHITECTURE.md` — Final stack section
-
-**Cross-references:**
 - Decision status: `DECISION-STATUS.md` — ESLint canonical, Biome `open`
 - Version pins: `DEPENDENCY.md` §3, §18
 - Architecture: `ARCHITECTURE.md` — Linting configuration section
-- Related: Task 14 (14-config-biome) evaluation determines future canonical status
+- Related: `13-config-prettier` remains the canonical formatter; `14-config-biome` and `01-config-biome-migration` remain evaluation tracks only
 
 ## Files
 ```
@@ -48,10 +43,10 @@ packages/config/eslint-config/
     "./next": "./next.mjs"
   },
   "files": ["base.mjs", "next.mjs", "README.md"],
-  "peerDependencies": { "eslint": "^9.3.0" },
+  "peerDependencies": { "eslint": "^9.0.0" },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.57.0",
-    "@typescript-eslint/parser": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
     "eslint-config-next": "16.2.3",
     "eslint-plugin-import": "^2.31.0"
   },
@@ -59,7 +54,7 @@ packages/config/eslint-config/
 }
 ```
 
-ESLint 9 flat config has been the default configuration system since v9.0.0. Shared configuration packages must export flat config objects directly for use in `eslint.config.js`. `@typescript-eslint` v8.0.0 (latest minor versions ~8.56.1) includes all TypeScript linting rules and the ESLint parser. `eslint-config-next` v16.2.3 is the latest official Next.js configuration and includes Next-specific rules plus React and React Hooks recommendations.
+ESLint 9 flat config is the canonical lint lane. Shared configuration packages must export flat config objects directly for use in `eslint.config.js`. Use the approved ranges from `DEPENDENCY.md` instead of minor-version guidance embedded in task prose.
 
 ### `base.mjs`
 
@@ -99,41 +94,7 @@ export default [
       "no-restricted-imports": ["error", { patterns: [
         { group: ["../../apps/*", "../../../apps/*", "~/apps/*"], message: "Do not import from apps inside packages." },
         { group: ["../*/src/*", "../../*/src/*", "../../../*/src/*"], message: "Use the package's public exports, not internal src files." }
-      ] ]
-    }
-  },
-  // Biome configuration for hybrid approach
-  {
-    files: ["**/*.{js,mjs,cjs,ts,mts,cts,tsx,jsx}"],
-    languageOptions: {
-      parser: ts.parser,
-      parserOptions: { ecmaVersion: "latest", sourceType: "module" }
-    },
-    plugins: {
-      import: importPlugin,
-    },
-    rules: {
-      // Biome-specific rules (formatting, core linting)
-      "complexity/noForEach": "error",
-      "complexity/noStaticOnlyClass": "error",
-      "suspicious/noDoubleEquals": "error",
-      "style/noNegationElse": "off",
-      "style/useForOf": "error",
-      "style/useNodejsImportProtocol": "error",
-      "style/useNumberNamespace": "error",
-      "organizeImports": { "enabled": true },
-      // Disable Biome rules that conflict with ESLint plugins during migration
-      "complexity/noStaticOnlyClass": "off",
-      "suspicious/noDoubleEquals": "off"
-    },
-    // Biome formatter configuration
-    formatter: {
-      enabled: true,
-      formatWithErrors: true
-    },
-    // JavaScript globals for Biome
-    javascript: {
-      globals: ["Global1"]
+      ] }]
     }
   }
 ];

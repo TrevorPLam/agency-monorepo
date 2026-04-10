@@ -20,7 +20,7 @@ Compare ESLint rules vs Biome equivalents using rule mapping from `rule-mapping.
 
 ### 1.4 Install Biome
 ```bash
-pnpm add -D -w @biomejs/biome@latest
+pnpm add -D -w @biomejs/biome@<validated-version-from-dependency-md>
 ```
 
 ### 1.5 Initialize Configuration
@@ -28,13 +28,13 @@ pnpm add -D -w @biomejs/biome@latest
 npx @biomejs/biome init
 ```
 
-### 1.6 Configure Hybrid Approach
-Update `biome.json` to use Biome for:
+### 1.6 Configure Evaluation Approach
+Update `biome.json` to use Biome for bounded comparison only:
 - Formatting and core linting
 - Import organization
 - Basic style rules
 
-Keep ESLint for:
+Keep ESLint + Prettier as the canonical repo defaults during evaluation:
 - React Hooks rules
 - Unicorn rules
 - Custom agency plugins

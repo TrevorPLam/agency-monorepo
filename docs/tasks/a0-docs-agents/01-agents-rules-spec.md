@@ -10,7 +10,7 @@
 | **Dependencies** | None (meta documentation) |
 | **Exit Criteria** | `AGENTS.md` published and enforced |
 | **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
-| **Version Authority** | Repository governance |
+| **Version Authority** | `DEPENDENCY.md` — repository toolchain and dependency-governance baseline |
 | **Supersedes** | n/a |
 | **Superseded by** | n/a |
 

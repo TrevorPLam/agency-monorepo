@@ -11,6 +11,7 @@
 | **Exit Criteria** | CRM app deployed and used by agency team |
 | **Implementation Authority** | `REPO-STATE.md` — Conditional; requires explicit business need |
 | **Version Authority** | `DEPENDENCY.md` §2, §5 — Next.js 16.2.3, Clerk 7.0.12 |
+| **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**
@@ -71,7 +72,7 @@ apps/internal-tools/crm/
     "dev": "next dev --port 3001",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf .next"
   },
