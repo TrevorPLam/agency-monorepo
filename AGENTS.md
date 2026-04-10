@@ -87,8 +87,8 @@ When deciding what to do, use this order of authority:
 
 1. Direct owner instruction in the current session
 2. `docs/AGENTS.md`
-3. Relevant task folder docs
-4. Package-local `README.md`
+3. Relevant task documents in `docs/tasks/`
+4. Package-local `01-config-biome-migration-50-ref-quickstart.md`
 5. Package `CHANGELOG.md`
 6. Package `package.json`
 7. Existing code patterns already used in the repo
@@ -101,8 +101,8 @@ If sources conflict, stop and explain the conflict before changing code.
 
 Before modifying any shared package, you must read:
 
-1. The relevant task folder documents, if they exist
-2. The target package `README.md`
+1. The relevant task documents in `docs/tasks/`, if they exist
+2. The target package `01-config-biome-migration-50-ref-quickstart.md`
 3. The target package `CHANGELOG.md`
 4. The target package `package.json`
 5. The package `exports` field
@@ -123,17 +123,17 @@ If the package has no README, no exports, or unclear ownership, stop and report 
 
 ## Task document reading order
 
-If a task folder exists, read its documents in this order:
+If relevant task documents exist in `docs/tasks/`, read them in this order:
 
-1. `00-*-overview.md`
-2. `01-*-spec.md`
-3. `02-*-constraints.md`
-4. `03-*-adr-*.md`
-5. `04-*-guide-*.md`
-6. `05-*-qa-checklist.md`
-7. `06-*-handoff-prompt.md`
+1. `*-00-overview.md`
+2. `*-10-spec.md`
+3. `*-20-constraints.md`
+4. `*-30-adr-*.md`
+5. `*-40-guide-*.md`
+6. `*-60-qa-checklist.md`
+7. `*-70-execution-prompt.md`
 
-Treat the task folder as the implementation contract.
+Treat the relevant task documents as the implementation contract.
 
 Do not skip from the overview directly into coding.
 
@@ -398,7 +398,7 @@ Examples:
 
 Every shared package should have:
 
-- `README.md`
+- `01-config-biome-migration-50-ref-quickstart.md`
 - `CHANGELOG.md`
 - `package.json`
 - explicit `exports`

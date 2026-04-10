@@ -14,7 +14,7 @@ This directory is not a replacement for:
 - `ARCHITECTURE.md` — the broad system blueprint,
 - `DEPENDENCY.md` — pinned versions and upgrade policy,
 - `docs/AGENTS.md` — behavioral rules for AI agents,
-- `docs/tasks/README.md` — implementation sequencing and task inventory.
+- `docs/tasks/` — the flat task corpus for implementation sequencing and execution details.
 
 ## What belongs here
 
@@ -45,7 +45,7 @@ Do not put these here:
 
 - package usage guides; those belong in `docs/package-guides/`
 - step-by-step setup instructions; those belong in `docs/onboarding/`
-- implementation task breakdowns; those belong in `docs/tasks/README.md` or the relevant `docs/tasks/*/` family
+- implementation task breakdowns; those belong in the relevant flat task files under `docs/tasks/`
 - pinned versions; those belong in `DEPENDENCY.md`
 - temporary working notes for a single feature PR
 - low-impact coding conventions that are already obvious from linting or package docs
@@ -72,9 +72,9 @@ Use this structure:
 ```text
 docs/
   architecture/
-    README.md
+    01-config-biome-migration-50-ref-quickstart.md
     ADRs/
-      README.md
+      01-config-biome-migration-50-ref-quickstart.md
       000-template.md
       001-monorepo-tooling.md
       002-domain-grouped-package-structure.md
@@ -92,7 +92,7 @@ Use the following order when documents appear to overlap:
 3. Accepted ADRs for durable architectural decisions
 4. `docs/DECISION-STATUS.md` for in-flight decision status
 5. `ARCHITECTURE.md` for the broad system model and intended shape
-6. `docs/tasks/README.md` for implementation sequence and execution planning
+6. The relevant task files under `docs/tasks/` for implementation sequence and execution planning
 
 If two docs conflict, do not guess.
 Open the conflict explicitly and update the docs.
@@ -239,7 +239,7 @@ Do not duplicate package usage examples inside ADRs unless the example is necess
 
 ## Relationship to tasks
 
-`docs/tasks/README.md` and the `docs/tasks/*/` families are allowed to reference ADR work, but task docs should not become the permanent explanation layer.
+The flat task files under `docs/tasks/` are allowed to reference ADR work, but task docs should not become the permanent explanation layer.
 
 Use this split:
 - task docs = build sequence and implementation output
@@ -258,7 +258,7 @@ Update this directory when:
 Do not leave orphaned ADRs.
 Every ADR must be reachable from:
 - this file, or
-- `docs/architecture/ADRs/README.md`
+- `docs/architecture/ADRs/01-config-biome-migration-50-ref-quickstart.md`
 
 ## Cross-links
 
@@ -268,18 +268,19 @@ This directory should link to:
 - `../../DEPENDENCY.md`
 - `../AGENTS.md`
 - `../DECISION-STATUS.md`
-- `../package-guides/README.md`
+- `../package-guides/01-config-biome-migration-50-ref-quickstart.md`
 - `../onboarding/`
-- `./ADRs/README.md`
+- `./ADRs/01-config-biome-migration-50-ref-quickstart.md`
 
 ## Initial checklist
 
-- [ ] Create `docs/architecture/README.md`
-- [ ] Create `docs/architecture/ADRs/README.md`
+- [ ] Create `docs/architecture/01-config-biome-migration-50-ref-quickstart.md`
+- [ ] Create `docs/architecture/ADRs/01-config-biome-migration-50-ref-quickstart.md`
 - [ ] Create `docs/architecture/ADRs/000-template.md`
 - [ ] Create ADR 001
 - [ ] Create ADR 002
 - [ ] Create ADR 003
-- [ ] Link this directory from root `README.md`
+- [ ] Link this directory from root `01-config-biome-migration-50-ref-quickstart.md`
 - [ ] Link this directory from onboarding docs
 - [ ] Link accepted ADRs from `ARCHITECTURE.md` where relevant
+

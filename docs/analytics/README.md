@@ -8,7 +8,7 @@ It exists to keep event taxonomy, provider boundaries, dashboard naming, and env
 
 ## Ownership
 
-- Task family: `docs/tasks/a7-docs-analytics-guides/`
+- Task family: `docs/tasks/a7-docs-analytics-guides-00-overview.md`
 - Related packages: `80-analytics`, `80a-analytics-attribution`, `80b-analytics-consent-bridge`, `81-experimentation`, `81a-experimentation-edge`, `42-monitoring`, `42a-monitoring-rum`
 
 ## Scope
@@ -38,6 +38,7 @@ Do not let analytics docs turn into a mandate for multi-provider abstraction or 
 
 When adding or changing analytics guidance:
 
-1. Read `docs/tasks/a7-docs-analytics-guides/` first.
+1. Read `docs/tasks/a7-docs-analytics-guides-00-overview.md` first.
 2. Confirm the provider boundary still matches `docs/DECISION-STATUS.md` and `docs/ARCHITECTURE.md`.
 3. Update the relevant package task family if the change affects implementation planning.
+

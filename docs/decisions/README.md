@@ -8,7 +8,7 @@ Use it for non-trivial repository decisions that need context, owner, date, and 
 
 ## Ownership
 
-- Task family: `docs/tasks/a8-docs-decisions-log/`
+- Task family: `docs/tasks/a8-docs-decisions-log-00-overview.md`
 - Related directories: `docs/architecture/`, `docs/tasks/`
 
 ## What belongs here
@@ -61,3 +61,4 @@ Use this shape for future decision entries:
 ## Promotion rule
 - Promote to ADR if it becomes durable, high-blast-radius, or hard to reverse
 ```
+

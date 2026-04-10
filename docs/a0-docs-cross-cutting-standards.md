@@ -6,10 +6,10 @@ This file is a high-level index only.
 
 Authoritative cross-cutting rules now live in dedicated task families and standards:
 
-- Tenant isolation: `docs/tasks/a5-docs-tenant-isolation-data-governance/` and `docs/standards/tenant-isolation-data-governance.md`
-- Dependency truth: `docs/tasks/a6-docs-dependency-truth-version-authority/` and `docs/standards/dependency-truth.md`
-- Analytics documentation governance: `docs/tasks/a7-docs-analytics-guides/` and `docs/analytics/README.md`
-- Decision-log governance: `docs/tasks/a8-docs-decisions-log/` and `docs/decisions/README.md`
+- Tenant isolation: `docs/tasks/a5-docs-tenant-isolation-data-governance-00-overview.md` and `docs/standards/tenant-isolation-data-governance.md`
+- Dependency truth: `docs/tasks/a6-docs-dependency-truth-version-authority-00-overview.md` and `docs/standards/dependency-truth.md`
+- Analytics documentation governance: `docs/tasks/a7-docs-analytics-guides-00-overview.md` and `docs/analytics/01-config-biome-migration-50-ref-quickstart.md`
+- Decision-log governance: `docs/tasks/a8-docs-decisions-log-00-overview.md` and `docs/decisions/01-config-biome-migration-50-ref-quickstart.md`
 
 Do not treat this file as the detailed implementation contract for those areas, and do not duplicate or override the dedicated standards here.
 
@@ -189,3 +189,5 @@ These standards are enforced through:
 ### Version History
 - v1.0 - Initial cross-cutting standards definition
 - Established April 2026 as part of repository correction phase
+
+

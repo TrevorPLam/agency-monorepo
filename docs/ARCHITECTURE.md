@@ -14,7 +14,7 @@
 > - `DEPENDENCY.md` — exact version authority for all dependencies
 > - `ARCHITECTURE.md` — target state design (reference only)
 
-*Last revised: April 2026. Synchronized with docs/tasks/README.md (95 task families, verified April 9, 2026).*
+*Last revised: April 2026. Synchronized with the flat docs/tasks corpus (verified April 9, 2026).*
 
 ***
 
@@ -167,7 +167,7 @@ agency-monorepo/
 │   ├── package-guides/                # per-package usage documentation
 │   ├── marketing/                     # marketing standards documentation
 │   ├── standards/                     # a5/a6: cross-cutting governance standards
-│   └── tasks/                         # canonical task system and index
+│   └── tasks/                         # canonical flat task corpus
 │
 ├── .changeset/
 ├── .github/
@@ -178,11 +178,10 @@ agency-monorepo/
 │   └── CODEOWNERS
 ├── ARCHITECTURE.md                    # this file
 ├── DEPENDENCY.md                      # version locks and upgrade strategy
-├── tasks/                             # legacy planning stubs to migrate or archive
 ├── package.json
 ├── pnpm-workspace.yaml
 ├── turbo.json
-└── README.md
+└── 01-config-biome-migration-50-ref-quickstart.md
 ```
 
 ### Conditional apps (add only when the need is confirmed)
@@ -355,7 +354,7 @@ The ESLint configuration in `@agency/config-eslint` includes `no-restricted-path
 
 Build in this sequence. Do not skip ahead.
 
-1. Root scaffolding: `pnpm-workspace.yaml`, `turbo.json` (using `tasks` key), root `package.json` (pnpm 10.33.0, Node 24.x engine), `.gitignore`, `.nvmrc` (24.0.0), README.md.
+1. Root scaffolding: `pnpm-workspace.yaml`, `turbo.json` (using `tasks` key), root `package.json` (pnpm 10.33.0, Node 24.x engine), `.gitignore`, `.nvmrc` (24.0.0), 01-config-biome-migration-50-ref-quickstart.md.
 2. `@agency/config-eslint` — boundary rules must exist before any other package is created.
 3. `@agency/config-typescript` — all subsequent packages extend from this.
 4. `@agency/config-tailwind` — Tailwind v4 CSS-first theme.
@@ -529,7 +528,7 @@ For UI component development, **Ladle** is recommended as the lighter, faster st
 ### Documentation standard
 
 Every shared package requires:
-- `README.md` explaining the package's purpose, consumers, installation, and at least one usage example
+- `01-config-biome-migration-50-ref-quickstart.md` explaining the package's purpose, consumers, installation, and at least one usage example
 - `CHANGELOG.md` generated and maintained by Changesets
 - `package.json` with a complete `exports` field
 - Local test scripts runnable with a single pnpm command
@@ -567,7 +566,7 @@ The `docs/AGENTS.md` file must be explicit, unambiguous, and treated as a hard c
 The file must contain at minimum:
 
 **Reading requirements before touching any shared package:**
-- Read the package's `README.md` and `CHANGELOG.md` before generating any code.
+- Read the package's `01-config-biome-migration-50-ref-quickstart.md` and `CHANGELOG.md` before generating any code.
 - Read the package's `package.json` `exports` field. Never import from a path not listed in `exports`.
 - Read `ARCHITECTURE.md` for the full dependency flow before adding any import.
 - Read `DEPENDENCY.md` for pinned versions before installing any package.
@@ -614,7 +613,7 @@ Priority: clarity and velocity over comprehensive governance.
 - Keep packages few. Start with only `config`, `core-types`, `core-utils`, `ui-design-system`, and `seo`. Add others when actual duplication appears.
 - Use Turborepo with pnpm and affected-only CI from day one.
 - Enable remote caching immediately — zero-configuration with Vercel.
-- Write `README.md` and `package.json` exports for every package before the first consumer imports it.
+- Write `01-config-biome-migration-50-ref-quickstart.md` and `package.json` exports for every package before the first consumer imports it.
 - Start `AGENTS.md` and `CODEOWNERS` on the first day.
 
 ### Growth stage (10–30 apps, 3–8 developers)
@@ -670,3 +669,4 @@ Priority: governance, compliance, and distributed execution.
 Start with a **domain-grouped pnpm/Turborepo monorepo** that uses **explicit package scopes, public `exports` fields, `workspace:*` internal dependencies, Turborepo remote caching from day one, Changesets, CODEOWNERS, and strong AI agent rules baked into `docs/AGENTS.md`**. Keep the package system small and strictly disciplined at launch — six to eight packages to begin — but shape every structural decision so that Nx boundary enforcement, private-registry publishing, per-package consumer smoke tests, stronger ownership, codemods, and multi-team governance can be added later without restructuring.
 
 The agency's long-term competitive advantage is not any individual client project — it is the accumulated shared infrastructure that makes each new project faster, more consistent, and more maintainable than the last. That infrastructure compounds only if the monorepo's architecture prevents it from degrading into a collection of poorly-connected apps that happen to share a Git root. The discipline described in this document — dependency flow rules, explicit exports, versioning discipline, CI rigor, and agent guardrails — is what keeps the infrastructure compounding rather than corroding.
+

@@ -11,7 +11,7 @@
 > 1. `REPO-STATE.md`
 > 2. `DECISION-STATUS.md`
 > 3. `DEPENDENCY.md`
-> 4. package-level README.md + `package.json` `exports`
+> 4. package-level 01-config-biome-migration-50-ref-quickstart.md + `package.json` `exports`
 > 5. `ARCHITECTURE.md` (target-state reference only)
 
 ---

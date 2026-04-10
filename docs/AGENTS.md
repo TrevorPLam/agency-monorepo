@@ -22,7 +22,7 @@ Before making any change, follow this document order:
 1. `REPO-STATE.md`
 2. `DECISION-STATUS.md`
 3. `DEPENDENCY.md`
-4. package-level `README.md`
+4. package-level `01-config-biome-migration-50-ref-quickstart.md`
 5. package-level `CHANGELOG.md` if shared package work is involved
 6. package-level `package.json` `exports`
 7. `ARCHITECTURE.md`
@@ -288,7 +288,7 @@ If they drift, stop and escalate.
 When changing a shared package:
 
 ### You must read first
-- package `README.md`
+- package `01-config-biome-migration-50-ref-quickstart.md`
 - package `CHANGELOG.md`
 - package `exports`
 - `DEPENDENCY.md`
