@@ -1,78 +1,86 @@
 # Agency Monorepo — Dependency Governance
 
 > **Purpose of this document**  
-> This is not a technology wishlist. It is a *governance contract* — the authoritative reference that controls which dependencies exist, where they live, when they are allowed to be installed, and what conditions must be met before any conditional package is activated.
+> This is the repository’s dependency governance contract.
 >
-> AI coding tools must read this document before installing anything.
+> It controls:
+> - which dependencies are allowed
+> - where they belong
+> - when conditional packages may be activated
+> - which provider lanes are approved by default
+> - how exact versions, approved ranges, and validation-pending rows should be interpreted
 >
-> No dependency outside this contract may be added without updating this document first.
+> This is **not** a technology wishlist.
+>
+> AI coding tools must read this file before installing anything.
+> If a dependency is not allowed here, it is not allowed in the repo.
 
-***
+---
 
 ## How to use this document
 
-1. **Before installing any package** — look up which internal package owns that dependency. Install it there, not in an app.
-2. **Before creating a new package** — verify its trigger condition is met (see §14).
-3. **Before choosing a provider** — consult the provider lane table for that category. Do not invent a new provider.
-4. **When a client has unusual needs** — consult §15 Client-Profile Routing to select the right lane.
-5. **"Do not build yet" items** — packages marked 🔒 in §14 must not be scaffolded until their trigger is satisfied.
+1. **Before installing a package** — check which internal package owns it.
+2. **Before activating a conditional package** — verify the trigger in §14 and check `REPO-STATE.md`.
+3. **Before choosing a provider** — use the approved provider lane for that domain.
+4. **Before upgrading a dependency** — update this document first, then manifests, lockfile, and CI as needed.
+5. **When a later-stage package is still inactive** — treat `Validation pending at activation` as a stop/escalate marker, not as permission to guess.
 
-***
+---
 
-## Dependency Truth Policy
+## Dependency truth policy
 
-This section defines the classification system for dependency versions in this repository. Every dependency entry must fall into one of these four categories:
+This repository uses four dependency-authority classes.
 
 | Classification | Meaning | Example |
-|---|---|---|
-| **Verified exact pin** | Version confirmed from official source (registry, changelog, or docs) | `pnpm@10.33.0`, `react@19.2.5` |
-| **Approved range** | Semver range approved for non-runtime or lower-risk dependencies | `^9.0.0` for ESLint 9.x |
-| **Tool-only latest** | Acceptable for CLI tools invoked by generators, not runtime dependencies | `pnpm dlx shadcn@latest` |
-| **Validation pending** | Placeholder requiring verification before active implementation | Marked with ⚠️ in tables |
+| --- | --- | --- |
+| **Verified exact pin** | Safe to use as implementation authority now | `pnpm@10.15.1` |
+| **Approved range** | Semver range intentionally allowed | `eslint@^9.0.0` |
+| **Validation pending at activation** | Do not install until the package/domain is actually activated and the pin is re-confirmed | `better-auth` in an inactive portal lane |
+| **Tool-only latest** | Allowed only in one-off CLI commands, never in repo manifests | `npx create-next-app@latest` |
 
-**Normalization note:** In the tables below, non-exact values are labeled explicitly as either `Approved range:` or `⚠️ Validation pending` so ambiguous placeholders like `latest` are not used as implementation authority.
+### Non-negotiable rules
+- `latest` is never allowed in repo manifests.
+- Exact version authority belongs here, not in `ARCHITECTURE.md`.
+- If a later-stage row is marked **Validation pending at activation**, do not treat it as implementation authority yet.
+- Human authority lives here; machine truth lives in manifests, lockfile, workspace config, and CI.
 
-### When `latest` is allowed
+### Normalization note
+This final corrected version intentionally removes or softens time-sensitive commercial details that are likely to drift, especially:
+- free-tier counts
+- pricing specifics
+- provider quotas
+- inactive-lane exact pins not needed yet
 
-- **Never** for runtime dependencies in `package.json` files
-- **Never** for internal package version pins
-- **Only** for:
-  - generator/tool commands explicitly labeled as tool commands
-  - research placeholders that are not implementation authority
-  - documented CLI setup flows where the repo is not pinning the CLI itself
+Those details should be validated **at activation time**, not treated as stable planning truth.
 
-### Stale pin correction process
+---
 
-When a version pin is found to be outdated:
-1. Verify the new version from official source
-2. Update this document (`DEPENDENCY.md`) first
-3. Update all referencing documents
-4. Run `pnpm install` to update the lockfile
-5. Test in at least one consuming app before merging
+## §1 · Runtime, package manager, and compiler baseline
 
-***
+Global baseline. These are the highest-priority dependency truths in the repository.
 
-## §1 · Runtime, Package Manager & Compiler Baseline
+| Tool | Policy | Source of truth |
+| --- | --- | --- |
+| **Node.js** | **24.x LTS** | `.nvmrc` + root `package.json` `engines.node` |
+| **pnpm** | **10.15.1** | root `package.json` `packageManager` |
+| **TypeScript** | **5.8.3** | `@agency/config-typescript` |
 
-Global baseline. These values are authoritative. Do not override per-package.
+### Baseline rules
+- Node must stay on an LTS line for production use.
+- Root version references must stay aligned across `.nvmrc`, `engines.node`, `packageManager`, and CI.
+- TypeScript 5.8.3 is the corrected baseline. Do not use older draft references to TypeScript 6.x as current implementation authority.
 
-| Tool | Pin | Minimum | Source of truth |
-| --- | --- | --- | --- |
-| **Node.js** | 24.x LTS | 20.9.0 | `.nvmrc` + `engines` in root `package.json` |
-| **pnpm** | 10.33.0 | 10.x | `packageManager` field in root `package.json` |
-| **TypeScript** | 6.0.2 | 5.x | `devDependencies` in `@agency/config-typescript` |
-
-**TS 6.0 note** — `--moduleResolution node` has been removed; `@agency/config-typescript` must use `moduleResolution: "bundler"` or `"nodenext"`.
-
-**Root `package.json` required fields:**
+### Root `package.json` required fields
 ```json
 {
-  "packageManager": "pnpm@10.33.0",
-  "engines": { "node": ">=20.9.0" }
+  "packageManager": "pnpm@10.15.1",
+  "engines": {
+    "node": ">=20.9.0"
+  }
 }
 ````
 
-**`pnpm-workspace.yaml` minimum:**
+### `pnpm-workspace.yaml` minimum
 
 ```yaml
 packages:
@@ -83,586 +91,464 @@ packages:
 
 ---
 
-## §2 · Core Framework & Styling
+## §2 · Core framework and styling baseline
 
-These three must always be installed as a coordinated trio. Never install one without pinning all three.
+These packages define the repo-wide frontend platform baseline.
 
-| Package     | Pin        | Notes                         |
-| ----------- | ---------- | ----------------------------- |
-| `next`      | **16.2.3** | App Router-first.             |
-| `react`     | **19.2.5** | Required pairing for Next 16. |
-| `react-dom` | **19.2.5** | Must match `react` exactly.   |
+| Package        | Policy      | Notes                            |
+| -------------- | ----------- | -------------------------------- |
+| `next`         | **16.2.0**  | App Router default               |
+| `react`        | **19.2.0**  | Must pair with React DOM exactly |
+| `react-dom`    | **19.2.0**  | Must match `react` exactly       |
+| `tailwindcss`  | **4.1.12**  | CSS-first Tailwind v4 baseline   |
+| `postcss`      | **8.5.6**   | PostCSS pipeline dependency      |
+| `autoprefixer` | **10.4.21** | Standard PostCSS companion       |
 
-### Tailwind CSS v4
+### Core framework rules
 
-| Package        | Pin         | Notes                                                                 |
-| -------------- | ----------- | --------------------------------------------------------------------- |
-| `tailwindcss`  | **4.2.2**   | CSS-first. `@theme` and `@source` replace the old preset-heavy model. |
-| `postcss`      | **8.5.9**   | Required for the Next CSS pipeline.                                   |
-| `autoprefixer` | **10.4.27** | Standard PostCSS peer.                                                |
+* Next.js App Router is the default application model.
+* Route Handlers remain the default early server model.
+* `apps/api` is not approved by default.
+* Next.js 16.2 is the baseline framework family for this repo.
+* React 19.2 is the baseline React family for this repo.
 
-### Tailwind ownership rule
+### Tailwind v4 rules
 
-**`@agency/config-tailwind` owns the Tailwind setup contract.**
-It does **not** own the long-term semantic token contract.
+* Tailwind is CSS-first.
+* `@agency/config-tailwind` must export CSS, not a JS preset.
+* Use `@theme` for tokens.
+* Use `@source` when shared workspace UI sources must be registered explicitly.
+* Do not rely on older preset-first Tailwind patterns from pre-v4 workflows.
 
-**`@agency/ui-theme` owns semantic tokens and theme CSS.**
-
-#### `@agency/config-tailwind`
-
-Exports:
-
-* shared Tailwind setup/import contract
-* low-level CSS conventions
-* source-detection guidance for shared workspaces
-
-Does **not** own:
-
-* semantic theme tokens
-* branded token sets
-* component source
-
-#### `@agency/ui-theme`
-
-Exports:
-
-* semantic token/theme CSS
-* light/dark theme mappings
-* shared brand-agnostic theme variables
-
-### Consuming-app pattern
-
-Apps should follow the split:
+### Example consuming pattern
 
 ```css
-@import "tailwindcss";
-@import "@agency/config-tailwind/setup.css";
-@import "@agency/ui-theme/theme.css";
-
-/* Register shared workspace sources when needed */
+@import "@agency/config-tailwind/theme.css";
 @source "../../packages/ui/design-system/src";
 ```
 
-### shadcn/ui monorepo workflow
+---
 
-shadcn/ui is **not** an installable package.
+## §3 · Shared UI / shadcn stack
 
-Use the monorepo-aware CLI workflow:
+These are the core shared UI dependencies used by the approved UI packages.
 
-* run the `add` command from the app path
-* let the CLI install shared reusable components into the shared UI workspace
-* keep app-specific compositions in the app when they are truly app-local
+| Package                    | Policy                                | Owned by                   |
+| -------------------------- | ------------------------------------- | -------------------------- |
+| `lucide-react`             | **0.473.0**                           | `@agency/ui-icons`         |
+| `clsx`                     | **2.1.1**                             | `@agency/ui-design-system` |
+| `tailwind-merge`           | **3.3.1**                             | `@agency/ui-design-system` |
+| `class-variance-authority` | **0.7.1**                             | `@agency/ui-design-system` |
+| `@radix-ui/react-*`        | **Exact pin per installed component** | `@agency/ui-design-system` |
 
-#### Required shadcn monorepo rules
+### shadcn/ui rules
 
-* every relevant workspace has a `components.json`
-* `tailwind.config` stays empty in `components.json` for Tailwind v4
-* shared workspaces keep the same `style`, `iconLibrary`, and `baseColor`
-* shared reusable components belong in `@agency/ui-design-system`
-* app-local one-offs remain app-local
-
-### shadcn/Radix/UI support packages
-
-| Package                    | Pin                               | Owned by                   |
-| -------------------------- | --------------------------------- | -------------------------- |
-| `@radix-ui/react-*`        | exact pin per installed component | `@agency/ui-design-system` |
-| `lucide-react`             | ⚠️ Validation pending             | `@agency/ui-icons`         |
-| `clsx`                     | **2.1.1**                         | `@agency/ui-design-system` |
-| `tailwind-merge`           | **3.5.0**                         | `@agency/ui-design-system` |
-| `class-variance-authority` | **0.7.1**                         | `@agency/ui-design-system` |
-
-### React Compiler (`@agency/config-react-compiler`)
-
-React Compiler is **supported but not enabled by default**.
-
-#### Repo policy
-
-* compiler-off by default
-* lint first
-* annotation-mode pilot first
-* no repo-wide rollout in Milestone 1
-
-#### When the first approved pilot happens
-
-* install `babel-plugin-react-compiler`
-* enable `reactCompiler` in `next.config.ts`
-* start with annotation mode
-* surface compiler diagnostics through `eslint-plugin-react-hooks`
-
-#### Important rule
-
-`eslint-plugin-react-hooks` is the default lint surface for compiler diagnostics.
-
-Do **not** treat `eslint-plugin-react-compiler` as the default repo lint lane.
-
-Apps consume compiler policy from `@agency/config-react-compiler`; they do not invent their own compiler policy.
+* shadcn/ui is not installed as a runtime package.
+* Use the CLI into the shared design-system lane when appropriate.
+* For Tailwind v4, keep Tailwind config path blank in `components.json`.
+* Keep workspace/path settings aligned across workspaces.
+* Do not treat shadcn as permission to widen the design system into branded page composition.
 
 ---
 
-## §3 · Monorepo Tooling
+## §4 · Monorepo tooling baseline
 
-> **Next.js 16 breaking change:** `next lint` is removed. Configure ESLint directly.
+These are the repo-governance and workspace-tooling dependencies.
 
-| Package                            | Pin                      | Purpose                                                   |
-| ---------------------------------- | ------------------------ | --------------------------------------------------------- |
-| `turbo`                            | **2.9.5**                | Task orchestration above pnpm workspaces                  |
-| `@changesets/cli`                  | **2.30.0**               | Versioning and changelogs                                 |
-| `eslint`                           | Approved range: `^9.0.0` | Base linter                                               |
-| `eslint-config-next`               | **16.2.3**               | Must match the Next pin                                   |
-| `@typescript-eslint/parser`        | Approved range: `^8.0.0` | TS-aware ESLint parser                                    |
-| `@typescript-eslint/eslint-plugin` | Approved range: `^8.0.0` | TS ESLint rules                                           |
-| `eslint-plugin-react-hooks`        | ⚠️ Validation pending    | Standard hooks lint path and compiler diagnostics surface |
-| `@types/node`                      | **25.5.2**               | Node typings for apps and tools                           |
+| Package                            | Policy                               | Purpose                                                         |
+| ---------------------------------- | ------------------------------------ | --------------------------------------------------------------- |
+| `turbo`                            | **2.5.6**                            | Task orchestration                                              |
+| `@changesets/cli`                  | **2.29.6**                           | Versioning/changelog intent                                     |
+| `eslint`                           | **Approved range: ^9.0.0**           | Lint baseline                                                   |
+| `@typescript-eslint/parser`        | **Approved range: ^8.0.0**           | TS parser                                                       |
+| `@typescript-eslint/eslint-plugin` | **Approved range: ^8.0.0**           | TS lint rules                                                   |
+| `prettier`                         | **3.6.2**                            | Formatting                                                      |
+| `eslint-config-next`               | **Validation pending at activation** | Reconfirm exact pin against chosen Next 16.2 install before use |
+| `@types/node`                      | **Validation pending at activation** | Reconfirm against active Node 24 lane before use                |
 
-**All internal dependencies use `workspace:*`** so pnpm resolves locally and Changesets can bump versions correctly.
+### Tooling rules
 
----
-
-## §4 · Database Layer
-
-### Provider Strategy
-
-| Lane                            | Provider                  | Role                                    | Free Tier (verify before use) | Best Fit                                  |
-| ------------------------------- | ------------------------- | --------------------------------------- | ----------------------------- | ----------------------------------------- |
-| **Primary**                     | **Neon**                  | Serverless Postgres, branching workflow | verify before use             | Branch-heavy dev, PR preview DBs          |
-| **Fallback / Integrated**       | **Supabase**              | Postgres + Auth + Storage bundle        | verify before use             | All-in-one clients                        |
-| **Enterprise / Cloud-standard** | **AWS Aurora PostgreSQL** | Managed Postgres                        | verify before use             | AWS-procurement clients                   |
-| **Alternative managed**         | **Aiven**                 | Managed Postgres                        | verify before use             | Managed ops without Neon/Supabase lock-in |
-
-**Drizzle ORM is the mandatory abstraction layer.**
-Apps never talk directly to a provider. All queries go through `@agency/data-db`.
-
-### Runtime Packages (`@agency/data-db`)
-
-| Package                    | Pin                   | Role                               |
-| -------------------------- | --------------------- | ---------------------------------- |
-| `drizzle-orm`              | **0.45.2**            | ORM layer                          |
-| `drizzle-kit`              | **0.31.10**           | Migrations CLI                     |
-| `@neondatabase/serverless` | **1.0.2**             | Neon driver                        |
-| `@supabase/supabase-js`    | **2.103.0**           | Supabase client                    |
-| `pg`                       | ⚠️ Validation pending | Optional classic TCP Postgres lane |
-
-### Tooling Rules
-
-* switch providers via environment variables
-* use one migration workflow
-* never install a database driver directly in an app
+* `turbo.json` must use `tasks`, not `pipeline`.
+* Use direct ESLint invocation, not `next lint`.
+* Keep parser/plugin majors aligned for `@typescript-eslint/*`.
+* Do not widen lint/build tooling by convenience.
 
 ---
 
-## §5 · Auth Layer
+## §5 · React Compiler config lane
 
-### Provider Matrix
+| Package                        | Policy                               | Owned by                        |
+| ------------------------------ | ------------------------------------ | ------------------------------- |
+| `babel-plugin-react-compiler`  | **Validation pending at activation** | `@agency/config-react-compiler` |
+| `eslint-plugin-react-compiler` | **Validation pending at activation** | `@agency/config-react-compiler` |
 
-| Lane                          | Provider          | Package                 | Cost Model  | Data Ownership | Best Fit                        |
-| ----------------------------- | ----------------- | ----------------------- | ----------- | -------------- | ------------------------------- |
-| **Internal tools — Primary**  | **Clerk**         | `@clerk/nextjs`         | Managed     | Vendor-managed | Internal dashboards, team tools |
-| **Client portals — Primary**  | **Better Auth**   | `better-auth`           | Self-hosted | You own data   | Client portals that may scale   |
-| **OSS / full control**        | **Auth.js**       | `next-auth`             | Self-hosted | You own data   | OSS / full control              |
-| **Integrated fallback**       | **Supabase Auth** | `@supabase/supabase-js` | Bundled     | Managed        | When already using Supabase     |
-| **Enterprise SSO escalation** | **WorkOS**        | REST / SDK              | Managed     | Vendor-managed | Enterprise SAML / SCIM          |
+### React Compiler rules
 
-### Package Pins
-
-**`@agency/auth-internal`**
-
-| Package         | Pin        |
-| --------------- | ---------- |
-| `@clerk/nextjs` | **7.0.12** |
-
-**`@agency/auth-portal`**
-
-| Package                        | Pin       |
-| ------------------------------ | --------- |
-| `better-auth`                  | **1.6.2** |
-| `@better-auth/drizzle-adapter` | **1.6.2** |
-
-### Selection Rules
-
-* never mix auth providers within the same app
-* Better Auth integrates with `@agency/data-db`
-* WorkOS is escalation only
+* Compiler support is allowed.
+* Compiler rollout is off by default.
+* Use lint-first preparation.
+* First enablement should be an annotation-first pilot.
+* Do not mass-remove manual memoization by assumption.
 
 ---
 
-## §6 · Email Stack
+## §6 · Operational data lane
 
-### Architecture Rule
+This domain is not approved in Milestone 1, but its default future lane is already locked.
 
-`@agency/email-templates` handles rendering only.
-`@agency/email-service` handles delivery only.
-Apps call `@agency/email-service` and never touch provider SDKs directly.
+### Default provider lane
 
-### Template Package (`@agency/email-templates`)
+* **PostgreSQL**
+* **Neon** as the default provider
+* **Drizzle** as the mandatory schema/query/migration abstraction
 
-| Package                       | Pin        | Notes                   |
-| ----------------------------- | ---------- | ----------------------- |
-| `@react-email/components`     | **1.0.12** | Component primitives    |
-| `@react-email/preview-server` | **5.2.10** | Dev preview server only |
+### Allowed runtime packages for `@agency/data-db`
 
-### Transport Providers (`@agency/email-service`)
+| Package                    | Policy                               | Notes                                    |
+| -------------------------- | ------------------------------------ | ---------------------------------------- |
+| `drizzle-orm`              | **Validation pending at activation** | Mandatory ORM layer                      |
+| `drizzle-kit`              | **Validation pending at activation** | Migration tooling                        |
+| `@neondatabase/serverless` | **Validation pending at activation** | Default Neon driver lane                 |
+| `@supabase/supabase-js`    | **Validation pending at activation** | Integrated fallback lane only            |
+| `pg`                       | **Validation pending at activation** | Non-edge / long-running worker lane only |
 
-| Provider     | Package                         | Free Tier         | Best Fit                     | Lane    |
-| ------------ | ------------------------------- | ----------------- | ---------------------------- | ------- |
-| **Resend**   | `resend@6.10.0`                 | verify before use | Developer DX                 | Primary |
-| **Postmark** | `postmark@4.0.7`                | verify before use | Transactional deliverability | Alt     |
-| **Brevo**    | `@getbrevo/brevo@5.0.3` or REST | verify before use | Budget clients               | Backup  |
-| **SendGrid** | `@sendgrid/mail`                | verify before use | Enterprise contracts         | Backup  |
-| **AWS SES**  | `@aws-sdk/client-ses`           | verify before use | High-volume AWS setups       | Backup  |
+### Data-lane rules
 
-**Repo rule:** only one transport provider is active per deployment.
-
----
-
-## §7 · CMS Layer
-
-### Provider Matrix
-
-| Provider        | Package(s)              | Self-hostable | Best Fit                   | Lane           |
-| --------------- | ----------------------- | ------------- | -------------------------- | -------------- |
-| **Sanity**      | `sanity`, `next-sanity` | No            | Rich content modeling      | Primary        |
-| **Hygraph**     | GraphQL / SDK           | No            | GraphQL-native teams       | Backup         |
-| **Contentful**  | `contentful`            | No            | Enterprise-familiar CMS    | Backup         |
-| **Prismic**     | `@prismicio/client`     | No            | Slice-based page building  | Backup         |
-| **Strapi**      | `@strapi/strapi`        | Yes           | Self-hosted control        | Self-host lane |
-| **Payload CMS** | `payload`               | Yes           | TypeScript-native CMS      | Self-host alt  |
-| **Directus**    | `@directus/sdk`         | Yes           | DB-first CMS/data platform | Self-host alt  |
-
-**`@agency/data-cms` owns all CMS dependencies.**
-Apps consume `@agency/data-cms` exports — they do not install CMS SDKs directly.
-
-### Default Sanity lane pins
-
-| Package          | Pin        |
-| ---------------- | ---------- |
-| `sanity`         | **5.20.0** |
-| `next-sanity`    | **12.2.2** |
-| `@sanity/client` | **7.20.0** |
+* Apps must not install DB drivers directly.
+* All DB access must flow through `@agency/data-db`.
+* Preview branches/environments are for QA, testing, and migration validation.
+* Preview branching is **not** a tenant-security boundary.
+* Route Handlers remain the early data-access surface.
+* `@agency/data-db` expected first activator = internal CRM / Milestone 2.
+* True architectural trigger = first approved operational-data consumer requiring persistent DB-backed state.
 
 ---
 
-## §8 · Analytics Stack
+## §7 · Auth provider lanes
 
-### Architecture Rule
+Auth is split by app category.
 
-`@agency/analytics` provides a provider-abstracted interface.
-Apps call the abstraction — they do not import trackers directly.
+### Internal tools — default lane
 
-### Default providers
+| Package         | Policy                               | Owned by                |
+| --------------- | ------------------------------------ | ----------------------- |
+| `@clerk/nextjs` | **Validation pending at activation** | `@agency/auth-internal` |
 
-| Provider                     | Package                                     | Best Fit                  | Lane                |
-| ---------------------------- | ------------------------------------------- | ------------------------- | ------------------- |
-| **Plausible**                | `@plausible-analytics/tracker@0.4.4`        | Public marketing sites    | Primary — marketing |
-| **PostHog**                  | `posthog-js@1.366.0`, `posthog-node@5.29.2` | Product analytics / flags | Primary — product   |
-| **Cloudflare Web Analytics** | Script only                                 | Static/edge sites         | Backup              |
-| **Microsoft Clarity**        | Script / REST                               | Heatmaps / session review | Backup              |
+### Client portals — default lane
 
-### Escalation packages
+| Package                        | Policy                               | Owned by              |
+| ------------------------------ | ------------------------------------ | --------------------- |
+| `better-auth`                  | **Validation pending at activation** | `@agency/auth-portal` |
+| `@better-auth/drizzle-adapter` | **Validation pending at activation** | `@agency/auth-portal` |
 
-| Package                            | Trigger                                     |
-| ---------------------------------- | ------------------------------------------- |
-| `@agency/analytics-attribution`    | Multi-touch attribution needed              |
-| `@agency/analytics-consent-bridge` | 2+ analytics providers need unified consent |
+### Fallback / escalation lanes
 
----
+| Package / Provider    | Policy                               | Notes                                        |
+| --------------------- | ------------------------------------ | -------------------------------------------- |
+| `next-auth` / Auth.js | **Validation pending at activation** | Full OSS control fallback                    |
+| Supabase Auth         | **Validation pending at activation** | Use only when intentionally in Supabase lane |
+| WorkOS                | **Validation pending at activation** | Enterprise SSO / SCIM escalation only        |
 
-## §9 · Feature Flags & Experimentation
+### Auth rules
 
-| Provider               | Type                | Best Fit                        | Lane                     |
-| ---------------------- | ------------------- | ------------------------------- | ------------------------ |
-| **PostHog**            | Cloud managed       | Product-side flags              | Primary — product        |
-| **Vercel Edge Config** | Edge infrastructure | Zero-latency marketing AB tests | Primary — edge marketing |
-| **GrowthBook**         | OSS/cloud           | Stats-rigorous experimentation  | Backup                   |
-| **Flagsmith**          | OSS/cloud           | Flags + remote config           | Backup                   |
-| **LaunchDarkly**       | Enterprise managed  | Enterprise SDK breadth          | Enterprise escalation    |
-
-### Package Ownership
-
-| Package                 | Internal pkg                   | Condition                       |
-| ----------------------- | ------------------------------ | ------------------------------- |
-| PostHog flags           | `@agency/analytics`            | Active when PostHog is provider |
-| Edge Config experiments | `@agency/experimentation-edge` | 🔒 Trigger-gated                |
-| General experimentation | `@agency/experimentation`      | 🔒 Trigger-gated                |
-
-### `@agency/experimentation-edge`
-
-| Package               | Pin       |
-| --------------------- | --------- |
-| `@vercel/edge-config` | **1.4.3** |
+* Internal tools default to Clerk.
+* Client portals default to Better Auth.
+* One provider per app.
+* Auth is not the tenant-isolation boundary.
+* WorkOS is escalation-only, not a default lane.
 
 ---
 
-## §10 · Monitoring, RUM & Observability
+## §8 · SEO lane
 
-> Entire category is condition-gated. Do not install until the trigger in §14 is met.
+SEO is app-local by default in Milestone 1.
 
-| Provider                  | Type                | Best Fit                      | Lane       |
-| ------------------------- | ------------------- | ----------------------------- | ---------- |
-| **Vercel Speed Insights** | Built-in            | Core Web Vitals on Vercel     | Default    |
-| **Vercel Analytics**      | Built-in            | Lightweight traffic analytics | Default    |
-| **New Relic**             | Full-stack          | Full-stack APM + RUM          | Primary    |
-| **Sentry**                | Error + performance | Error monitoring              | Error lane |
-| **Grafana Faro**          | OSS RUM             | OSS-focused teams             | Backup     |
+### Package status
 
----
+| Package       | Policy                             |
+| ------------- | ---------------------------------- |
+| `@agency/seo` | **Conditional — not approved now** |
 
-## §11 · Communication & Notifications
+### SEO rules
 
-### `@agency/notifications`
-
-Install only the minimum provider SDK required for the approved workflow.
-
-| Provider            | Package                      | Best Fit                        |
-| ------------------- | ---------------------------- | ------------------------------- |
-| **Slack**           | `@slack/web-api`             | Internal ops notifications      |
-| **Discord**         | `discord.js` or webhook-only | Dev team notifications          |
-| **Generic webhook** | native `fetch`               | Simple outbound push            |
-| **Knock**           | `@knocklabs/node`            | Multi-channel orchestration     |
-| **Novu**            | `@novu/node`                 | OSS notification infrastructure |
+* Use native Next.js metadata / sitemap / robots / OG primitives first.
+* If `@agency/seo` is activated later, it must remain thin and infrastructure-only.
+* Do not centralize page-specific metadata content, campaign logic, canonical strategy, or branded OG composition into shared SEO prematurely.
 
 ---
 
-## §12 · Testing & Component Workbench
+## §9 · Analytics lane
 
-> Centralize only when repetition is observed.
+Analytics is split between marketing and product contexts.
 
-### Unit & Integration (`@agency/test-setup`)
+### Default provider lanes
 
-| Package                       | Pin        |
-| ----------------------------- | ---------- |
-| `vitest`                      | **4.1.3**  |
-| `@testing-library/react`      | **16.3.2** |
-| `@testing-library/jest-dom`   | **6.9.1**  |
-| `@testing-library/user-event` | **14.6.1** |
-| `jsdom`                       | **29.0.2** |
+| Lane                | Provider  | Package policy                       |
+| ------------------- | --------- | ------------------------------------ |
+| Marketing analytics | Plausible | **Validation pending at activation** |
+| Product analytics   | PostHog   | **Validation pending at activation** |
 
-### E2E (`@agency/test-setup`)
+### Package status
 
-| Package            | Pin        |
-| ------------------ | ---------- |
-| `@playwright/test` | **1.59.1** |
+| Package                            | Policy                             |
+| ---------------------------------- | ---------------------------------- |
+| `@agency/analytics`                | **Conditional — not approved now** |
+| `@agency/analytics-attribution`    | **Deferred**                       |
+| `@agency/analytics-consent-bridge` | **Deferred**                       |
 
-### Component Workbench (pick one)
+### Analytics rules
 
-| Option        | Package                         | Pin                      |
-| ------------- | ------------------------------- | ------------------------ |
-| **Storybook** | `storybook`, `@storybook/react` | Approved range: `^8.6.0` |
-| **Ladle**     | `@ladle/react`                  | **5.1.1**                |
-
-### Test Fixtures (`@agency/test-fixtures`)
-
-| Package           | Pin        |
-| ----------------- | ---------- |
-| `@faker-js/faker` | **10.4.0** |
+* Milestone 1 analytics may remain app-local.
+* `@agency/analytics` is not approved in Milestone 1.
+* If `@agency/analytics` is activated later, it must expose **lane-specific exports**.
+* Do not design one fake universal runtime abstraction for Plausible + PostHog.
+* Attribution and consent-bridge remain trigger-based later-stage packages.
 
 ---
 
-## §13 · Internal Package Dependency Matrix
+## §10 · Monitoring and observability lane
 
-This table is the canonical record of what each internal package is allowed to depend on.
+Monitoring is built-ins first, app-local first.
 
-| Package                               | Allowed external deps                                                                                                                                                | Allowed internal deps                                                                       |
-| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| `@agency/config-eslint`               | `eslint (approved range: ^9.0.0)`, `eslint-config-next@16.2.3`, `@typescript-eslint/* (approved range: ^8.0.0)`, `eslint-plugin-react-hooks (⚠️ validation pending)` | —                                                                                           |
-| `@agency/config-typescript`           | `typescript@6.0.2`                                                                                                                                                   | —                                                                                           |
-| `@agency/config-tailwind`             | `tailwindcss@4.2.2`, `postcss@8.5.9`, `autoprefixer@10.4.27`                                                                                                         | —                                                                                           |
-| `@agency/config-prettier`             | `prettier@3.5.0`                                                                                                                                                     | —                                                                                           |
-| `@agency/config-react-compiler`       | `babel-plugin-react-compiler (⚠️ validation pending; install only when pilot is approved)`                                                                           | —                                                                                           |
-| `@agency/core-types`                  | `zod`, `typescript`                                                                                                                                                  | —                                                                                           |
-| `@agency/core-utils`                  | `typescript`                                                                                                                                                         | `@agency/core-types`                                                                        |
-| `@agency/core-constants`              | `typescript`                                                                                                                                                         | `@agency/core-types`                                                                        |
-| `@agency/core-hooks`                  | `react`, `typescript`                                                                                                                                                | `@agency/core-types`, `@agency/core-utils`                                                  |
-| `@agency/ui-theme`                    | —                                                                                                                                                                    | `@agency/config-tailwind`                                                                   |
-| `@agency/ui-icons`                    | `lucide-react (⚠️ validation pending)`                                                                                                                               | —                                                                                           |
-| `@agency/ui-design-system`            | `react`, `react-dom`, `@radix-ui/react-*`, `clsx@2.1.1`, `tailwind-merge@3.5.0`, `class-variance-authority@0.7.1`                                                    | `@agency/ui-theme`, `@agency/ui-icons`, `@agency/core-types`                                |
-| `@agency/seo`                         | `next`, `react`                                                                                                                                                      | `@agency/core-types`, `@agency/core-utils`                                                  |
-| `@agency/compliance`                  | `react`, `zod`                                                                                                                                                       | `@agency/core-types`, `@agency/ui-design-system`                                            |
-| `@agency/compliance-security-headers` | —                                                                                                                                                                    | `@agency/compliance`                                                                        |
-| `@agency/monitoring`                  | provider SDKs                                                                                                                                                        | `@agency/core-types`                                                                        |
-| `@agency/monitoring-rum`              | provider SDKs                                                                                                                                                        | `@agency/monitoring`                                                                        |
-| `@agency/data-db`                     | `drizzle-orm@0.45.2`, `drizzle-kit@0.31.10`, `@neondatabase/serverless@1.0.2`, `@supabase/supabase-js@2.103.0`, `pg (⚠️ validation pending)`                         | `@agency/core-types`                                                                        |
-| `@agency/data-cms`                    | `sanity@5.20.0`, `next-sanity@12.2.2`, `@sanity/client@7.20.0`                                                                                                       | `@agency/core-types`                                                                        |
-| `@agency/data-content-federation`     | federation provider SDKs                                                                                                                                             | `@agency/data-cms`, `@agency/data-db`, `@agency/core-types`                                 |
-| `@agency/data-ai-enrichment`          | `ai (approved range: ^6.0.0)`, provider adapters (⚠️ validation pending)`                                                                                            | `@agency/data-cms`, `@agency/core-types`                                                    |
-| `@agency/data-api-client`             | `zod`                                                                                                                                                                | `@agency/core-types`, `@agency/core-utils`                                                  |
-| `@agency/auth-internal`               | `@clerk/nextjs@7.0.12`                                                                                                                                               | `@agency/core-types`                                                                        |
-| `@agency/auth-portal`                 | `better-auth@1.6.2`, `@better-auth/drizzle-adapter@1.6.2`                                                                                                            | `@agency/core-types`, `@agency/data-db`                                                     |
-| `@agency/email-templates`             | `@react-email/components@1.0.12`, `react`, `react-dom`                                                                                                               | `@agency/core-types`                                                                        |
-| `@agency/email-service`               | transport provider SDKs                                                                                                                                              | `@agency/email-templates`, `@agency/core-types`                                             |
-| `@agency/notifications`               | provider SDKs                                                                                                                                                        | `@agency/core-types`, `@agency/email-service`                                               |
-| `@agency/analytics`                   | `@plausible-analytics/tracker@0.4.4`, `posthog-js@1.366.0`, `posthog-node@5.29.2`                                                                                    | `@agency/core-types`                                                                        |
-| `@agency/analytics-attribution`       | attribution provider SDKs                                                                                                                                            | `@agency/analytics`, `@agency/compliance`                                                   |
-| `@agency/analytics-consent-bridge`    | —                                                                                                                                                                    | `@agency/analytics`, `@agency/compliance`                                                   |
-| `@agency/experimentation`             | provider SDKs                                                                                                                                                        | `@agency/analytics`, `@agency/core-types`                                                   |
-| `@agency/experimentation-edge`        | `@vercel/edge-config@1.4.3`                                                                                                                                          | `@agency/analytics`, `@agency/core-types`                                                   |
-| `@agency/lead-capture`                | `react-hook-form@7.51.0`, `@hookform/resolvers@3.3.0`, `zod@3.23.0`                                                                                                  | `@agency/ui-design-system`, `@agency/analytics`, `@agency/compliance`, `@agency/core-types` |
-| `@agency/lead-capture-progressive`    | —                                                                                                                                                                    | `@agency/lead-capture`                                                                      |
-| `@agency/lead-capture-enrichment`     | enrichment provider SDKs                                                                                                                                             | `@agency/lead-capture`, `@agency/data-db`                                                   |
-| `@agency/test-setup`                  | `vitest@4.1.3`, `@testing-library/react@16.3.2`, `@playwright/test@1.59.1`, `jsdom@29.0.2`                                                                           | —                                                                                           |
-| `@agency/test-fixtures`               | `@faker-js/faker@10.4.0`                                                                                                                                             | `@agency/core-types`                                                                        |
+### Package status
+
+| Package                  | Policy                               |
+| ------------------------ | ------------------------------------ |
+| `@agency/monitoring`     | **Conditional — not approved now**   |
+| `@agency/monitoring-rum` | **Conditional — not approved now**   |
+| `@sentry/nextjs`         | **Validation pending at activation** |
+| `newrelic`               | **Validation pending at activation** |
+| `@grafana/faro-web-sdk`  | **Validation pending at activation** |
+
+### Monitoring rules
+
+* Use platform-native monitoring minimums first.
+* Milestone 1 monitoring may remain platform-native or app-local.
+* `@agency/monitoring-rum` refers to browser-side field telemetry / RUM helpers.
+* Do not tie `@agency/monitoring-rum` narrowly to CrUX-specific wording.
+* Do not add external observability vendors until the built-in baseline is insufficient and the package is approved.
 
 ---
 
-## §14 · Conditional Package Activation
+## §11 · CMS lane
 
-🟢 = Build now
-🟡 = Build when trigger is met
-🔒 = Do not build until trigger is satisfied
+Not yet locked as an active implementation lane, but current default planning direction remains:
 
-| Package                               | Status | Build when                                          | Do NOT build when                        | Min consumers |
-| ------------------------------------- | ------ | --------------------------------------------------- | ---------------------------------------- | ------------- |
-| `@agency/config-*`                    | 🟢     | Always                                              | —                                        | —             |
-| `@agency/core-*`                      | 🟢     | Always                                              | —                                        | —             |
-| `@agency/ui-*`                        | 🟢     | Always                                              | —                                        | —             |
-| `@agency/seo`                         | 🟡     | 2+ surfaces need shared SEO helpers                 | SEO limited to 1 simple app              | 2             |
-| `@agency/compliance`                  | 🟡     | First real consent/privacy UI is needed             | One-off banner acceptable                | 1             |
-| `@agency/compliance-security-headers` | 🔒     | Audit or stricter header needs justify it           | Standard platform headers are sufficient | 1             |
-| `@agency/monitoring`                  | 🔒     | Ranking-critical or real observability need exists  | Lab/platform defaults are sufficient     | 1             |
-| `@agency/monitoring-rum`              | 🔒     | Real-user performance data is needed                | No ranking-critical traffic yet          | 1             |
-| `@agency/data-db`                     | 🟡     | First internal tool needs persistent data           | Storage needs are still hypothetical     | 1             |
-| `@agency/data-cms`                    | 🟡     | First Sanity-backed site is approved                | Content lives in a single app only       | 1             |
-| `@agency/data-content-federation`     | 🔒     | 2+ content sources need federation                  | Single CMS source                        | 1             |
-| `@agency/data-ai-enrichment`          | 🔒     | High content volume justifies AI automation         | Manual enrichment is sufficient          | 1             |
-| `@agency/data-api-client`             | 🟡     | 2+ apps call the same internal API                  | Only one app uses that API               | 2             |
-| `@agency/auth-internal`               | 🟡     | First internal tool requires auth                   | Tools are public-only                    | 1             |
-| `@agency/auth-portal`                 | 🟡     | First client portal needs login                     | Sites are brochure-only                  | 1             |
-| `@agency/email-templates`             | 🟡     | First transactional email flow is real              | Email is hypothetical                    | 1             |
-| `@agency/email-service`               | 🟡     | With `@agency/email-templates`                      | Email is hypothetical                    | 1             |
-| `@agency/notifications`               | 🔒     | 2+ workflows need shared notification delivery      | One app can call provider directly       | 2             |
-| `@agency/analytics`                   | 🟡     | 2+ apps need analytics abstraction                  | Analytics limited to one app             | 2             |
-| `@agency/analytics-attribution`       | 🔒     | Cross-channel attribution is truly needed           | Last-click is sufficient                 | 1             |
-| `@agency/analytics-consent-bridge`    | 🔒     | 2+ analytics providers need unified consent         | One provider is sufficient               | 2             |
-| `@agency/experimentation`             | 🔒     | First real AB test / flag system is needed          | No experimentation planned               | 1             |
-| `@agency/experimentation-edge`        | 🔒     | Marketing site needs edge AB testing                | Product-side flags are sufficient        | 1             |
-| `@agency/lead-capture`                | 🔒     | Marketing site needs lead forms                     | No inbound lead flow                     | 1             |
-| `@agency/lead-capture-progressive`    | 🔒     | Forms are materially complex or abandonment is real | Simple forms are sufficient              | 1             |
-| `@agency/lead-capture-enrichment`     | 🔒     | Sales workflow requires enrichment                  | Manual research is sufficient            | 1             |
-| `@agency/test-setup`                  | 🟡     | Test config duplication is observed                 | Test needs remain unique                 | 2             |
-| `@agency/test-fixtures`               | 🔒     | 2+ suites need shared fixtures                      | Test data remains suite-specific         | 2             |
+| Lane                     | Provider                    | Package policy                       |
+| ------------------------ | --------------------------- | ------------------------------------ |
+| Default conceptual lane  | Sanity                      | **Validation pending at activation** |
+| Self-hosted alternatives | Strapi / Payload / Directus | **Validation pending at activation** |
+
+### Package status
+
+| Package            | Policy                             |
+| ------------------ | ---------------------------------- |
+| `@agency/data-cms` | **Conditional — not approved now** |
+
+### CMS rule
+
+Do not activate CMS dependencies by inference before Topic 16 is locked and `REPO-STATE.md` approves the package.
 
 ---
 
-## §15 · Client-Profile Routing
+## §12 · Email and notifications lane
 
-Use this table to choose the right provider lane when starting a new client project.
+Not yet locked as an active implementation lane.
 
-| Profile                            | DB Lane                       | Auth Lane              | CMS Lane             | Email Lane                | Analytics Lane                             | Hosting Lane              |
-| ---------------------------------- | ----------------------------- | ---------------------- | -------------------- | ------------------------- | ------------------------------------------ | ------------------------- |
-| **Brochure / Marketing site**      | None or Neon                  | None                   | Sanity               | Resend                    | Plausible or Cloudflare                    | Vercel or Cloudflare      |
-| **Privacy-sensitive / EU client**  | Neon/Supabase EU              | Better Auth            | Strapi / Payload     | Brevo or self-hosted SMTP | Umami or Matomo                            | Cloudflare or self-hosted |
-| **Internal tool / dashboard**      | Neon                          | Clerk                  | None or Sanity       | Resend                    | PostHog                                    | Vercel                    |
-| **Client portal / SaaS starter**   | Neon or Supabase              | Better Auth            | Sanity or Contentful | Resend or Postmark        | PostHog                                    | Vercel                    |
-| **High-traffic landing page**      | Neon                          | None                   | Sanity or Prismic    | Resend                    | Plausible + PostHog + edge experimentation | Vercel Edge or Cloudflare |
-| **Enterprise / procurement-bound** | Aurora PostgreSQL or Supabase | WorkOS + Clerk         | Contentful or Sanity | SendGrid or SES           | Datadog or New Relic                       | AWS / Azure / GCP         |
-| **Budget / startup MVP**           | Neon or Supabase              | Better Auth or Auth.js | Cosmic or Prismic    | Brevo / Resend            | Cloudflare Analytics + Clarity             | Vercel Hobby              |
-| **Content-heavy / editorial**      | Neon                          | Clerk or Better Auth   | Sanity               | Resend                    | Plausible                                  | Vercel                    |
+### Conceptual package split
 
----
+* `@agency/email-templates` = rendering only
+* `@agency/email-service` = delivery only
 
-## §16 · CI/CD & Hosting
+### Default conceptual provider lane
 
-| Platform                       | Role                      | Best Fit                                     |
-| ------------------------------ | ------------------------- | -------------------------------------------- |
-| **Vercel**                     | Primary default           | Fastest DX, previews, native Next.js support |
-| **Cloudflare Pages + Workers** | Cost/edge alternative     | Static/edge-heavy deployments                |
-| **Netlify**                    | Alternative managed       | Simpler static + serverless sites            |
-| **Railway**                    | Long-running workloads    | Background jobs / stateful processes         |
-| **Render**                     | Long-running alternative  | Simple server processes                      |
-| **AWS / GCP / Azure**          | Enterprise / self-managed | Enterprise mandates                          |
+| Lane                      | Provider                         | Package policy                       |
+| ------------------------- | -------------------------------- | ------------------------------------ |
+| Email delivery            | Resend                           | **Validation pending at activation** |
+| Transactional premium alt | Postmark                         | **Validation pending at activation** |
+| Backup / budget lanes     | Brevo / SES / SendGrid / SMTP2GO | **Validation pending at activation** |
 
-### GitHub Actions Baseline
+### Package status
 
-```yaml
-- uses: actions/checkout@v4
-- uses: actions/setup-node@v4
-  with:
-    node-version: "24.x"
-- run: pnpm install --frozen-lockfile
-- run: pnpm lint
-- run: pnpm test
-- run: pnpm build
-```
+| Package                   | Policy                             |
+| ------------------------- | ---------------------------------- |
+| `@agency/email-templates` | **Conditional — not approved now** |
+| `@agency/email-service`   | **Conditional — not approved now** |
+| `@agency/notifications`   | **Conditional — not approved now** |
 
-All CI jobs target Node 24.x.
+### Email rule
+
+Do not activate email or notification packages until Topic 17 is locked and a real workflow exists.
 
 ---
 
-## §17 · AI Agent Rules
+## §13 · Testing and workbench lane
+
+These packages remain condition-gated.
+
+| Package                          | Policy                               |
+| -------------------------------- | ------------------------------------ |
+| `vitest`                         | **Validation pending at activation** |
+| `@testing-library/react`         | **Validation pending at activation** |
+| `@testing-library/jest-dom`      | **Validation pending at activation** |
+| `@testing-library/user-event`    | **Validation pending at activation** |
+| `jsdom`                          | **Validation pending at activation** |
+| `@playwright/test`               | **Validation pending at activation** |
+| `storybook` / `@storybook/react` | **Validation pending at activation** |
+| `@ladle/react`                   | **Validation pending at activation** |
+| `@faker-js/faker`                | **Validation pending at activation** |
+
+### Testing rules
+
+* `@agency/test-setup` is conditional.
+* `@agency/test-fixtures` is conditional.
+* Do not install Storybook and Ladle in the same repo.
+
+---
+
+## §14 · Internal package dependency matrix
+
+This is the canonical ownership map for where dependencies belong.
+
+| Package                         | Allowed external deps                                                                           | Allowed internal deps                                        |
+| ------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `@agency/config-eslint`         | `eslint`, `@typescript-eslint/*`, `eslint-config-next`                                          | —                                                            |
+| `@agency/config-typescript`     | `typescript`                                                                                    | —                                                            |
+| `@agency/config-tailwind`       | `tailwindcss`, `postcss`, `autoprefixer`                                                        | —                                                            |
+| `@agency/config-prettier`       | `prettier`                                                                                      | —                                                            |
+| `@agency/config-react-compiler` | compiler/lint companion packages                                                                | —                                                            |
+| `@agency/core-types`            | minimal type/runtime validation libs only                                                       | —                                                            |
+| `@agency/core-utils`            | utility libs only when approved                                                                 | `@agency/core-types`                                         |
+| `@agency/core-constants`        | none or minimal runtime-safe deps                                                               | `@agency/core-types`                                         |
+| `@agency/core-hooks`            | `react`                                                                                         | `@agency/core-types`, `@agency/core-utils`                   |
+| `@agency/ui-theme`              | `tailwindcss`                                                                                   | `@agency/config-tailwind`                                    |
+| `@agency/ui-icons`              | `lucide-react`, `react`                                                                         | —                                                            |
+| `@agency/ui-design-system`      | `react`, `react-dom`, `@radix-ui/react-*`, `clsx`, `tailwind-merge`, `class-variance-authority` | `@agency/ui-theme`, `@agency/ui-icons`, `@agency/core-types` |
+| `@agency/seo`                   | Next/React SEO-safe helpers only                                                                | `@agency/core-types`, `@agency/core-utils`                   |
+| `@agency/analytics`             | analytics providers for active lanes only                                                       | `@agency/core-types`                                         |
+| `@agency/monitoring`            | approved monitoring providers only                                                              | `@agency/core-types`                                         |
+| `@agency/monitoring-rum`        | approved browser telemetry providers only                                                       | `@agency/monitoring`                                         |
+| `@agency/data-db`               | Drizzle + approved DB drivers only                                                              | `@agency/core-types`                                         |
+| `@agency/auth-internal`         | Clerk lane only                                                                                 | `@agency/core-types`                                         |
+| `@agency/auth-portal`           | Better Auth lane + approved adapter                                                             | `@agency/core-types`, `@agency/data-db`                      |
+| `@agency/data-cms`              | active CMS provider SDKs only                                                                   | `@agency/core-types`                                         |
+| `@agency/email-templates`       | React Email rendering packages only                                                             | `@agency/core-types`                                         |
+| `@agency/email-service`         | active email transport provider only                                                            | `@agency/email-templates`, `@agency/core-types`              |
+| `@agency/notifications`         | active notification provider only                                                               | `@agency/core-types`, `@agency/email-service`                |
+
+### Matrix rule
+
+Installing a dependency into the wrong internal package is a governance violation.
+
+---
+
+## §15 · Conditional package activation
+
+🟢 = allowed now
+🟡 = conceptually valid but not approved now
+🔒 = later-stage / stricter trigger
+
+| Package                            | Status now | Trigger summary                                                     | Min consumers |
+| ---------------------------------- | ---------- | ------------------------------------------------------------------- | ------------- |
+| `@agency/config-*`                 | 🟢         | Always required                                                     | —             |
+| `@agency/core-*`                   | 🟢         | Only as consumed                                                    | —             |
+| `@agency/ui-*`                     | 🟢         | Only as consumed                                                    | —             |
+| `@agency/seo`                      | 🟡         | 2+ public-facing apps need the same narrow SEO infrastructure       | 2             |
+| `@agency/analytics`                | 🟡         | 2+ approved apps need shared analytics infrastructure               | 2             |
+| `@agency/analytics-attribution`    | 🔒         | Real cross-channel attribution need                                 | 1             |
+| `@agency/analytics-consent-bridge` | 🔒         | 2+ analytics providers need unified consent                         | 2             |
+| `@agency/monitoring`               | 🔒         | Platform-native/app-local monitoring no longer sufficient           | 1             |
+| `@agency/monitoring-rum`           | 🔒         | Shared browser-side field telemetry need beyond platform baseline   | 1             |
+| `@agency/data-db`                  | 🟡         | First approved operational-data consumer requiring persistent state | 1             |
+| `@agency/auth-internal`            | 🟡         | First internal tool requiring auth, Milestone 2 active              | 1             |
+| `@agency/auth-portal`              | 🟡         | First approved client portal requiring login                        | 1             |
+| `@agency/data-cms`                 | 🟡         | First real CMS-backed site after Topic 16 lock                      | 1             |
+| `@agency/email-templates`          | 🟡         | First real transactional email flow after Topic 17 lock             | 1             |
+| `@agency/email-service`            | 🟡         | With email templates activation                                     | 1             |
+| `@agency/notifications`            | 🔒         | Multi-workflow notification need                                    | 2             |
+| `@agency/experimentation`          | 🔒         | First real flags / AB testing need                                  | 1             |
+| `@agency/experimentation-edge`     | 🔒         | Real edge experimentation need                                      | 1             |
+| `@agency/test-setup`               | 🟡         | Repeated test-config duplication                                    | 2             |
+| `@agency/test-fixtures`            | 🔒         | Shared factory duplication across suites                            | 2             |
+| `apps/api`                         | 🔒         | Separate API extraction threshold formally met                      | —             |
+
+---
+
+## §16 · Client-profile routing (planning default only)
+
+This is a planning aid, not implementation approval.
+
+| Profile                        | Default lane summary                                                |
+| ------------------------------ | ------------------------------------------------------------------- |
+| Brochure / marketing site      | No auth, no DB by default, app-local SEO/analytics/monitoring first |
+| Internal tool                  | Clerk + later Neon/Drizzle if persistent data is required           |
+| Client portal / SaaS starter   | Better Auth + Neon/Drizzle + tenant-scoped data                     |
+| Privacy-sensitive / EU client  | Self-host / stricter provider lane may be justified                 |
+| Enterprise / procurement-bound | Aurora / WorkOS / enterprise provider escalation only when required |
+
+### Important rule
+
+This section helps choose a lane once the relevant domain is approved.
+It does **not** activate packages by itself.
+
+---
+
+## §17 · CI/CD and hosting dependency rules
+
+### Default hosting posture
+
+* Vercel-first for approved Next.js apps
+* portability-aware, but portability infrastructure is not launch-default scope
+
+### CI baseline rules
+
+* use frozen lockfile installs
+* keep Node/pnpm versions aligned
+* fail CI on internal dependency specifiers that are not `workspace:*`
+* fail CI on `latest` in manifests
+* fail CI when dependency truth drifts from this document
+
+---
+
+## §18 · AI agent dependency rules
+
+AI coding tools must follow these rules:
 
 1. Do not install any package not listed in this document.
 2. Do not install a package in the wrong internal package.
-3. Do not activate a 🔒 package unless its trigger is explicitly confirmed.
-4. Do not hard-code provider names in app logic.
-5. Do not add a second auth provider to an existing app without explicit approval.
-6. Do not add monitoring/RUM packages until their trigger is confirmed.
-7. Do not install Storybook and Ladle in the same repo.
-8. Use `workspace:*` for all internal dependencies.
-9. Version authority lives here first.
-10. When in doubt, do less.
+3. Do not activate a conditional package unless the trigger is satisfied **and** `REPO-STATE.md` approves it.
+4. Do not hard-code provider names in app logic when a domain boundary package is required.
+5. Do not add a second auth provider to an app without an explicit decision.
+6. Do not install DB drivers in apps.
+7. Do not create `@agency/analytics` in Milestone 1.
+8. Do not create `@agency/monitoring` or `@agency/monitoring-rum` in Milestone 1.
+9. Do not create `@agency/seo` in Milestone 1.
+10. Use `workspace:*` for all internal dependencies.
 
 ---
 
-## §18 · Linting Configuration (Post-Next.js 16)
+## §19 · Dependency change workflow
 
-> `next lint` is removed. Configure ESLint directly.
+Before adding or upgrading any dependency:
 
-### Root script baseline
+1. Update `DEPENDENCY.md`
+2. Update the owning manifest/workspace config
+3. Update the root lockfile
+4. Run the relevant checks
+5. Update any affected docs if dependency references changed
 
-```json
-{
-  "scripts": {
-    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
-    "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix"
-  }
-}
-```
+### Important rule
 
-### `@agency/config-eslint` requirements
-
-* flat config only
-* include Next rules
-* include TypeScript rules
-* include boundary rules
-* include the standard hooks lint path
-
-### Compiler-lint note
-
-Use the shared ESLint lane to surface React Compiler diagnostics through `eslint-plugin-react-hooks`.
-
-Do not treat compiler rollout as an ESLint-only opt-in.
-
-### Biome
-
-Biome remains a separate open evaluation topic.
-Do not migrate by inference.
+Dependency changes must not begin in `package.json` files.
 
 ---
 
-## §19 · Version Verification and QA Notes
+## §20 · Final corrected normalization notes
 
-This document has been normalized across Topics 1–10.
+This final corrected version incorporates the QA-driven corrections from Topics 11–15:
 
-### 6–10 QA corrections now reflected
-
-* React Compiler integration wording corrected
-* compiler diagnostics moved to the standard hooks lint path
-* Tailwind v4 ownership clarified:
-
-  * `config-tailwind` = setup contract
-  * `ui-theme` = semantic tokens
-  * `ui-design-system` = primitives
-* shadcn monorepo workflow wording corrected
-
-### Remaining caution
-
-This document is the dependency authority, but not every non-core provider row was re-verified during the Topic 6–10 QA pass.
-
-That means:
-
-* core stack, governance-critical, and corrected topic-sensitive sections should be treated as highest-confidence
-* any provider lane marked `⚠️ Validation pending` must be verified before active implementation
-* future provider refreshes must still begin in this document
-
----
-
-*Last updated: April 9, 2026 — final reproduced version after Topics 6–10 QA corrections.*
+* `@agency/analytics` wording now supports **Milestone 1 app-local analytics** and **later lane-specific exports**
+* `@agency/monitoring-rum` is defined as **browser-side field telemetry / RUM**, not CrUX-specific infrastructure
+* WorkOS is normalized as **escalation-only**
+* `@agency/data-db` activation wording is normalized to **first approved operational-data consumer**, while still expecting internal CRM to be the first likely activator
+* many later-stage provider exact pins are intentionally marked **Validation pending at activation** so inactive domains do not accumulate stale implementation authority

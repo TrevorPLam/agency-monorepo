@@ -1,189 +1,50 @@
+```md
 # REPO-STATE.md
 
 > **Purpose of this document**  
-> This is the implementation-state authority for the repository.  
-> It answers one question: **what is approved to build now?**
+> This file defines what is approved to build **now**, what is locked as planning policy, and what remains conditional or deferred.
 >
-> If a package, app, tool, or workflow is described elsewhere but is not approved here, it is **not approved for scaffolding or implementation**.
+> This is the repository’s implementation-approval reference.
 >
-> **Implementation precedence**
-> 1. `REPO-STATE.md`
-> 2. `DECISION-STATUS.md`
-> 3. `DEPENDENCY.md`
-> 4. package-level 01-config-biome-migration-50-ref-quickstart.md + `package.json` `exports`
-> 5. `ARCHITECTURE.md` (target-state reference only)
+> **Non-negotiable rule:**  
+> Target-state architecture is **not** implementation approval.
 
 ---
 
-## Status summary
+## 1) Current repository posture
 
-### Current implementation phase
-**Planning / pre-implementation governance phase**
+The repository is currently planning-locked through **Topic 17**.
 
-### What this means
-The repository is still in planning mode.  
-Implementation should be limited to:
-- the approved launch slice
-- the governance spine
-- the foundational packages explicitly approved here
-
-### Not allowed
-- broad repo-wide scaffolding based only on target-state architecture
-- activating conditional packages before their trigger is satisfied
-- creating new shared packages without explicit approval here
-- widening milestone scope because a future package/app seems “close enough”
-- adding tooling or infrastructure because it is “future useful”
+That means the strategic decisions for Topics 1–17 are considered **locked planning policy**, but the repository must still obey milestone scope, conditional activation rules, and dependency governance before anything is built.
 
 ---
 
-## Governing rules
+## 2) Launch-slice posture
 
-### Rule 1 — Approval is explicit
-If something is not marked **Approved now** in this file, it is not approved.
-
-### Rule 2 — Conditional packages stay conditional
-A package listed in `ARCHITECTURE.md` or `DEPENDENCY.md` is still **not approved** unless:
-- its trigger is satisfied, and
-- this file says it is approved
-
-### Rule 3 — Smallest correct milestone wins
-Implementation follows the smallest real milestone that respects:
-- dependency activation rules
-- package extraction rules
-- launch-slice rules
-- current locked topic decisions
-
-### Rule 4 — App-local first
-If a capability can stay inside an app for the current milestone, keep it app-local unless a shared-package approval exists here.
-
-### Rule 5 — Stop on ambiguity
-If there is any conflict between target-state architecture and this file, follow this file and stop for decision review if needed.
-
----
-
-## Topic lock summary
-
-| Topic | Status | Implementation effect |
-|---|---|---|
-| 1. Monorepo foundation strategy | Locked | Use pnpm + Turborepo now; Nx deferred |
-| 2. AI-governed planning and anti-drift controls | Locked | Governance spine required before broad implementation |
-| 3. Domain-grouped package boundaries and extraction rules | Locked | App-local first; new shared packages need approval |
-| 4. Launch-slice strategy | Locked | Agency website is the first validating app |
-| 5. Dependency-truth and version-governance | Locked | `DEPENDENCY.md` is version authority; machine drift checks required |
-| 6. Tenant isolation and client-data safety | Locked | Future data/auth work must use row-level tenant scoping + RLS defense-in-depth |
-| 7. Marketing-site architecture in shared monorepo | Locked | Public-site apps stay separate; branded/campaign logic stays app-local by default |
-| 8. Next.js 16 as the repo-wide application platform | Locked | Next.js App Router is the default app framework; Route Handlers first; `apps/api` remains deferred |
-| 9. React 19 and React Compiler adoption policy | Locked | Compiler-ready but off by default; lint first; annotation-mode pilot before broader enablement |
-| 10. Tailwind v4 and source-owned design system strategy | Locked | CSS-first Tailwind; token/setup/component ownership split across approved UI packages |
-
----
-
-## Approved now — governance spine
-
-These items are approved immediately because they are required to make later implementation safe.
-
-### Governance documents
-- `REPO-STATE.md`
-- `DECISION-STATUS.md`
-- `DEPENDENCY.md`
-- `docs/AGENTS.md`
-- ADRs for Topics 1–10
-
-### Repo governance and enforcement
-- `.github/CODEOWNERS`
-- CI baseline
-- ESLint boundary enforcement
-- explicit package `exports`
-- Changesets for shared-package version intent
-- `workspace:*` for internal dependencies
-- root lockfile governance
-- dependency drift-check job
-
-### Governance review documents
-- `docs/governance/shared-package-acceptance-checklist.md`
-- `docs/governance/new-package-proposal-template.md`
-- `docs/governance/version-authority-audit-checklist.md`
-- `docs/governance/tenant-isolation-review-checklist.md`
-- `docs/governance/public-site-boundary-checklist.md`
-- `docs/governance/dedicated-api-extraction-checklist.md`
-- `docs/governance/react-compiler-adoption-checklist.md`
-- `docs/governance/ui-boundary-review-checklist.md`
-
----
-
-## Approved now — monorepo foundation
-
-### Root repository scaffolding
-- root `package.json`
-- `pnpm-workspace.yaml`
-- `turbo.json` using `tasks`
-- `.gitignore`
-- `.nvmrc`
-- `01-config-biome-migration-50-ref-quickstart.md`
-
-### Approved core stack direction
-- pnpm workspaces
-- Turborepo
-- Next.js App Router
-- React 19
-- Tailwind v4
-- shadcn/ui source-owned design system approach
-
-### Explicitly not approved now
-- Nx
-- repo-specific MCP server
-- private package registry
-- dedicated API app
-- separate backend framework by default
-- worker/service infrastructure by default
-- enterprise-scale CI/distribution features
-- platform-portability infrastructure beyond approved app needs
-
----
-
-## Approved now — launch slice strategy
-
-The repository uses a **two-step launch-slice strategy**.
+The repository is governed by a **two-step launch-slice strategy**.
 
 ### Milestone 1 — Public website slice
-**First validating app:** `apps/agency-website/`
 
-#### Approved now in Milestone 1
+The first validating app is:
 
-##### Config packages
-- `@agency/config-eslint`
-- `@agency/config-typescript`
-- `@agency/config-tailwind`
-- `@agency/config-prettier`
-- `@agency/config-react-compiler`
-
-##### Core packages
-Only the packages actually needed by the first app:
-- `@agency/core-types`
-- `@agency/core-utils`
-- `@agency/core-constants`
-- `@agency/core-hooks`
-
-##### UI packages
-Only the packages actually needed by the first app:
-- `@agency/ui-theme`
-- `@agency/ui-icons`
-- `@agency/ui-design-system`
-
-##### App
 - `apps/agency-website/`
 
-#### Approved implementation style in Milestone 1
-- Next.js App Router is the default app framework
-- Route Handlers inside App Router if server endpoints are needed
-- app-local SEO if only one public surface exists
-- app-local analytics if only one app exists
-- app-local monitoring if package triggers are not met
-- branded sections and page/campaign composition remain app-local
-- React Compiler config package may exist, but compiler rollout remains off by default
-- Tailwind v4 CSS-first setup with approved shared UI package boundaries
+### Milestone 1 approved build scope
 
-#### Not approved in Milestone 1
+In Milestone 1, AI tools may build:
+
+- root scaffolding
+- approved governance files
+- approved workspace/tooling config
+- approved config packages
+- only the `@agency/core-*` packages actually consumed
+- only the `@agency/ui-*` packages actually consumed
+- `apps/agency-website/`
+
+### Milestone 1 prohibited build scope
+
+In Milestone 1, AI tools must **not** build:
+
 - `apps/internal-tools/crm/`
 - `apps/api`
 - `@agency/data-db`
@@ -195,339 +56,256 @@ Only the packages actually needed by the first app:
 - `@agency/monitoring`
 - `@agency/monitoring-rum`
 - `@agency/data-cms`
-- `@agency/data-content-federation`
-- `@agency/data-ai-enrichment`
-- `@agency/data-api-client`
 - `@agency/notifications`
 - `@agency/experimentation`
 - `@agency/experimentation-edge`
 - `@agency/analytics-attribution`
 - `@agency/analytics-consent-bridge`
+- `@agency/data-api-client`
+- `@agency/data-content-federation`
+- `@agency/data-ai-enrichment`
 - `@agency/lead-capture`
-- `@agency/lead-capture-progressive`
-- `@agency/lead-capture-enrichment`
 - `@agency/test-setup`
 - `@agency/test-fixtures`
-- `@agency/content-blocks`
-- client-specific brand-foundation packages
-- Storybook or Ladle activation unless separately approved
-- separate backend frameworks
-- worker/service infrastructure
 
-#### Milestone 1 rule
-Do not activate a shared package in Milestone 1 if the need can be satisfied app-locally and the package trigger is not yet met.
+### Milestone 1 implementation rule
+
+If the first website needs SEO, analytics, monitoring, or CMS-backed content before shared-package triggers are met:
+
+- keep that logic app-local
+- do not create the shared package early
+
+If the first website needs a transactional email flow before shared-package triggers are met:
+
+- keep templates app-local
+- keep sending logic app-local
+- keep provider wiring app-local
+- do not create shared email packages early
+- do not create `@agency/notifications` for email-only needs
 
 ---
+
+## 3) Milestone 2 posture
 
 ### Milestone 2 — First authenticated internal slice
-**Second validating app:** expected `apps/internal-tools/crm/`
 
-#### Approved when Milestone 2 begins
+The second validating app is expected to be:
+
 - `apps/internal-tools/crm/`
+
+Only when Milestone 2 begins may AI tools activate:
+
 - `@agency/data-db`
 - `@agency/auth-internal`
-
-#### Conditionally approvable within Milestone 2
-Only if the app actually requires them and the relevant trigger is satisfied:
-- `@agency/email-templates`
-- `@agency/email-service`
-- `@agency/compliance`
-- `@agency/seo`
-- `@agency/analytics`
-
-#### Still not approved by default in Milestone 2
-Unless separately approved after trigger review:
-- `apps/api`
-- `@agency/monitoring`
-- `@agency/monitoring-rum`
-- `@agency/data-cms`
-- `@agency/auth-portal`
-- `@agency/notifications`
-- `@agency/experimentation`
-- `@agency/experimentation-edge`
-- `@agency/analytics-attribution`
-- `@agency/analytics-consent-bridge`
-- `@agency/data-api-client`
-- `@agency/data-content-federation`
-- `@agency/data-ai-enrichment`
-- `@agency/lead-capture`
-- `@agency/lead-capture-progressive`
-- `@agency/lead-capture-enrichment`
-- `@agency/test-setup`
-- `@agency/test-fixtures`
-- `@agency/content-blocks`
-- client-specific brand-foundation packages
-- repo-specific MCP server
-- Nx
-- separate backend framework by default
-- worker/service infrastructure by default
+- other dependencies and packages explicitly approved for that milestone
 
 ---
 
-## Shared package approval state
+## 4) Locked planning posture by topic
 
-### Always approved
-These are foundational and may be created now:
-- `@agency/config-*`
-- `@agency/core-*`
-- `@agency/ui-*`
+## Topics 1–5
 
-### Not automatically approved
-Even if listed in architecture, these require explicit trigger satisfaction plus approval here:
-- `@agency/seo`
-- `@agency/compliance`
-- `@agency/compliance-security-headers`
-- `@agency/monitoring`
-- `@agency/monitoring-rum`
-- `@agency/data-db`
-- `@agency/data-cms`
-- `@agency/data-content-federation`
-- `@agency/data-ai-enrichment`
-- `@agency/data-api-client`
-- `@agency/auth-internal`
-- `@agency/auth-portal`
-- `@agency/email-templates`
-- `@agency/email-service`
-- `@agency/notifications`
-- `@agency/analytics`
-- `@agency/analytics-attribution`
-- `@agency/analytics-consent-bridge`
-- `@agency/experimentation`
-- `@agency/experimentation-edge`
-- `@agency/lead-capture`
-- `@agency/lead-capture-progressive`
-- `@agency/lead-capture-enrichment`
-- `@agency/test-setup`
-- `@agency/test-fixtures`
-- `@agency/content-blocks`
-- client-specific brand-foundation packages
+### Topic 1 — Monorepo foundation strategy
+- **Locked**
+- pnpm workspaces + Turborepo now
+- Nx later only by explicit trigger
+- do not migrate to Nx before repo-scale or governance complexity justifies it
 
----
+### Topic 2 — AI-governed planning and anti-drift controls
+- **Locked**
+- AI governance must be structural, not advisory
+- control-plane docs are required
+- AI tools must obey repo state, dependency policy, exports, and milestone limits
 
-## Shared package extraction rule
+### Topic 3 — Domain-grouped package boundaries and extraction rules
+- **Locked**
+- app-local-first extraction
+- shared packages require real reuse, low-distortion API shape, explicit ownership, docs, tests, and approval
 
-A new shared package may be approved only when all are true:
-1. it has two real consumers
-2. both consumers can use the same API without distortion
-3. it has a clear domain home
-4. its dependencies fit the allowed repo dependency flow
-5. its public API can be defined via explicit `exports`
-6. it has an owner, README, and tests
-7. it is approved in this file
+### Topic 4 — Launch-slice strategy
+- **Locked**
+- website-first launch slice
+- validate architecture through a real app before broad package activation
 
-If any of these are false, the code stays app-local.
+### Topic 5 — Dependency-truth and version-governance
+- **Locked**
+- `DEPENDENCY.md` is the authoritative human dependency policy document
+- machine truth lives in manifests, workspace config, lockfile, and CI
+- do not use `latest`
+- do not install unapproved dependencies
 
----
+## Topics 6–10
 
-## Tooling approval state
+### Topic 6 — Tenant isolation and client-data safety
+- **Locked**
+- pooled row-level tenant isolation is the default posture
+- stronger isolation is escalation-only by trigger
+- auth is not the tenant-isolation boundary
 
-### Approved now
-- Changesets
-- root lockfile workflow
-- CI drift checks
-- filtered Turborepo commands
-- package boundary linting
-- generator planning/specification work
+### Topic 7 — Marketing-site architecture inside a shared monorepo
+- **Locked**
+- public-facing sites are separate apps
+- do not overbuild a shared marketing platform early
 
-### Deferred
-- package generators as required implementation path
-- codemods
-- MCP server
-- Nx migration work
-- distributed task execution
-- private registry publishing
-- repo-wide Storybook/Ladle adoption
-- repo-wide portability infrastructure
-- worker/service platform scaffolding
+### Topic 8 — Next.js as the repo-wide application platform
+- **Locked**
+- Next.js App Router is the default application platform
+- Route Handlers first
+- no early `apps/api`
 
----
+### Topic 9 — React 19 and React Compiler adoption policy
+- **Locked**
+- React Compiler is conservative/opt-in
+- do not enable blindly across the repo
 
-## Dependency governance state
+### Topic 10 — Tailwind v4 and source-owned design system strategy
+- **Locked**
+- Tailwind v4 CSS-first posture
+- source-owned, primitive-first design system
+- do not overbuild a design-system platform early
 
-### Approved now
-- `DEPENDENCY.md` as human dependency authority
-- machine truth in root manifests, lockfile, workspace config, and CI
-- `workspace:*` for internal dependencies
-- no `latest` in repo manifests
-- dependency changes must begin with `DEPENDENCY.md`
+## Topics 11–15
 
-### Required cleanup before broad implementation
-- normalize exact version references in `DEPENDENCY.md`
-- remove or de-authorize duplicated exact pin tables outside `DEPENDENCY.md`
-- normalize React Compiler integration/lint wording in `DEPENDENCY.md`
-- normalize Tailwind/shadcn ownership wording in `DEPENDENCY.md`
-- add dependency drift checks to CI
+### Topic 11 — SEO architecture and reusable public-site infrastructure
+- **Locked**
+- SEO is app-local by default in Milestone 1
+- `@agency/seo` is conditional, not launch-default
+- if activated later, `@agency/seo` must remain thin and infrastructure-only
 
----
+### Topic 12 — Analytics architecture for marketing vs product contexts
+- **Locked**
+- marketing analytics and product analytics are separate lanes
+- app-local analytics is allowed in Milestone 1
+- Plausible is the default marketing lane
+- PostHog is the default product lane
+- `@agency/analytics` is conditional
+- if activated later, `@agency/analytics` must support lane-specific exports
 
-## Tenant-isolation implementation state
+### Topic 13 — Monitoring and observability scope
+- **Locked**
+- built-ins-first, app-local-first monitoring posture
+- platform-native monitoring minimums first for Vercel-hosted apps
+- `@agency/monitoring` and `@agency/monitoring-rum` are escalation packages, not launch-default packages
+- `@agency/monitoring-rum` refers to browser-side field telemetry / RUM helpers, not CrUX-specific infrastructure
 
-### Current approval effect
-Topic 6 is locked as repository policy, but it does not activate new Milestone 1 packages.
+### Topic 14 — Auth strategy split: internal tools vs client portals
+- **Locked**
+- internal tools default to Clerk
+- client portals default to Better Auth
+- one provider per app
+- auth is not the tenant-isolation boundary
+- `@agency/auth-internal` and `@agency/auth-portal` are provider-boundary packages
+- WorkOS is escalation-only, not the default enterprise auth lane
 
-### Milestone 1
-Still not approved:
-- `@agency/data-db`
-- `@agency/auth-internal`
-- `@agency/auth-portal`
+### Topic 15 — Database and operational data architecture
+- **Locked**
+- PostgreSQL + Neon + Drizzle is the default operational-data lane
+- `@agency/data-db` is the required database boundary
+- apps do not install database drivers directly
+- Route Handlers / approved server-only app code remain the early data surface
+- preview/staging DB branching is for testing and migration validation, not tenant security
+- expected first activator is the internal CRM / Milestone 2
+- true architectural trigger is the first approved operational-data consumer requiring persistent DB-backed state
 
-### Milestone 2 rule
-When Milestone 2 begins and `@agency/data-db` is activated:
-- every client-owned table must include `client_id`
-- client-owned query helpers must require explicit tenant scope
-- RLS must be applied to client-owned tables as defense-in-depth
-- dual-tenant leakage tests are required before the package is considered stable
+## Topics 16–17
 
-### Escalation rule
-Do not move to schema-per-tenant or database-per-tenant by default.  
-Use stronger isolation only when an approved tenant/app requirement justifies it.
+### Topic 16 — CMS strategy for client sites
+- **Locked**
+- Sanity is the default CMS lane for **CMS-backed client sites**
+- this does **not** mean every public site should adopt CMS
+- app-local content remains valid when a site does not yet need real structured editorial workflow
+- default implementation posture is app-local in the owning site
+- `@agency/data-cms` is conditional, not launch-default
+- self-hosted CMS is exception-only and requires explicit justification
 
----
-
-## Public-site implementation state
-
-### Current approval effect
-Topic 7 is locked as repository policy, but it does not widen Milestone 1 package approval.
-
-### Milestone 1 public-site rule
-For the agency website:
-- keep branded sections app-local
-- keep campaign/page composition app-local
-- keep SEO/analytics/monitoring app-local unless package triggers are explicitly satisfied and approved
-
-### Future client-site rule
-Do not define detailed client-sites family standards yet.  
-Handle that later when the client-sites family topic is activated by a real approved client site.
+### Topic 17 — Email and notifications architecture
+- **Locked**
+- React Email is the default email rendering lane
+- Resend is the default transactional email delivery lane
+- this topic governs **transactional/app email first**, not broad marketing/broadcast tooling
+- the first real transactional email flow stays app-local by default
+- `@agency/email-templates` and `@agency/email-service` are conditional
+- `@agency/notifications` is deferred and trigger-based
+- Postmark-like provider escalation is later-only and requires real operational justification
 
 ---
 
-## Application-platform implementation state
+## 5) Operating rules derived from locked posture
 
-### Current approval effect
-Topic 8 is locked as repository policy, but it does not widen Milestone 1 approval.
+### Shared-package rule
+Do not create a shared package unless all normal shared-package acceptance rules are satisfied, including:
 
-### Approved now
-- Next.js 16 App Router is the default app framework for approved app surfaces
-- Route Handlers are the default early server model
+1. real reuse
+2. same API without distortion
+3. clear domain ownership
+4. explicit `exports`
+5. docs
+6. tests
+7. owner
+8. approval in this file
 
-### Still not approved
-- `apps/api`
-- separate backend framework adoption by default
-- worker/service infrastructure
-- portability infrastructure beyond approved app needs
+### Conditional package rule
+A package may exist in target-state architecture and still be **not approved**.
 
-### Dedicated API rule
-Do not create `apps/api` unless a later explicit review confirms the extraction trigger.
+No conditional package may be activated unless:
 
----
+- its trigger is satisfied
+- it is approved in this file
+- it complies with `DEPENDENCY.md`
+- it complies with `DECISION-STATUS.md`
 
-## React Compiler implementation state
+### Provider-lane rule
+Provider-lane decisions in locked topics are **policy**, not automatic install approval.
 
-### Current approval effect
-Topic 9 is locked as repository policy.
+Exact installs still require:
 
-### Approved now
-- `@agency/config-react-compiler` may exist in Milestone 1
-- compiler-related lint preparation is allowed
-
-### Not approved by default
-- enabling React Compiler in all apps
-- app-wide infer-mode enablement in Milestone 1
-- compiler-driven shared-package refactors
-- mass memoization cleanup
-
-### Pilot rule
-If React Compiler is enabled in an approved app during early phases:
-- use annotation mode first
-- keep scope intentionally limited
-- preserve rollback simplicity
+- dependency approval in `DEPENDENCY.md`
+- milestone approval
+- consumer reality
+- normal package-boundary compliance
 
 ---
 
-## UI implementation state
+## 6) Current approved exceptions for app-local implementation
 
-### Current approval effect
-Topic 10 is locked as repository policy.
+The following are explicitly allowed to remain app-local in Milestone 1 if needed before shared-package triggers are met:
 
-### Approved now
-- `@agency/config-tailwind`
-- `@agency/ui-theme`
-- `@agency/ui-icons`
-- `@agency/ui-design-system`
+- SEO logic
+- analytics logic
+- monitoring logic
+- CMS integration
+- transactional email logic
 
-### UI ownership rule
-Use the approved split:
-- config-tailwind = Tailwind setup
-- ui-theme = semantic tokens
-- ui-icons = icons
-- ui-design-system = shared primitives
-
-### Milestone 1 UI rule
-For `apps/agency-website/`:
-- shared primitives may be consumed from the approved UI packages
-- branded sections and page composition stay app-local
-- do not widen the design-system package with one-app marketing components
-
-### Not approved by default
-- extra UI subpackages
-- client-brand token packages
-- shared content-block packages
-- Storybook/Ladle activation unless separately approved
+This allowance exists to preserve launch-slice discipline and prevent fake shared-package extraction.
 
 ---
 
-## AI implementation operating state
+## 7) Deferred / trigger-based topics not yet locked
 
-### AI tools may
-- scaffold only items marked approved here
-- build only within the current approved milestone
-- keep logic app-local by default
-- use Route Handlers instead of creating `apps/api` in early phases
-- use Next.js App Router as the default approved app framework
-- prepare compiler lint/config support without broadly enabling React Compiler
-- use the approved UI package split for primitives/tokens/setup/icons
-- propose, but not scaffold, deferred packages
+The following topics remain deferred, open, or trigger-based beyond Topic 17:
 
-### AI tools must not
-- infer approval from `ARCHITECTURE.md`
-- scaffold conditional packages early
-- create shared packages without approval here
-- add Nx
-- add MCP infrastructure
-- create `apps/api` in Milestone 1
-- activate data/auth/email/CMS packages in Milestone 1 unless explicitly approved here
-- treat future reuse as current justification
-- enable React Compiler broadly by assumption
-- move branded/page-specific UI into `@agency/ui-design-system`
-- introduce schema-per-tenant or database-per-tenant as a default repo model
-- introduce separate backend frameworks or worker/service lanes without explicit approval
+- Topic 18 — Client-sites family architecture
+- Topic 19 — Client portal architecture
+- Topic 20 — Dedicated API app threshold
+- Topic 21 — Playwright E2E workspace strategy
+- Topic 22 — Client brand-foundation extraction rules
+- Topic 23 — Attribution / experimentation / consent-bridge thresholds
+- Topic 24 — AI enrichment / content federation thresholds
+- Topic 25 — MCP server / advanced AI tooling threshold
+
+These topics are **not approved for implementation by inference**.
 
 ---
 
-## Exit criteria for moving beyond Milestone 1
+## 8) Final implementation reminder
 
-Milestone 1 is considered complete when:
-- governance spine exists
-- first app builds, lints, typechecks, and deploys
-- approved config/core/ui packages are consumed successfully
-- no non-approved packages were activated
-- package extraction stayed app-local where required
-- branded/public-site composition remained app-local where required
-- no premature React Compiler rollout occurred
-- no premature data/auth/backend lane was activated
+A package being named in architecture, planning summaries, or ADRs does **not** mean it is approved to build.
 
-Milestone 2 may begin only when:
-- Milestone 1 is stable
-- first internal-tool need is approved
-- `@agency/data-db` and `@agency/auth-internal` are explicitly entered into active implementation
+When there is any conflict:
 
----
-
-## Change control for this document
-
-Any update to this file must answer:
-1. what is being newly approved or deferred
-2. which topic decision authorizes the change
-3. what milestone the change belongs to
-4. whether any dependency trigger or package extraction rule is being activated
-5. what AI tools are now allowed to do that they could not do before
+1. `REPO-STATE.md` decides what is approved now
+2. `DECISION-STATUS.md` decides what is locked vs open
+3. `DEPENDENCY.md` decides what may be installed and where
+4. package-level docs and `exports` decide the local contract
+5. `ARCHITECTURE.md` remains target-state reference only
+```
