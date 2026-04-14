@@ -1,18 +1,26 @@
 # Agency Monorepo Architecture
 *A strategic, fully elaborated reference for building, scaling, and governing a production-grade agency monorepo — written for a non-developer owner working through AI coding tools like Cursor and Windsurf.*
 
-> **Governance Note:** This document describes the **target architecture** — the intended end-state design of the repository. It does **not** grant implementation authority. The current implementation state — what is approved to build, what is planned, and what is deferred — is tracked in `REPO-STATE.md`. 
+> **⚠️ TARGET STATE REFERENCE ONLY — NOT IMPLEMENTATION AUTHORITY ⚠️**
 >
-> **Before beginning any implementation work:**
-> 1. Consult `REPO-STATE.md` to confirm a package or app has been approved for scaffolding
-> 2. Consult `DECISION-STATUS.md` to verify the decision status of relevant architectural choices
-> 3. Consult `DEPENDENCY.md` for exact version pins — never use versions from this document without cross-referencing DEPENDENCY.md
+> This document describes the **target architecture** — the intended end-state design of the repository. **It does NOT grant implementation authority.**
 >
-> **Document hierarchy for implementation:**
-> - `REPO-STATE.md` — what is approved to implement now
-> - `DECISION-STATUS.md` — which decisions are locked vs still open
-> - `DEPENDENCY.md` — exact version authority for all dependencies
-> - `ARCHITECTURE.md` — target state design (reference only)
+> **🛑 STOP — READ THIS BEFORE IMPLEMENTING:**
+> 1. `REPO-STATE.md` — what is approved to build **now**
+> 2. `DECISION-STATUS.md` — which decisions are locked vs open
+> 3. `DEPENDENCY.md` — exact version pins (versions in this file may drift)
+>
+> **Document authority hierarchy (highest to lowest):**
+> 1. `REPO-STATE.md` — implementation approval
+> 2. `DECISION-STATUS.md` — decision lock state
+> 3. `DEPENDENCY.md` — version authority
+> 4. `AGENTS.md` — operating rules
+> 5. Task documents — planning aids only
+> 6. **This document** — target state reference only
+>
+> **⚠️ CRITICAL RULE:** If this document suggests something not approved in `REPO-STATE.md`, it is **NOT approved**. Do not implement by inference.
+>
+> **Version warning:** Versions listed in this document are for reference. Always use `DEPENDENCY.md` as the single source of version truth.
 
 *Last revised: April 2026. Synchronized with the flat docs/tasks corpus (verified April 9, 2026).*
 
@@ -70,14 +78,14 @@ All version locks are maintained in `DEPENDENCY.md`. The values below are the pi
 
 | Tool | Pinned version | Notes |
 |---|---|---|
-| Node.js | 24.x (min 20.9.0) | `.nvmrc` set to `24.0.0` |
-| pnpm | 10.33.0 | Locked via `packageManager` field in root `package.json` |
-| Turborepo | 2.9.5 | Uses `tasks` key (not `pipeline`) in `turbo.json` |
-| Next.js | 16.2.3 | Minimum for stable React Compiler support |
-| React | 19.2.5 | Required for React Compiler |
-| TypeScript | 6.0.2 | Used in all packages and apps |
+| Node.js | 24.x LTS | `.nvmrc` set to `24.11.0` |
+| pnpm | 10.15.1 | Locked via `packageManager` field in root `package.json` |
+| Turborepo | 2.5.6 | Uses `tasks` key (not `pipeline`) in `turbo.json` |
+| Next.js | 16.2.0 | Minimum for stable React Compiler support |
+| React | 19.2.0 | Required for React Compiler |
+| TypeScript | 5.8.3 | Used in all packages and apps |
 | Tailwind CSS | 4.x | CSS-first configuration via `@theme` directives, no JS preset |
-| Drizzle ORM | 0.45.2 | Paired with `drizzle-kit` for migrations |
+| Drizzle ORM | Validation pending at activation | Paired with `drizzle-kit` for migrations |
 
 > **AI agent note:** When scaffolding any new package or app, always read `DEPENDENCY.md` and use these exact versions. Do not use `latest` as a version specifier for core dependencies. Never upgrade major versions without a corresponding ADR in `docs/architecture/`.
 

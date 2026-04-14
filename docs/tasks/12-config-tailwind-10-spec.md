@@ -1,5 +1,16 @@
 # 12-config-tailwind: Implementation Specification
 
+> **⚠️ NON-AUTHORITATIVE DOCUMENT ⚠️**
+>
+> This is a planning specification, not implementation authority.
+>
+> **Before implementing:**
+> 1. Read `REPO-STATE.md` — confirms what is approved to build now
+> 2. Read `DECISION-STATUS.md` — confirms locked vs open decisions
+> 3. Read `DEPENDENCY.md` — provides exact version authority
+>
+> **If this document conflicts with the above:** The governance documents win. Stop and escalate.
+
 ## Task Header
 
 | Field | Value |
@@ -7,10 +18,10 @@
 | **State** | `planned` — Documented target; implementation not yet authorized |
 | **Trigger** | Repository initialization — always required |
 | **Minimum Consumers** | n/a (root infrastructure) |
-| **Dependencies** | Tailwind CSS 4.2.2, PostCSS, autoprefixer |
+| **Dependencies** | Tailwind CSS 4.1.12, PostCSS 8.5.6, autoprefixer 10.4.21 |
 | **Exit Criteria** | Root package.json, pnpm-workspace.yaml, turbo.json committed and verified |
 | **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
-| **Version Authority** | `DEPENDENCY.md` §2 — Tailwind CSS 4.2.2 |
+| **Version Authority** | `DEPENDENCY.md` §2 — Tailwind CSS 4.1.12 |
 | **Supersedes** | n/a |
 | **Superseded by** | n/a |
 

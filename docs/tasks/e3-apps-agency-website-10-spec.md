@@ -131,7 +131,7 @@ apps/agency-website/
     "@types/node": "25.5.2",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "typescript": "6.0.2"
+    "typescript": "5.8.3"
   },
   "prettier": "@agency/config-prettier"
 }
@@ -151,7 +151,11 @@ const nextConfig = {
   ],
   experimental: {
     typedRoutes: true,
+    // Next.js 16.2: Server Function logging enabled by default in dev
+    serverActionsLogging: true,
   },
+  // Next.js 16.2: Adapters API now stable
+  adapter: process.env.VERCEL ? '@vercel/next-adapter' : undefined,
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
@@ -323,6 +327,34 @@ export const env = createEnv({
 export type ServerEnv = typeof env.server;
 export type ClientEnv = typeof env.client;
 ```
+
+### shadcn/ui v4 Requirements
+
+```json
+// components.json - required in apps/agency-website/
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "radix-nova",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "../../packages/ui/design-system/src/styles/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "@/components",
+    "utils": "@agency/ui-design-system/lib/utils",
+    "hooks": "@/hooks",
+    "lib": "@/lib",
+    "ui": "@agency/ui-design-system/components"
+  }
+}
+```
+
+> **Important**: For Tailwind CSS v4, leave `tailwind.config` empty in `components.json`
 
 ### Self-Contained App Rules
 

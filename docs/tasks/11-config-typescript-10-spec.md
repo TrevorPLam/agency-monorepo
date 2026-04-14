@@ -1,5 +1,16 @@
 # 11-config-typescript: Implementation Specification
 
+> **⚠️ NON-AUTHORITATIVE DOCUMENT ⚠️**
+>
+> This is a planning specification, not implementation authority.
+>
+> **Before implementing:**
+> 1. Read `REPO-STATE.md` — confirms what is approved to build now
+> 2. Read `DECISION-STATUS.md` — confirms locked vs open decisions
+> 3. Read `DEPENDENCY.md` — provides exact version authority
+>
+> **If this document conflicts with the above:** The governance documents win. Stop and escalate.
+
 ## Task Header
 
 | Field | Value |
@@ -7,15 +18,15 @@
 | **State** | `planned` — Documented target; implementation not yet authorized |
 | **Trigger** | Repository initialization — always required |
 | **Minimum Consumers** | n/a (root infrastructure) |
-| **Dependencies** | TypeScript 6.0, Node 24.x LTS |
+| **Dependencies** | TypeScript 5.8.3, Node 24.x LTS |
 | **Exit Criteria** | Root package.json, pnpm-workspace.yaml, turbo.json committed and verified |
 | **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
-| **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 6.0 |
+| **Version Authority** | `DEPENDENCY.md` §1 — TypeScript 5.8.3 |
 | **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
 **Cross-references:**
-- Decision status: `DECISION-STATUS.md` — TypeScript 6.0 `locked`
+- Decision status: `DECISION-STATUS.md` — TypeScript 5.8.3 `locked`
 - Version pins: `DEPENDENCY.md` §1
 - Architecture: `ARCHITECTURE.md` — Final stack section
 

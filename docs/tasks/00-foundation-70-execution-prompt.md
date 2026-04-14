@@ -1,15 +1,33 @@
 # 00-foundation-70-execution-prompt.md
 
+> **⚠️ IMPLEMENTATION PROMPT — GOVERNANCE CHECK REQUIRED ⚠️**
+>
+> This prompt authorizes work only when combined with current governance documents.
+>
+> **Mandatory pre-read (in order):**
+> 1. `REPO-STATE.md` — what is approved now
+> 2. `DECISION-STATUS.md` — locked vs open decisions  
+> 3. `DEPENDENCY.md` — exact version authority
+>
+> **Authority hierarchy:** `REPO-STATE.md` > `DECISION-STATUS.md` > `DEPENDENCY.md` > this prompt > `ARCHITECTURE.md`
+>
+> **Stop and escalate if:** Any conflict exists between these documents.
+
 ## Task Context
 
 Implement the root repository scaffolding for the agency monorepo. This is the foundation upon which all other packages and apps will be built.
 
 ## Required Reading
 
-Before starting, read:
-1. `AGENTS.md` - Architecture rules and constraints
-2. `ARCHITECTURE.md` - Monorepo philosophy and structure
-3. `00-foundation-10-spec.md` - Detailed specification
+Before starting, read in this exact order:
+1. `REPO-STATE.md` - What is approved to build now
+2. `DECISION-STATUS.md` - Which decisions are locked vs open
+3. `DEPENDENCY.md` - Exact version authority for all dependencies
+4. `AGENTS.md` - Architecture rules and constraints
+5. `00-foundation-10-spec.md` - Detailed specification
+6. `ARCHITECTURE.md` - Target state design (reference only)
+
+**Authority rule:** When any document conflicts with `REPO-STATE.md`, `DECISION-STATUS.md`, or `DEPENDENCY.md`, stop and escalate. The governance documents always win.
 
 ## Implementation Scope
 
@@ -17,7 +35,7 @@ Create the following files in the repository root:
 
 ### Configuration Files
 - `.gitignore` - Exclude node_modules, build outputs, env files
-- `.nvmrc` - Node version 24.0.0
+- `.nvmrc` - Node version 24.11.0 (LTS)
 - `.prettierignore` - Exclude files from formatting
 - `package.json` - Root workspace configuration
 - `pnpm-workspace.yaml` - pnpm workspace + catalog configuration
@@ -31,7 +49,7 @@ Create the following files in the repository root:
 ## Constraints
 
 - Use Node.js 24.x LTS
-- Use pnpm 10.33.0 exactly
+- Use pnpm 10.15.1 exactly
 - Include pnpm catalog in workspace config
 - Follow Turborepo best practices
 - No secrets in any committed files
@@ -39,7 +57,7 @@ Create the following files in the repository root:
 ## Verification Steps
 
 1. Run `node -v` - should be v24.x.x
-2. Run `pnpm -v` - should be 10.33.0
+2. Run `pnpm -v` - should be 10.15.1
 3. Run `pnpm install` - should succeed
 4. Run `pnpm turbo build --dry-run` - should show task graph
 

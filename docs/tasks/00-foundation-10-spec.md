@@ -1,5 +1,18 @@
 # 00-foundation: Implementation Specification
 
+> **⚠️ NON-AUTHORITATIVE DOCUMENT ⚠️**
+>
+> This is a planning specification, not implementation authority.
+>
+> **Before implementing:**
+> 1. Read `REPO-STATE.md` — confirms what is approved to build now
+> 2. Read `DECISION-STATUS.md` — confirms locked vs open decisions
+> 3. Read `DEPENDENCY.md` — provides exact version authority
+>
+> **If this document conflicts with the above:** The governance documents win. Stop and escalate.
+>
+> **Versions in this document:** Must be cross-referenced against `DEPENDENCY.md`. Do not use versions from this file without verification.
+
 ## Task Header
 
 | Field | Value |
@@ -7,10 +20,10 @@
 | **State** | `planned` — Documented target; implementation not yet authorized |
 | **Trigger** | Repository initialization — always required |
 | **Minimum Consumers** | n/a (root infrastructure) |
-| **Dependencies** | Node 24.x LTS, pnpm 10.33.0 |
+| **Dependencies** | Node 24.x LTS, pnpm 10.15.1 |
 | **Exit Criteria** | Root package.json, pnpm-workspace.yaml, turbo.json committed and verified |
 | **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
-| **Version Authority** | `DEPENDENCY.md` §1 — pnpm 10.33.0 locked via packageManager |
+| **Version Authority** | `DEPENDENCY.md` §1 — pnpm 10.15.1 locked via packageManager |
 | **Supersedes** | n/a |
 | **Superseded by** | n/a |
 
@@ -91,7 +104,7 @@ Thumbs.db
 
 ### `.nvmrc`
 ```
-24.0.0
+24.11.0
 ```
 
 ### `.prettierignore`
@@ -126,7 +139,7 @@ yarn.lock
   "version": "0.1.0",
   "private": true,
   "description": "Agency monorepo with pnpm workspaces and Turborepo",
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@10.15.1",
   "engines": {
     "node": ">=20.9.0"
   },
@@ -144,9 +157,9 @@ yarn.lock
     "clean": "turbo run clean && rm -rf node_modules .turbo"
   },
   "devDependencies": {
-    "@changesets/cli": "2.30.0",
-    "prettier": "3.5.0",
-    "turbo": "2.9.5"
+    "@changesets/cli": "2.29.6",
+    "prettier": "3.6.2",
+    "turbo": "2.5.6"
   }
 }
 ```
@@ -162,30 +175,22 @@ packages:
 # Centralized dependency version management
 # Use "catalog:" in package.json to reference these versions
 catalog:
-  # Core runtime dependencies
-  react: ^19.3.0
-  react-dom: ^19.3.0
-  next: ^16.4.0
-  typescript: ^6.0.0
+  # Core runtime dependencies — Milestone 1 only
+  react: 19.2.0
+  react-dom: 19.2.0
+  next: 16.2.0
+  typescript: 5.8.3
   
-  # Data layer
-  drizzle-orm: ^0.45.2
-  @neondatabase/serverless: ^1.0.0
+  # Styling — Milestone 1 only
+  tailwindcss: 4.1.12
   
-  # Styling
-  tailwindcss: ^4.2.2
-  
-  # Development dependencies
-  "@types/react": ^19.3.0
-  "@types/node": ^22.0.0
+  # Development dependencies — Milestone 1 only
+  "@types/react": 19.2.0
+  "@types/node": 22.15.0
   eslint: ^9.0.0
   
-  # Build tools
-  turbo: ^2.9.5
-  
-  # Testing
-  vitest: ^3.0.0
-  "@testing-library/react": ^16.0.0
+  # Build tools — Milestone 1 only
+  turbo: 2.5.6
 ```
 
 ### `turbo.json`
@@ -234,7 +239,7 @@ catalog:
 node -v  # Should be v24.x.x
 
 # Verify pnpm version
-pnpm -v  # Should be 10.33.0
+pnpm -v  # Should be 10.15.1
 
 # Verify workspace recognition
 pnpm recursive list  # Should list all packages

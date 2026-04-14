@@ -1,5 +1,16 @@
 # 10-config-eslint: Implementation Specification
 
+> **⚠️ NON-AUTHORITATIVE DOCUMENT ⚠️**
+>
+> This is a planning specification, not implementation authority.
+>
+> **Before implementing:**
+> 1. Read `REPO-STATE.md` — confirms what is approved to build now
+> 2. Read `DECISION-STATUS.md` — confirms locked vs open decisions
+> 3. Read `DEPENDENCY.md` — provides exact version authority
+>
+> **If this document conflicts with the above:** The governance documents win. Stop and escalate.
+
 ## Task Header
 
 | Field | Value |
@@ -7,7 +18,7 @@
 | **State** | `planned` — Documented target; implementation not yet authorized |
 | **Trigger** | Repository initialization — always required |
 | **Minimum Consumers** | n/a (root infrastructure) |
-| **Dependencies** | ESLint 9.x, `@typescript-eslint/*`, `eslint-config-next@16.2.3` |
+| **Dependencies** | ESLint ^9.0.0, `@typescript-eslint/*` ^8.0.0, `eslint-config-next` (validate at activation) |
 | **Exit Criteria** | Root package.json, pnpm-workspace.yaml, turbo.json committed and verified |
 | **Implementation Authority** | `REPO-STATE.md` — Phase: Planning, Build status: Not started |
 | **Version Authority** | `DEPENDENCY.md` §3 — ESLint, `@typescript-eslint`, and `eslint-config-next` |
