@@ -72,13 +72,12 @@ Use this structure:
 ```text
 docs/
   architecture/
-    01-config-biome-migration-50-ref-quickstart.md
+    README.md
     ADRs/
-      01-config-biome-migration-50-ref-quickstart.md
       000-template.md
-      001-monorepo-tooling.md
-      002-domain-grouped-package-structure.md
-      003-database-and-orm-selection.md
+      ADR-001-monorepo-foundation-strategy.md
+      ADR-002-ai-governance-and-anti-drift-controls.md
+      ADR-003-package-boundaries-and-extraction-rules.md
 ```
 
 If the directory name is currently `ADRs/`, keep it consistent everywhere rather than mixing `ADR`, `ADRs`, and ad hoc filenames.
@@ -258,7 +257,7 @@ Update this directory when:
 Do not leave orphaned ADRs.
 Every ADR must be reachable from:
 - this file, or
-- `docs/architecture/ADRs/01-config-biome-migration-50-ref-quickstart.md`
+- `docs/architecture/ADRs/000-template.md`
 
 ## Cross-links
 
@@ -268,19 +267,18 @@ This directory should link to:
 - `../../DEPENDENCY.md`
 - `../AGENTS.md`
 - `../DECISION-STATUS.md`
-- `../package-guides/01-config-biome-migration-50-ref-quickstart.md`
-- `../onboarding/`
-- `./ADRs/01-config-biome-migration-50-ref-quickstart.md`
+- `../tasks/` — implementation task documents
+- `../onboarding/` — new contributor guides
+- `./ADRs/` — architecture decision records
 
 ## Initial checklist
 
-- [ ] Create `docs/architecture/01-config-biome-migration-50-ref-quickstart.md`
-- [ ] Create `docs/architecture/ADRs/01-config-biome-migration-50-ref-quickstart.md`
-- [ ] Create `docs/architecture/ADRs/000-template.md`
-- [ ] Create ADR 001
-- [ ] Create ADR 002
-- [ ] Create ADR 003
-- [ ] Link this directory from root `01-config-biome-migration-50-ref-quickstart.md`
+- [x] Create `docs/architecture/README.md` (this file)
+- [x] Create `docs/architecture/ADRs/000-template.md`
+- [x] Create ADR 001 — Monorepo foundation strategy
+- [x] Create ADR 002 — AI governance and anti-drift controls
+- [x] Create ADR 003 — Package boundaries and extraction rules
+- [ ] Link this directory from root `ARCHITECTURE.md`
 - [ ] Link this directory from onboarding docs
 - [ ] Link accepted ADRs from `ARCHITECTURE.md` where relevant
 

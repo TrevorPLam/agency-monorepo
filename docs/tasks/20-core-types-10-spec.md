@@ -1,3 +1,16 @@
+> **Non-Authoritative Warning**
+>
+> This is a task specification, not implementation authority.
+>
+> **Read first:**
+> 1. `REPO-STATE.md` — what is approved to build now
+> 2. `DECISION-STATUS.md` — which decisions are locked vs open
+> 3. `DEPENDENCY.md` — exact versions and provider lanes
+>
+> **Before implementation:** Verify this package is approved in `REPO-STATE.md` and all dependencies are allowed.
+
+---
+
 # 20-core-types: Implementation Specification
 
 ## Files

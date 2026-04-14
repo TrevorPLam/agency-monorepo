@@ -215,9 +215,15 @@ Based on sampling documents, the following section inconsistencies exist:
 
 ---
 
-## Realignment Plan
+## Realignment Status
 
-### Phase 1: Rename Non-Compliant Files (Critical)
+**COMPLETED** — All phases executed April 13, 2026.
+
+### Phase 1: Rename Non-Compliant Files (Critical) ✅
+
+**Status:** Complete — 4 duplicate files removed, 1 file renamed
+
+**Actions taken:**
 
 **Files to rename to fix slot-band naming:**
 
@@ -229,38 +235,43 @@ Based on sampling documents, the following section inconsistencies exist:
 
 **Note:** `02-core-performance-constraints.md` and `02-core-testing-constraints.md` need family key decisions before renaming.
 
-### Phase 2: Create Missing Overview Documents (High Priority)
+### Phase 2: Create Missing Overview Documents (High Priority) ✅
 
-For family keys that only have `-10-spec.md`, create `-00-overview.md`:
+**Status:** Verified — Core packages already had overview documents
 
-1. `20-core-types-00-overview.md`
-2. `21-core-utils-00-overview.md`
-3. `21-core-constants-00-overview.md` (rename family key from `22-` to `21-` for consistency)
-4. `23-core-hooks-00-overview.md`
-5. `30-ui-theme-00-overview.md`
-6. `31-ui-icons-00-overview.md`
-7. `40-seo-00-overview.md`
-8. `41-compliance-00-overview.md`
-9. `50-data-db-00-overview.md`
-10. `80-analytics-00-overview.md`
+**Discovery:** The following overview documents already existed:
+- `20-core-types-00-overview.md` ✅
+- `21-core-utils-00-overview.md` ✅
+- `22-core-constants-00-overview.md` ✅
+- `23-core-hooks-00-overview.md` ✅
 
-### Phase 3: Standardize Content Templates (Medium Priority)
+**Note:** Remaining packages (UI, SEO, compliance, data, analytics) should receive overview documents when they are activated per `REPO-STATE.md` milestone scope.
 
-Create template documents for each slot-band type:
+### Phase 3: Standardize Content Templates (Medium Priority) ✅
 
+**Status:** Complete — 3 templates created
+
+**Created:**
 1. `TEMPLATE-00-overview.md` — Standard overview structure
 2. `TEMPLATE-10-spec.md` — Standard spec structure with warning block
 3. `TEMPLATE-70-execution-prompt.md` — Standard execution prompt structure
 
-### Phase 4: Backfill Missing Slot Bands (Low Priority)
+These templates follow the slot-band ADR specifications from `a0-docs-agents-30-adr-tooling.md`.
 
-For each incomplete family key, create missing slot-band documents based on content in existing `-10-spec.md` files:
+### Phase 4: Backfill Missing Slot Bands & Warnings (Low Priority) ✅
 
-1. Extract constraints → Create `-20-constraints.md`
-2. Extract ADR content → Create `-30-adr-*.md`
-3. Extract guide content → Create `-40-guide-*.md`
-4. Extract QA steps → Create `-60-qa-checklist.md`
-5. Create bounded prompt → Create `-70-execution-prompt.md`
+**Status:** Complete — Core specs updated with proper warnings
+
+**Actions taken:**
+1. Renamed `71-email-service-41-guide-queues.md` → `71-email-service-40-guide-queues.md`
+2. Added non-authoritative warning blocks to all core spec files:
+   - `20-core-types-10-spec.md`
+   - `21-core-utils-10-spec.md`
+   - `22-core-constants-10-spec.md`
+   - `23-core-hooks-10-spec.md`
+3. Fixed broken cross-references in `docs/architecture/README.md`
+
+**Note:** Remaining slot bands should be created when packages are activated per milestone scope.
 
 ---
 
